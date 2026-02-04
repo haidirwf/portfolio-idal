@@ -21,7 +21,7 @@ const skills = [
 const itemVariants = {
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-};
+} as const;
 
 const HomeView = ({ setActiveTab }: { setActiveTab: (tab: any) => void }) => {
   return (
@@ -29,21 +29,21 @@ const HomeView = ({ setActiveTab }: { setActiveTab: (tab: any) => void }) => {
       initial="hidden"
       animate="visible"
       variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-      className="w-full max-w-5xl mx-auto px-4 sm:px-8 pt-24 pb-16"
+      className="w-full max-w-5xl mx-auto px-6 pt-32 pb-20"
     >
-      {/* --- HERO SECTION --- */}
-      <section className="flex flex-col-reverse md:flex-row gap-6 mb-12 items-start justify-between">
-        <motion.div variants={itemVariants} className="space-y-4">
+      {/* --- HERO SECTION: RATA TENGAH DI MOBILE, KIRI DI DESKTOP --- */}
+      <section className="flex flex-col-reverse md:flex-row gap-10 mb-20 items-center md:items-start justify-between">
+        <motion.div variants={itemVariants} className="space-y-6 text-center md:text-left">
           <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-[0.85] text-white">
-            Haidar Rauf Prayogo<span className="text-blue-500">.</span>
+            Haidar Rauf<br />Prayogo<span className="text-blue-500">.</span>
           </h1>
-          <p className="text-zinc-500 text-sm md:text-lg max-w-md font-normal leading-snug">
+          <p className="text-zinc-500 text-sm md:text-lg max-w-md mx-auto md:mx-0 font-normal leading-relaxed">
             Technical precision meets clean execution. Specialized in high-performance applications.
           </p>
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <div className="w-16 h-16 md:w-44 md:h-44 rounded-xl border border-white/10 overflow-hidden grayscale bg-zinc-900">
+          <div className="w-20 h-20 md:w-44 md:h-44 rounded-xl border border-white/10 overflow-hidden grayscale bg-zinc-900 shrink-0">
             <img 
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" 
               alt="Profile" 
@@ -53,22 +53,22 @@ const HomeView = ({ setActiveTab }: { setActiveTab: (tab: any) => void }) => {
         </motion.div>
       </section>
 
-      {/* --- SKILLS GRID (Brutalist Style) --- */}
+      {/* --- SKILLS GRID: SPACING TIGHT --- */}
       <motion.div 
         variants={itemVariants}
-        className="grid grid-cols-2 lg:grid-cols-4 gap-[1px] bg-white/10 border border-white/10 mb-12"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-[1px] bg-white/10 border border-white/10 mb-10 w-full"
       >
         {skills.map((skill, index) => (
-          <div key={index} className="p-5 md:p-8 bg-[#0a0a0a] group hover:bg-[#0f0f0f] transition-colors">
+          <div key={index} className="p-6 md:p-8 bg-[#0a0a0a] group hover:bg-[#0f0f0f] transition-colors">
             <skill.icon size={18} className="text-zinc-500 group-hover:text-blue-500 mb-4 transition-colors" />
             <h3 className="text-white text-[10px] md:text-xs font-bold uppercase tracking-widest">{skill.title}</h3>
-            <p className="text-zinc-600 text-[10px] md:text-xs mt-1 leading-tight">{skill.desc}</p>
+            <p className="text-zinc-600 text-[10px] md:text-xs mt-1.5 leading-tight uppercase font-medium">{skill.desc}</p>
           </div>
         ))}
       </motion.div>
 
-      {/* --- SIMPLE NAV BARS --- */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      {/* --- NAV BARS: EQUAL SPACING --- */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
         {[
           { id: "projects", label: "Projects", icon: LayoutGrid },
           { id: "profile", label: "Profile", icon: User },
@@ -78,13 +78,13 @@ const HomeView = ({ setActiveTab }: { setActiveTab: (tab: any) => void }) => {
           <motion.button
             key={item.id}
             variants={itemVariants}
-            whileTap={{ scale: 0.97 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setActiveTab(item.id)}
             className="flex items-center justify-between p-4 bg-zinc-900/40 border border-white/5 rounded-lg hover:border-white/10 hover:bg-white/5 transition-all group"
           >
             <div className="flex items-center gap-3 overflow-hidden">
               <item.icon size={16} className="text-zinc-500 group-hover:text-white transition-colors shrink-0" />
-              <span className="text-xs font-medium text-zinc-400 group-hover:text-white truncate uppercase tracking-tighter">
+              <span className="text-[10px] font-bold text-zinc-400 group-hover:text-white truncate uppercase tracking-widest">
                 {item.label}
               </span>
             </div>
