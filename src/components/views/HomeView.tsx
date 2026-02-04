@@ -13,9 +13,9 @@ import {
 
 const skills = [
   { icon: Code2, title: "Web Dev", desc: "React, Next.js, TS" },
-  { icon: Smartphone, title: "Mobile", desc: "React Native, Expo" },
+  { icon: Smartphone, title: "Mobile", desc: "Flutter" },
   { icon: Palette, title: "UI/UX", desc: "Figma, Framer" },
-  { icon: Network, title: "Network", desc: "Security, Infrastructure" },
+  { icon: Network, title: "Network", desc: "Mikrotik, Cisco" },
 ];
 
 const itemVariants = {
