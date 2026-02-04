@@ -16,13 +16,7 @@ interface NavigationProps {
   setActiveTab: (tab: TabType) => void;
 }
 
-interface TabItem {
-  id: TabType;
-  label: string;
-  icon: LucideIcon;
-}
-
-const tabs: TabItem[] = [
+const tabs: { id: TabType; label: string; icon: LucideIcon }[] = [
   { id: "home", label: "home", icon: LayoutGrid },
   { id: "projects", label: "projects", icon: Folder },
   { id: "profile", label: "profile", icon: User },
@@ -31,10 +25,10 @@ const tabs: TabItem[] = [
 
 const Navigation = ({ activeTab, setActiveTab }: NavigationProps) => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] border-b border-white/5">
-      <div className="flex items-end max-w-7xl mx-auto">
-        {/* Scroll Container */}
-        <div className="flex items-end overflow-x-auto no-scrollbar scroll-smooth">
+    <nav className="fixed top-0 left-0 right-0 z-[100] bg-[#0a0a0a] border-b border-white/5">
+      <div className="flex items-center max-w-7xl mx-auto">
+        {/* Horizontal Scroll Container */}
+        <div className="flex items-end overflow-x-auto no-scrollbar touch-pan-x flex-1">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -43,56 +37,37 @@ const Navigation = ({ activeTab, setActiveTab }: NavigationProps) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`group relative flex items-center gap-2 px-4 py-3 sm:py-2.5 min-w-fit flex-shrink-0 transition-all duration-200
-                  ${
-                    isActive
-                      ? "bg-[#1a1a1a] text-white"
-                      : "text-zinc-500 hover:text-zinc-300 active:bg-white/5"
-                  }`}
+                className={`flex items-center gap-2 px-4 py-3.5 sm:py-3 min-w-fit transition-all relative border-r border-white/5
+                  ${isActive ? "bg-[#141414] text-white" : "text-zinc-500 hover:bg-white/5"}`}
               >
-                {/* Icon - Ukuran sedikit lebih besar di mobile agar mudah dilihat */}
-                <Icon
-                  size={14}
-                  className={`${isActive ? "text-blue-400" : "text-zinc-500"}`}
-                />
-
-                {/* Label .tsx */}
-                <span className="text-[11px] sm:text-xs font-medium lowercase tracking-tight whitespace-nowrap">
+                <Icon size={14} className={isActive ? "text-blue-500" : "text-zinc-500"} />
+                <span className="text-[11px] font-medium lowercase tracking-tighter whitespace-nowrap">
                   {tab.label}.tsx
                 </span>
-
-                {/* Tombol X - Di mobile hanya muncul jika aktif agar tidak penuh */}
-                <X
-                  size={12}
-                  className={`ml-2 transition-opacity duration-200 
-                    ${isActive ? "opacity-60" : "opacity-0 md:group-hover:opacity-60"}
-                  `}
+                
+                <X 
+                  size={10} 
+                  className={`ml-1 transition-opacity ${isActive ? "opacity-100" : "opacity-0 sm:group-hover:opacity-40"}`} 
                 />
 
-                {/* Active Indicator (Bar Atas) */}
+                {/* Indikator Atas - Edgy style */}
                 {isActive && (
                   <motion.div
-                    layoutId="active-tab-indicator"
+                    layoutId="nav-indicator"
                     className="absolute top-0 left-0 right-0 h-[2px] bg-blue-500"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                   />
                 )}
-                
-                {/* Border kanan antar tab yang halus */}
-                <div className="absolute right-0 top-1/4 bottom-1/4 w-[1px] bg-white/5" />
               </button>
             );
           })}
+          
+          {/* Tambahan space di ujung agar tidak mentok saat scroll mobile */}
+          <div className="min-w-[40px] h-full" />
         </div>
 
-        {/* Action Buttons (Sticky at the end) */}
-        <div className="flex items-center px-2 mb-1 bg-[#0f0f0f]">
-          <button
-            onClick={() => console.log("New Tab")}
-            className="p-2 text-zinc-600 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors"
-          >
-            <Plus size={18} />
-          </button>
+        {/* Plus Button - Fixed on Right */}
+        <div className="px-3 border-l border-white/5 bg-[#0a0a0a]">
+          <Plus size={16} className="text-zinc-600" />
         </div>
       </div>
     </nav>
