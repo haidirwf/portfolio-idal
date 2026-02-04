@@ -1,82 +1,55 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Folder, Hash } from "lucide-react";
 
 type FilterType = "all" | "web" | "app" | "design" | "network";
 
 const filters: { id: FilterType; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "web", label: "Web" },
-  { id: "app", label: "App" },
-  { id: "design", label: "Design" },
-  { id: "network", label: "Networking" },
+  { id: "all", label: "all" },
+  { id: "web", label: "web" },
+  { id: "app", label: "app" },
+  { id: "design", label: "design" },
+  { id: "network", label: "networking" },
 ];
 
 const projects = [
   {
     id: 1,
     title: "E-Commerce Platform",
-    description: "A full-stack e-commerce solution with real-time inventory management.",
+    description: "Full-stack solution with real-time inventory management.",
     image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop",
     category: "web",
-    tags: ["React", "Node.js", "MongoDB"],
+    tags: ["React", "Node.js"],
   },
   {
     id: 2,
     title: "Fitness Tracker App",
-    description: "Cross-platform mobile app for tracking workouts and nutrition.",
+    description: "Cross-platform mobile app for tracking workouts.",
     image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&h=400&fit=crop",
     category: "app",
-    tags: ["Flutter", "Firebase", "Dart"],
+    tags: ["Flutter", "Firebase"],
   },
   {
     id: 3,
-    title: "Brand Identity System",
-    description: "Complete visual identity for a tech startup including logo and guidelines.",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop",
-    category: "design",
-    tags: ["Figma", "Illustrator", "Branding"],
+    title: "Enterprise Setup",
+    description: "Multi-site network infrastructure with VPN protocols.",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop",
+    category: "network",
+    tags: ["Cisco", "MikroTik"],
   },
   {
     id: 4,
-    title: "Enterprise Network Setup",
-    description: "Multi-site network infrastructure with VPN and security protocols.",
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop",
-    category: "network",
-    tags: ["Cisco", "MikroTik", "VPN"],
-  },
-  {
-    id: 5,
     title: "Dashboard Analytics",
-    description: "Real-time analytics dashboard with interactive data visualizations.",
+    description: "Interactive data visualizations and real-time analytics.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
     category: "web",
-    tags: ["Next.js", "D3.js", "PostgreSQL"],
-  },
-  {
-    id: 6,
-    title: "Food Delivery App",
-    description: "Feature-rich mobile application for food ordering and delivery tracking.",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop",
-    category: "app",
-    tags: ["React Native", "Redux", "Maps API"],
+    tags: ["Next.js", "D3.js"],
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05 },
-  },
-};
-
 const itemVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.15 },
-  },
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
 const ProjectsView = () => {
@@ -91,89 +64,100 @@ const ProjectsView = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="w-full max-w-6xl mx-auto px-4"
+      className="w-full max-w-5xl mx-auto px-5 pt-28 pb-20"
     >
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center mb-10"
-      >
-        <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-          Featured Projects
+      {/* Header Section */}
+      <motion.div variants={itemVariants} initial="hidden" animate="visible" className="mb-12">
+        <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-white leading-[0.85] mb-6">
+          projek kami<span className="text-blue-500">.</span>
         </h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          A curated selection of my work across web development, mobile apps, design, and networking.
+        <p className="text-zinc-500 text-lg max-w-md font-normal lowercase tracking-tight">
+          / {activeFilter} projects — showing {filteredProjects.length} items
         </p>
       </motion.div>
 
-      {/* Filter Bar */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.05 }}
-        className="flex justify-center gap-2 mb-10 flex-wrap"
-      >
+      {/* Filter Bar - Technical / Tab Style */}
+      <div className="flex overflow-x-auto no-scrollbar border-b border-white/10 mb-10">
         {filters.map((filter) => (
           <button
             key={filter.id}
             onClick={() => setActiveFilter(filter.id)}
-            className={`filter-btn ${
-              activeFilter === filter.id ? "filter-btn-active" : ""
-            }`}
+            className={`px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-bold transition-all whitespace-nowrap border-b-2 
+              ${activeFilter === filter.id 
+                ? "border-blue-500 text-white bg-white/5" 
+                : "border-transparent text-zinc-600 hover:text-zinc-400"
+              }`}
           >
             {filter.label}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Projects Grid */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeFilter}
-          variants={containerVariants}
           initial="hidden"
           animate="visible"
-          exit={{ opacity: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          exit={{ opacity: 0, y: 10 }}
+          variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-white/10 border border-white/10"
         >
           {filteredProjects.map((project) => (
             <motion.div
               key={project.id}
               variants={itemVariants}
-              layout
-              className="flat-card flat-card-hover overflow-hidden group"
+              className="bg-[#0a0a0a] group relative overflow-hidden"
             >
-              <div className="relative overflow-hidden">
+              {/* Image Container */}
+              <div className="aspect-video overflow-hidden bg-zinc-900 border-b border-white/5">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-48 object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 opacity-60 group-hover:opacity-100"
                 />
-                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="w-9 h-9 rounded-md bg-card border border-border flex items-center justify-center hover:bg-secondary transition-colors">
-                    <Github size={16} className="text-foreground" />
-                  </button>
-                  <button className="w-9 h-9 rounded-md bg-card border border-border flex items-center justify-center hover:bg-secondary transition-colors">
-                    <ExternalLink size={16} className="text-foreground" />
-                  </button>
-                </div>
               </div>
+
+              {/* Content */}
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                       <Folder size={12} className="text-blue-500" />
+                       <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">{project.category}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white tracking-tight leading-tight">
+                      {project.title}
+                    </h3>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <button className="p-2 bg-zinc-900 border border-white/5 hover:border-white/20 text-zinc-400 hover:text-white transition-all rounded-md">
+                      <Github size={16} />
+                    </button>
+                    <button className="p-2 bg-zinc-900 border border-white/5 hover:border-white/20 text-zinc-400 hover:text-white transition-all rounded-md">
+                      <ExternalLink size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <p className="text-zinc-500 text-sm leading-relaxed mb-6 line-clamp-2 font-light">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2">
+
+                {/* Tech Tags */}
+                <div className="flex flex-wrap gap-3">
                   {project.tags.map((tag, i) => (
-                    <span key={i} className="tech-tag">
-                      {tag}
-                    </span>
+                    <div key={i} className="flex items-center gap-1.5 text-zinc-400">
+                      <Hash size={10} className="text-blue-500/50" />
+                      <span className="text-[10px] font-mono uppercase tracking-tighter">{tag}</span>
+                    </div>
                   ))}
                 </div>
               </div>
+
+              {/* Hover Effect Bar */}
+              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
             </motion.div>
           ))}
         </motion.div>
