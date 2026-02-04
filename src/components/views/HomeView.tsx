@@ -35,7 +35,7 @@ const HomeView = ({ setActiveTab }: { setActiveTab: (tab: any) => void }) => {
       <section className="flex flex-col-reverse md:flex-row gap-6 mb-12 items-start justify-between">
         <motion.div variants={itemVariants} className="space-y-4">
           <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-[0.85] text-white">
-            Haidar<br />Rauf Prayogo<span className="text-blue-500">.</span>
+            Haidar Rauf Prayogo<span className="text-blue-500">.</span>
           </h1>
           <p className="text-zinc-500 text-sm md:text-lg max-w-md font-normal leading-snug">
             Technical precision meets clean execution. Specialized in high-performance applications.

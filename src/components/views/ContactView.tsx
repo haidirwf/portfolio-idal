@@ -1,219 +1,138 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Linkedin, Github, Mail, ArrowUpRight } from "lucide-react";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.15 },
-  },
-};
+import { Linkedin, Github, Mail, ArrowUpRight, MessageSquare, Globe, Hash } from "lucide-react";
 
 const socialLinks = [
   {
     icon: Linkedin,
     title: "LinkedIn",
-    subtitle: "@johndoe",
+    subtitle: "Professional Network",
     action: "Connect",
     href: "https://linkedin.com",
+    color: "group-hover:text-blue-500"
   },
   {
     icon: Github,
     title: "GitHub",
-    subtitle: "@johndoe",
+    subtitle: "Source Code & Projects",
     action: "Follow",
     href: "https://github.com",
+    color: "group-hover:text-white"
+  },
+  {
+    icon: MessageSquare,
+    title: "WhatsApp",
+    subtitle: "Quick Chat",
+    action: "Message",
+    href: "https://wa.me/yournumber",
+    color: "group-hover:text-emerald-500"
   },
   {
     icon: Mail,
     title: "Email",
     subtitle: "hello@example.com",
-    action: "Message",
+    action: "Send",
     href: "mailto:hello@example.com",
+    color: "group-hover:text-orange-400"
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1, 
+    transition: { staggerChildren: 0.05 } 
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.3 } 
+  },
+};
+
 const ContactView = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="w-full max-w-6xl mx-auto px-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="w-full max-w-4xl mx-auto px-5 pt-28 pb-20"
     >
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center mb-12"
-      >
-        <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-          Let's Connect
+      {/* Header - Minimalist & Edgy */}
+      <motion.div variants={itemVariants} className="mb-16">
+        <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-white leading-[0.85] mb-6">
+          get in touch<span className="text-blue-500">.</span>
         </h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Have a project in mind or just want to say hello? I'd love to hear from you.
+        <p className="text-zinc-500 text-lg max-w-md font-normal leading-relaxed">
+          Looking for a collaborator or just want to discuss a project? 
+          Reach out through any of these platforms.
         </p>
       </motion.div>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+      {/* Social Directory Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-white/10 border border-white/10 mb-12">
+        {socialLinks.map((link, index) => {
+          const Icon = link.icon;
+          return (
+            <motion.a
+              key={index}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={itemVariants}
+              className="group flex items-center justify-between p-8 bg-[#0a0a0a] hover:bg-[#0f0f0f] transition-all"
+            >
+              <div className="flex items-center gap-5">
+                <div className={`transition-colors duration-300 text-zinc-600 ${link.color}`}>
+                  <Icon size={24} />
+                </div>
+                <div>
+                  <h3 className="text-white font-bold text-sm uppercase tracking-wider">
+                    {link.title}
+                  </h3>
+                  <p className="text-zinc-600 text-xs mt-1 lowercase font-mono">
+                    {link.subtitle}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-700 group-hover:text-white transition-colors">
+                {link.action}
+                <ArrowUpRight size={14} />
+              </div>
+            </motion.a>
+          );
+        })}
+      </div>
+
+      {/* Footer Info / Status Section */}
+      <motion.div 
+        variants={itemVariants}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 border-t border-white/5"
       >
-        {/* Contact Form - Left Side */}
-        <motion.div variants={itemVariants}>
-          <div className="flat-card p-8">
-            <h2 className="text-xl font-bold text-foreground mb-6">
-              Send a Message
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-muted-foreground mb-2"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Your name"
-                  className="input-flat w-full"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-muted-foreground mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="your@email.com"
-                  className="input-flat w-full"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-muted-foreground mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell me about your project..."
-                  rows={5}
-                  className="input-flat w-full resize-none"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-3 rounded-md bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
-              >
-                <Send size={16} />
-                Send Message
-              </button>
-            </form>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-zinc-500 uppercase text-[10px] font-bold tracking-[0.2em]">
+            <Globe size={12} /> Location
           </div>
-        </motion.div>
+          <p className="text-zinc-300 text-sm italic">Jakarta, Indonesia (GMT+7)</p>
+        </div>
 
-        {/* Social Links - Right Side */}
-        <motion.div variants={itemVariants} className="space-y-4">
-          <h2 className="text-xl font-bold text-foreground mb-6">
-            Or Reach Out Directly
-          </h2>
-          {socialLinks.map((link, index) => {
-            const Icon = link.icon;
-            return (
-              <motion.a
-                key={index}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                variants={itemVariants}
-                className="social-card justify-between transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-md bg-secondary border border-border flex items-center justify-center">
-                    <Icon size={20} className="text-foreground" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-base font-semibold text-foreground">
-                      {link.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {link.subtitle}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground font-medium">
-                  {link.action}
-                  <ArrowUpRight size={16} />
-                </div>
-              </motion.a>
-            );
-          })}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-zinc-500 uppercase text-[10px] font-bold tracking-[0.2em]">
+            <Hash size={12} /> Availability
+          </div>
+          <p className="text-zinc-300 text-sm italic">Open for New Projects</p>
+        </div>
 
-          {/* Availability Card */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.15 }}
-            className="flat-card p-6 mt-8"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <span className="w-2 h-2 rounded-full bg-foreground" />
-              <span className="text-foreground font-medium text-sm">
-                Available for new projects
-              </span>
-            </div>
-            <p className="text-muted-foreground text-sm">
-              I'm currently open to freelance work and full-time opportunities.
-              Let's discuss how I can help bring your ideas to life.
-            </p>
-          </motion.div>
-        </motion.div>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-zinc-500 uppercase text-[10px] font-bold tracking-[0.2em]">
+            <MessageSquare size={12} /> Response Time
+          </div>
+          <p className="text-zinc-300 text-sm italic">Within 24 Hours</p>
+        </div>
       </motion.div>
     </motion.div>
   );
