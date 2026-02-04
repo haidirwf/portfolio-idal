@@ -1,64 +1,143 @@
 import { motion } from "framer-motion";
-import { LayoutGrid, Folder, User, Send, Plus, X } from "lucide-react";
+import { Code2, Smartphone, Palette, Network, ArrowRight, Folder, Send, User } from "lucide-react";
 
-export type TabType = "home" | "projects" | "profile" | "contact";
-
-interface NavigationProps {
-  activeTab: TabType;
-  setActiveTab: (tab: TabType) => void;
-}
-
-const tabs = [
-  { id: "home" as TabType, label: "Home", icon: LayoutGrid },
-  { id: "projects" as TabType, label: "Projects", icon: Folder },
-  { id: "profile" as TabType, label: "Profile", icon: User },
-  { id: "contact" as TabType, label: "Contact", icon: Send },
+const pillars = [
+  {
+    icon: Code2,
+    title: "Web Development",
+    description: "Building modern, responsive web applications with cutting-edge technologies.",
+    tab: "projects"
+  },
+  {
+    icon: Smartphone,
+    title: "App Development",
+    description: "Creating cross-platform mobile experiences that users love.",
+    tab: "projects"
+  },
+  {
+    icon: Palette,
+    title: "UI/UX Design",
+    description: "Crafting intuitive interfaces with a focus on user experience.",
+    tab: "projects"
+  },
+  {
+    icon: Network,
+    title: "Network Engineering",
+    description: "Designing robust network infrastructure and security solutions.",
+    tab: "projects"
+  },
 ];
 
-const Navigation = ({ activeTab, setActiveTab }: NavigationProps) => {
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] pt-2 px-2 border-b border-white/5">
-      <div className="flex items-end max-w-7xl mx-auto">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
 
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`group relative flex items-center gap-2 px-4 py-2 min-w-[120px] transition-all duration-300 rounded-t-xl
-                ${isActive 
-                  ? "bg-[#1a1a1a] text-white shadow-[0_-4px_10px_rgba(0,0,0,0.3)]" 
-                  : "text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
-                }`}
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4 },
+  },
+};
+
+const HomeView = ({ setActiveTab }: { setActiveTab: (tab: any) => void }) => {
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="w-full max-w-6xl mx-auto px-6 pt-32 pb-20"
+    >
+      {/* Hero Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-center">
+        <motion.div variants={itemVariants} className="lg:col-span-7 space-y-6">
+          <div className="inline-block px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest">
+            Available for Freelance
+          </div>
+          <h1 className="text-4xl md:text-7xl font-bold text-foreground leading-[1.1] tracking-tight">
+            Engineering <span className="text-muted-foreground">Digital</span> Solutions.
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+            I'm a full-stack developer and network engineer who builds high-performance applications with a focus on clean design.
+          </p>
+          
+          <div className="flex flex-wrap gap-4 pt-4">
+            <button 
+              onClick={() => setActiveTab("projects")}
+              className="group px-6 py-3 bg-foreground text-background rounded-2xl font-bold flex items-center gap-2 hover:bg-foreground/90 transition-all"
             >
-              <Icon size={14} className={isActive ? "text-blue-400" : "text-zinc-500"} />
-              <span className="text-xs font-medium lowercase tracking-tight">
-                {tab.label}.tsx
-              </span>
-              <X size={12} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              {isActive && (
-                <motion.div 
-                  layoutId="active-tab-indicator"
-                  className="absolute -top-[2px] left-0 right-0 h-[2px] bg-blue-500"
-                />
-              )}
+              Check My Work 
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
+            <button 
+              onClick={() => setActiveTab("contact")}
+              className="px-6 py-3 bg-secondary border border-border rounded-2xl font-bold hover:bg-border transition-all"
+            >
+              Let's Talk
+            </button>
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="lg:col-span-5 flex justify-center">
+          <div className="relative group shadow-2xl rounded-[2.5rem] overflow-hidden rotate-2 hover:rotate-0 transition-all duration-500 border-8 border-card">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop"
+              alt="Profile"
+              className="w-full h-80 lg:h-[450px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+            />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Pillars Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        {pillars.map((pillar, index) => {
+          const Icon = pillar.icon;
+          return (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              onClick={() => setActiveTab(pillar.tab)}
+              className="group cursor-pointer p-8 rounded-[2rem] bg-card border border-border hover:border-primary/40 transition-all"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <Icon size={22} />
+              </div>
+              <h3 className="text-lg font-bold mb-3">{pillar.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {pillar.description}
+              </p>
+            </motion.div>
           );
         })}
-        
-        <button 
-          onClick={() => setActiveTab("home")}
-          className="p-2 mb-1 ml-1 text-zinc-600 hover:bg-white/5 rounded-md transition-colors"
-        >
-          <Plus size={16} />
-        </button>
-        <div className="flex-1 h-10" />
       </div>
-    </nav>
+
+      {/* Quick Footer Navigation */}
+      <motion.div 
+        variants={itemVariants}
+        className="flex flex-col md:flex-row items-center justify-between p-8 rounded-[2rem] bg-secondary/30 border border-border border-dashed"
+      >
+        <div className="flex items-center gap-4 mb-4 md:mb-0">
+          <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border">
+            <User size={18} />
+          </div>
+          <p className="font-medium">Curious about my journey and technical stack?</p>
+        </div>
+        <button 
+          onClick={() => setActiveTab("profile")}
+          className="text-primary font-bold flex items-center gap-2 hover:underline underline-offset-4"
+        >
+          Read Full Profile <ArrowRight size={16} />
+        </button>
+      </motion.div>
+    </motion.div>
   );
 };
 
-export default Navigation;
+export default HomeView;
