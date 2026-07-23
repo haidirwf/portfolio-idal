@@ -1,0 +1,27 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#09090b"/>
+  <rect x="40" y="40" width="1120" height="550" rx="16" fill="#18181b" stroke="#27272a" stroke-width="2"/>
+  <circle cx="90" cy="90" r="8" fill="#ef4444"/>
+  <circle cx="115" cy="90" r="8" fill="#eab308"/>
+  <circle cx="140" cy="90" r="8" fill="#22c55e"/>
+  <line x1="40" y1="120" x2="1160" y2="120" stroke="#27272a" stroke-width="2"/>
+  <text x="90" y="220" font-family="monospace" font-size="28" fill="#a1a1aa">// Aether Engine System Topology</text>
+  <rect x="90" y="270" width="300" height="180" rx="8" fill="#27272a" stroke="#3f3f46"/>
+  <text x="120" y="320" font-family="monospace" font-size="22" font-weight="bold" fill="#f4f4f5">Client SDK</text>
+  <text x="120" y="360" font-family="monospace" font-size="16" fill="#71717a">Zero-copy FlatBuffers</text>
+  <text x="120" y="390" font-family="monospace" font-size="16" fill="#38bdf8">Latency: 0.2ms</text>
+  
+  <path d="M 390 360 L 470 360" stroke="#38bdf8" stroke-width="3" stroke-dasharray="6,6"/>
+  
+  <rect x="470" y="270" width="300" height="180" rx="8" fill="#27272a" stroke="#38bdf8" stroke-width="2"/>
+  <text x="500" y="320" font-family="monospace" font-size="22" font-weight="bold" fill="#f4f4f5">Aether Core Node</text>
+  <text x="500" y="360" font-family="monospace" font-size="16" fill="#71717a">Tokio Ring Buffer</text>
+  <text x="500" y="390" font-family="monospace" font-size="16" fill="#22c55e">QPS: 520,000 req/s</text>
+
+  <path d="M 770 360 L 850 360" stroke="#38bdf8" stroke-width="3"/>
+
+  <rect x="850" y="270" width="230" height="180" rx="8" fill="#27272a" stroke="#3f3f46"/>
+  <text x="880" y="320" font-family="monospace" font-size="22" font-weight="bold" fill="#f4f4f5">LSM Storage</text>
+  <text x="880" y="360" font-family="monospace" font-size="16" fill="#71717a">SSD Persistence</text>
+  <text x="880" y="390" font-family="monospace" font-size="16" fill="#a1a1aa">Lock-free WAL</text>
+</svg>
