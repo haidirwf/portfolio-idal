@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LanguageProvider } from "@/components/language-provider";
 import Lenis from "lenis";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -33,7 +34,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-      <TooltipProvider>{children}</TooltipProvider>
+      <LanguageProvider>
+        <TooltipProvider>{children}</TooltipProvider>
+      </LanguageProvider>
     </NextThemesProvider>
   );
 }

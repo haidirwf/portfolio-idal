@@ -10,7 +10,7 @@ import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 
 export function Showcase({ projects }: { projects: Project[] }) {
   return (
-    <section id="projects" className="py-12 max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
+    <section id="projects" className="py-12 px-4 sm:px-6 space-y-8">
       <h2 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
         Projects
       </h2>

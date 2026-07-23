@@ -2,79 +2,87 @@
 
 import * as React from "react";
 import { motion } from "motion/react";
-import { Mail, GitBranch, Link2, Share2, Copy, Check, ArrowUpRight, Download } from "lucide-react";
+import { Mail, GitBranch, Link2, Share2, Copy, Check, ArrowUpRight, Download, Phone } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import confetti from "canvas-confetti";
 
 export function Contact() {
-  const [copied, setCopied] = React.useState(false);
-  const email = "alex.rivera.engineering@example.com";
+  const { t } = useLanguage();
+  const [copiedEmail, setCopiedEmail] = React.useState(false);
+  const [copiedPhone, setCopiedPhone] = React.useState(false);
+
+  const email = "raufidnn@gmail.com";
+  const phone = "+6282173662010";
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(email);
-    setCopied(true);
-    confetti({
-      particleCount: 40,
-      spread: 60,
-      origin: { y: 0.85 }
-    });
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
+  };
+
+  const handleCopyPhone = () => {
+    navigator.clipboard.writeText(phone);
+    setCopiedPhone(true);
+    setTimeout(() => setCopiedPhone(false), 2000);
   };
 
   const socialLinks = [
-    { name: "GitHub", href: "https://github.com", icon: GitBranch },
-    { name: "LinkedIn", href: "https://linkedin.com", icon: Link2 },
-    { name: "Instagram", href: "https://instagram.com", icon: Share2 }
+    { name: "GitHub", href: "https://github.com/haidirwf", icon: GitBranch },
+    { name: "LinkedIn", href: "https://www.linkedin.com/in/haidar-rauf/", icon: Link2 },
+    { name: "Instagram", href: "https://instagram.com/haidarwf", icon: Share2 }
   ];
 
   return (
-    <section id="contact" className="py-16 max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
-      <h2 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
-        Contact
-      </h2>
-
+    <section id="contact" className="py-16 px-4 sm:px-6 space-y-8">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="border-border bg-card/40 p-8 sm:p-12 text-center space-y-6">
-          <div className="space-y-2 max-w-lg mx-auto">
-            <h3 className="text-2xl sm:text-3xl font-bold font-sans tracking-tight">
-              Let's build something together.
-            </h3>
-            <p className="text-sm font-mono text-muted-foreground">
-              Open for engineering leadership, systems architecture, and high-impact full-stack contracts.
+        <Card className="border-border/80 bg-card/60 rounded-3xl p-8 sm:p-14 text-center space-y-8 w-full shadow-xs relative overflow-hidden">
+          {/* Background grid pattern */}
+          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
+
+          <div className="relative space-y-3 max-w-lg mx-auto">
+            <h2 className="text-3xl sm:text-5xl font-extrabold font-sans tracking-tight">
+              {t("Mari Bekerja Sama.", "Let's build something together.")}
+            </h2>
+            <p className="text-sm sm:text-base font-sans text-muted-foreground">
+              {t(
+                "Open untuk proyek freelance, kontrak jaringan, arsitektur MikroTik/Cisco, dan UI/UX design.",
+                "Open for freelance projects and long-term collaborations in networking, cybersecurity, or interface design."
+              )}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Button
               onClick={handleCopyEmail}
               variant="default"
-              size="default"
-              className="font-mono text-xs gap-2 min-w-[240px]"
+              size="lg"
+              className="rounded-full font-sans text-xs sm:text-sm px-6 gap-2"
             >
               <Mail className="size-4" />
-              <span>{copied ? "Copied to Clipboard!" : email}</span>
-              {copied ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+              <span>{copiedEmail ? t("Email Tersalin!", "Email Copied!") : email}</span>
+              {copiedEmail ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
             </Button>
 
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              download
-              className={cn(buttonVariants({ variant: "outline", size: "default" }), "font-mono text-xs gap-2")}
+            <Button
+              onClick={handleCopyPhone}
+              variant="outline"
+              size="lg"
+              className="rounded-full font-sans text-xs sm:text-sm px-6 gap-2 bg-background"
             >
-              <Download className="size-4" />
-              <span>Download CV</span>
-            </a>
+              <Phone className="size-4" />
+              <span>{copiedPhone ? t("Nomor Tersalin!", "Phone Copied!") : phone}</span>
+              {copiedPhone ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+            </Button>
           </div>
 
-          <div className="flex items-center justify-center gap-4 pt-6 border-t border-border/40">
+          <div className="relative flex items-center justify-center gap-6 pt-6 border-t border-border/40">
             {socialLinks.map((social) => {
               const Icon = social.icon;
               return (
@@ -83,11 +91,11 @@ export function Contact() {
                   href={social.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm font-sans font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Icon className="size-4" />
                   <span>{social.name}</span>
-                  <ArrowUpRight className="size-3" />
+                  <ArrowUpRight className="size-3.5" />
                 </a>
               );
             })}

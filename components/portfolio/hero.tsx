@@ -1,60 +1,84 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowDown, Mail, ArrowUpRight } from "lucide-react";
+import { ArrowDown, Mail, ArrowUpRight, ShieldCheck, Cpu } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
 
 export function Hero() {
+  const { t } = useLanguage();
+
   return (
-    <section className="pt-24 pb-8 max-w-6xl mx-auto px-4 sm:px-6">
+    <section className="pt-20 pb-8 px-4 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <Card className="overflow-hidden border-border bg-card/50 p-6 sm:p-10 hover:bg-card transition-all duration-300">
-          <div className="space-y-5 max-w-3xl">
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-foreground font-sans">
-                Alex Rivera
+        <Card className="min-h-[420px] sm:min-h-[480px] flex flex-col justify-center items-center text-center overflow-hidden border-border/80 bg-card/60 rounded-3xl p-8 sm:p-16 md:p-20 shadow-xs relative">
+          {/* Background grid pattern */}
+          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
+
+          <div className="relative space-y-6 max-w-3xl flex flex-col items-center">
+            {/* Certifications Badge Bar */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-xs font-mono font-medium text-primary">
+                <ShieldCheck className="size-3.5" />
+                <span>MTCNA Certified</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-mono font-medium text-emerald-500">
+                <Cpu className="size-3.5" />
+                <span>MTCRE Certified</span>
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground font-sans leading-none">
+                Muhammad Haidar Rauf Prayogo
               </h1>
 
-              <p className="text-lg sm:text-xl text-muted-foreground font-medium font-sans leading-relaxed">
-                Systems & Full-Stack Engineer crafting distributed tools & low-latency cloud architectures.
+              <p className="text-lg sm:text-2xl text-muted-foreground font-medium font-sans max-w-2xl leading-snug">
+                {t(
+                  "Network Engineer | MTCNA & MTCRE | Spesialis Infrastruktur Jaringan & UI/UX Design",
+                  "Network Engineer | MTCNA & MTCRE | Network Infrastructure & UI/UX Specialist"
+                )}
               </p>
             </div>
 
-            <p className="text-sm text-muted-foreground/80 font-sans max-w-2xl leading-relaxed">
-              Show the work first. Explain later. Clean engineering, zero bloat.
+            <p className="text-sm sm:text-base text-muted-foreground/80 font-sans max-w-xl leading-relaxed">
+              {t(
+                "Fokus pada jaringan yang aman, efisien, dan antarmuka digital yang intuitif. Cikarang Selatan, Jawa Barat, Indonesia.",
+                "Focusing on secure, efficient networks and intuitive digital interfaces. Cikarang Selatan, West Java, Indonesia."
+              )}
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <a
                 href="#projects"
-                className={cn(buttonVariants({ variant: "default", size: "default" }), "font-sans text-xs gap-2")}
+                className={cn(buttonVariants({ variant: "default", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2")}
               >
-                <span>View Projects</span>
-                <ArrowDown className="size-3.5" />
+                <span>{t("Lihat Topologi", "View Topologies")}</span>
+                <ArrowDown className="size-4" />
               </a>
 
               <a
                 href="#contact"
-                className={cn(buttonVariants({ variant: "outline", size: "default" }), "font-sans text-xs gap-2")}
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 bg-background")}
               >
-                <Mail className="size-3.5" />
-                <span>Contact</span>
+                <Mail className="size-4" />
+                <span>{t("Kontak", "Contact")}</span>
               </a>
 
               <a
-                href="https://github.com"
+                href="https://github.com/haidirwf"
                 target="_blank"
                 rel="noreferrer"
-                className={cn(buttonVariants({ variant: "ghost", size: "default" }), "font-sans text-xs gap-1.5 text-muted-foreground")}
+                className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm gap-1.5 text-muted-foreground px-4")}
               >
                 <span>GitHub</span>
-                <ArrowUpRight className="size-3.5" />
+                <ArrowUpRight className="size-4" />
               </a>
             </div>
           </div>

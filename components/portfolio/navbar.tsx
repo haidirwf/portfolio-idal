@@ -3,15 +3,16 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Moon, Sun, Command, Code2 } from "lucide-react";
+import { Moon, Sun, Command, Code2, Globe } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
 
 export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
   const { theme, setTheme } = useTheme();
+  const { lang, setLang, t } = useLanguage();
   const [mounted, setMounted] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
-  const pathname = usePathname();
 
   React.useEffect(() => {
     setMounted(true);
@@ -23,10 +24,10 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
   }, []);
 
   const navLinks = [
-    { name: "Projects", href: "/#projects" },
-    { name: "About", href: "/#about" },
-    { name: "Experience", href: "/#experience" },
-    { name: "Contact", href: "/#contact" },
+    { name: t("Projects", "Projects"), href: "/#projects" },
+    { name: t("About", "About"), href: "/#about" },
+    { name: t("Pengalaman", "Experience"), href: "/#experience" },
+    { name: t("Kontak", "Contact"), href: "/#contact" },
   ];
 
   return (
@@ -43,7 +44,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
           className="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight hover:opacity-80 transition-opacity"
         >
           <Code2 className="size-4" />
-          <span>dev.portfolio</span>
+          <span>haidar.dev</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-xs font-mono">
@@ -59,6 +60,18 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Language Switcher Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLang(lang === "ID" ? "EN" : "ID")}
+            className="h-8 px-2.5 text-xs font-mono gap-1 text-muted-foreground hover:text-foreground"
+            aria-label="Toggle Language"
+          >
+            <Globe className="size-3.5" />
+            <span className="font-bold text-foreground">{lang}</span>
+          </Button>
+
           {onOpenCommand && (
             <Button
               variant="outline"

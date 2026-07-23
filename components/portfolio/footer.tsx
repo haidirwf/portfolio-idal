@@ -6,7 +6,7 @@ export function Footer() {
       <Separator className="bg-border/60" />
       <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-muted-foreground gap-2">
         <div>
-          © {new Date().getFullYear()} Alex Rivera. All rights reserved.
+          © {new Date().getFullYear()} Haidar Rauf. All rights reserved.
         </div>
         <div>
           Built using Next.js + shadcn/ui

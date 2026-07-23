@@ -42,7 +42,7 @@ const TECH_STACK: TechItem[] = [
 
 export function TechStack() {
   return (
-    <section id="tech-stack" className="py-12 max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
+    <section id="tech-stack" className="py-12 px-4 sm:px-6 space-y-8">
       <h2 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
         Tech Stack
       </h2>

@@ -16,7 +16,7 @@ export function MainWrapper({
   const [cmdOpen, setCmdOpen] = React.useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased">
+    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto">
       <Navbar onOpenCommand={() => setCmdOpen(true)} />
       <main>{children}</main>
       <Footer />
