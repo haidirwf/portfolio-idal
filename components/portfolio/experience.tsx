@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,9 @@ interface ExperienceItem {
   descId: string;
   descEn: string;
   skills: string[];
+  image: string;
+  imageCaptionId: string;
+  imageCaptionEn: string;
 }
 
 const EXPERIENCES: ExperienceItem[] = [
@@ -23,7 +27,10 @@ const EXPERIENCES: ExperienceItem[] = [
     period: "2024 — Present",
     descId: "Merancang dan mengonfigurasi jaringan skala kecil hingga menengah, otomatisasi routing MikroTik (OSPF, MTCRE level), firewall hardening, serta penyediaan VPN Site-to-Site.",
     descEn: "Designing and configuring small to medium scale networks, MikroTik routing automation (OSPF, MTCRE level), firewall hardening, and Site-to-Site VPN provisioning.",
-    skills: ["MikroTik", "MTCNA", "MTCRE", "OSPF", "Firewall", "IPSec"]
+    skills: ["MikroTik", "MTCNA", "MTCRE", "OSPF", "Firewall", "IPSec"],
+    image: "/projects/hyperscale.svg",
+    imageCaptionId: "Dokumentasi Topologi & Gateway Firewall MikroTik",
+    imageCaptionEn: "MikroTik Gateway & Firewall Topology Documentation"
   },
   {
     company: "IDN Boarding School Network Lab",
@@ -32,7 +39,10 @@ const EXPERIENCES: ExperienceItem[] = [
     period: "2023 — Present",
     descId: "Mengelola topologi jaringan lab sekolah, simulasi switching & routing bertingkat pada Cisco Packet Tracer & GNS3, serta pemeliharaan server lokal.",
     descEn: "Managing school lab network topologies, simulating multi-layer switching & routing on Cisco Packet Tracer & GNS3, and local server maintenance.",
-    skills: ["Cisco Packet Tracer", "VLAN", "STP", "EtherChannel", "Linux"]
+    skills: ["Cisco Packet Tracer", "VLAN", "STP", "EtherChannel", "Linux"],
+    image: "/projects/aether-engine-arch.svg",
+    imageCaptionId: "Cisco Packet Tracer Lab & Switch Infrastructure Diagram",
+    imageCaptionEn: "Cisco Packet Tracer Lab & Switch Infrastructure Diagram"
   }
 ];
 
@@ -62,7 +72,7 @@ export function Experience() {
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: idx * 0.08 }}
           >
-            <Card className="border-border/80 bg-card/60 rounded-2xl p-6 sm:p-8 hover:bg-card transition-all duration-300">
+            <Card className="border-border/80 bg-card/60 rounded-2xl p-6 sm:p-8 hover:bg-card transition-all duration-300 space-y-4">
               <div className="space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-border/40 pb-3">
                   <div>
@@ -80,12 +90,32 @@ export function Experience() {
                   {t(exp.descId, exp.descEn)}
                 </p>
 
-                <div className="flex flex-wrap gap-1.5 pt-2">
+                <div className="flex flex-wrap gap-1.5 pt-1">
                   {exp.skills.map((skill) => (
                     <Badge key={skill} variant="secondary" className="font-mono text-[10px] rounded-md">
                       {skill}
                     </Badge>
                   ))}
+                </div>
+              </div>
+
+              {/* LinkedIn Style Media Attachment Thumbnail */}
+              <div className="pt-2 border-t border-border/40">
+                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/30 border border-border/50 hover:bg-secondary/50 transition-colors group cursor-pointer">
+                  <div className="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 border border-border/40 bg-secondary/40">
+                    <Image
+                      src={exp.image}
+                      alt={exp.company}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="space-y-1 overflow-hidden">
+                    <p className="text-xs font-sans font-semibold text-foreground truncate">
+                      {t(exp.imageCaptionId, exp.imageCaptionEn)}
+                    </p>
+                    <p className="text-[11px] font-mono text-muted-foreground">Media Attachment · Documentation</p>
+                  </div>
                 </div>
               </div>
             </Card>
