@@ -1,11 +1,43 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowDown, Mail, ArrowUpRight } from "lucide-react";
+import {
+  ArrowDown,
+  Mail,
+  ArrowUpRight,
+  Router,
+  Server,
+  Cpu,
+  Globe,
+  Wifi,
+  ShieldCheck,
+  Layers,
+  Terminal,
+  Activity,
+  Radio,
+  Lock,
+  Cable
+} from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
+
+// Floating background icons pattern for Network Engineering theme
+const FLOATING_ICONS = [
+  { Icon: Router, top: "10%", left: "6%", size: "size-5 sm:size-6" },
+  { Icon: Server, top: "14%", right: "8%", size: "size-5 sm:size-6" },
+  { Icon: Cpu, top: "35%", left: "10%", size: "size-4 sm:size-5" },
+  { Icon: Globe, top: "40%", right: "12%", size: "size-5 sm:size-6" },
+  { Icon: Wifi, top: "65%", left: "8%", size: "size-4 sm:size-5" },
+  { Icon: ShieldCheck, top: "70%", right: "9%", size: "size-5 sm:size-6" },
+  { Icon: Layers, top: "82%", left: "15%", size: "size-4 sm:size-5" },
+  { Icon: Activity, top: "85%", right: "16%", size: "size-4 sm:size-5" },
+  { Icon: Lock, top: "22%", left: "22%", size: "size-3.5 sm:size-4" },
+  { Icon: Cable, top: "25%", right: "24%", size: "size-3.5 sm:size-4" },
+  { Icon: Terminal, top: "78%", left: "28%", size: "size-4" },
+  { Icon: Radio, top: "76%", right: "30%", size: "size-4" }
+];
 
 export function Hero() {
   const { t } = useLanguage();
@@ -19,9 +51,28 @@ export function Hero() {
       >
         <Card className="min-h-[420px] sm:min-h-[480px] flex flex-col justify-center items-center text-center overflow-hidden border-border/80 bg-card/60 rounded-3xl p-8 sm:p-16 md:p-20 shadow-xs relative">
           {/* Background grid pattern */}
-          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-35 pointer-events-none" />
 
-          <div className="relative space-y-6 max-w-3xl flex flex-col items-center">
+          {/* Floating Subtle Network Icons (Inspired by shadcn.io landing background) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+            {FLOATING_ICONS.map((item, idx) => {
+              const IconComponent = item.Icon;
+              return (
+                <div
+                  key={idx}
+                  style={{ top: item.top, left: item.left, right: item.right }}
+                  className={cn(
+                    "absolute text-muted-foreground/25 dark:text-muted-foreground/20 transition-all duration-700",
+                    item.size
+                  )}
+                >
+                  <IconComponent className="w-full h-full" />
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="relative space-y-6 max-w-3xl flex flex-col items-center z-10">
             <div className="space-y-3">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground font-sans leading-none">
                 Muhammad Haidar Rauf Prayogo
@@ -45,7 +96,7 @@ export function Hero() {
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <a
                 href="#projects"
-                className={cn(buttonVariants({ variant: "default", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2")}
+                className={cn(buttonVariants({ variant: "default", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 shadow-xs")}
               >
                 <span>{t("Lihat Topologi", "View Topologies")}</span>
                 <ArrowDown className="size-4" />
