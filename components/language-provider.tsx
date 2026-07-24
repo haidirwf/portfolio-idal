@@ -11,13 +11,13 @@ interface LanguageContextType {
 }
 
 const LanguageContext = React.createContext<LanguageContextType>({
-  lang: "ID",
+  lang: "EN",
   setLang: () => {},
-  t: (idKey) => idKey,
+  t: (idKey, enKey) => enKey,
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = React.useState<Language>("ID");
+  const [lang, setLang] = React.useState<Language>("EN");
 
   const t = React.useCallback(
     (idText: string, enText: string) => {
