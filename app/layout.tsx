@@ -11,8 +11,8 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL("https://haidar-rauf.dev"),
   title: {
-    default: "Muhammad Haidar Rauf Prayogo — Network Engineer | MTCNA & MTCRE",
-    template: "%s | Haidar Rauf",
+    default: "Haidar Portfolio",
+    template: "%s | Haidar Portfolio",
   },
   description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
   keywords: ["Network Engineer", "TKJ", "MikroTik", "MTCNA", "MTCRE", "Cisco", "OSPF", "EIGRP", "BGP", "VLAN", "Linux"],
