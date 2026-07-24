@@ -146,7 +146,7 @@ export function About() {
           {/* Top Skills List */}
           <div className="pt-4 border-t border-border/40 space-y-3">
             <h3 className="text-sm font-bold font-sans uppercase tracking-wider text-foreground">
-              {t("Keahlian Utama TKJ (Technical Skills)", "TKJ Technical Skills")}
+              {t("Keahlian Utama (Technical Skills)", "Technical Skills")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {skills.flatMap((s) => s.items).map((item) => (

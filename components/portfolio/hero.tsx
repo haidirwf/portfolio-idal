@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowDown, Mail, ArrowUpRight, ShieldCheck, Cpu } from "lucide-react";
+import { ArrowDown, Mail, ArrowUpRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
@@ -22,18 +22,6 @@ export function Hero() {
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
 
           <div className="relative space-y-6 max-w-3xl flex flex-col items-center">
-            {/* Certifications Badge Bar */}
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-xs font-mono font-medium text-primary">
-                <ShieldCheck className="size-3.5" />
-                <span>MTCNA Certified</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-mono font-medium text-emerald-500">
-                <Cpu className="size-3.5" />
-                <span>MTCRE Certified</span>
-              </span>
-            </div>
-
             <div className="space-y-3">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground font-sans leading-none">
                 Muhammad Haidar Rauf Prayogo

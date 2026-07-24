@@ -41,7 +41,7 @@ export function TechStack() {
     <section id="tech-stack" className="py-12 px-4 sm:px-6 space-y-8">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Keahlian & Perangkat TKJ", "TKJ Skills & Toolset")}
+          {t("Keahlian & Perangkat", "Skills & Toolset")}
         </h2>
         <p className="text-sm text-muted-foreground font-sans">
           {t(
