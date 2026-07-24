@@ -41,16 +41,16 @@ export function Hero() {
 
               <p className="text-lg sm:text-2xl text-muted-foreground font-medium font-sans max-w-2xl leading-snug">
                 {t(
-                  "Network Engineer | MTCNA & MTCRE | Spesialis Infrastruktur Jaringan & UI/UX Design",
-                  "Network Engineer | MTCNA & MTCRE | Network Infrastructure & UI/UX Specialist"
+                  "Network Engineer | MTCNA & MTCRE | Spesialis Infrastruktur Jaringan Computer & Security",
+                  "Network Engineer | MTCNA & MTCRE | Computer Network Infrastructure & Security Specialist"
                 )}
               </p>
             </div>
 
             <p className="text-sm sm:text-base text-muted-foreground/80 font-sans max-w-xl leading-relaxed">
               {t(
-                "Fokus pada jaringan yang aman, efisien, dan antarmuka digital yang intuitif. Cikarang Selatan, Jawa Barat, Indonesia.",
-                "Focusing on secure, efficient networks and intuitive digital interfaces. Cikarang Selatan, West Java, Indonesia."
+                "Fokus pada perancangan jaringan komputer yang aman, andal, efisien, dan skalabel. Cikarang Selatan, Jawa Barat, Indonesia.",
+                "Focusing on designing secure, reliable, efficient, and scalable computer network infrastructure. Cikarang Selatan, West Java, Indonesia."
               )}
             </p>
 

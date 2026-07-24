@@ -17,7 +17,7 @@ interface ExperienceItem {
 
 const EXPERIENCES: ExperienceItem[] = [
   {
-    company: "Freelance & Individual Projects",
+    company: "Freelance & Network Infrastructure",
     roleId: "Network Engineer & Consultant",
     roleEn: "Network Engineer & Consultant",
     period: "2024 — Present",
@@ -33,15 +33,6 @@ const EXPERIENCES: ExperienceItem[] = [
     descId: "Mengelola topologi jaringan lab sekolah, simulasi switching & routing bertingkat pada Cisco Packet Tracer & GNS3, serta pemeliharaan server lokal.",
     descEn: "Managing school lab network topologies, simulating multi-layer switching & routing on Cisco Packet Tracer & GNS3, and local server maintenance.",
     skills: ["Cisco Packet Tracer", "VLAN", "STP", "EtherChannel", "Linux"]
-  },
-  {
-    company: "UI/UX & Creative Projects",
-    roleId: "UI/UX & Product Designer",
-    roleEn: "UI/UX & Product Designer",
-    period: "2023 — Present",
-    descId: "Merancang antarmuka aplikasi web dan mobile yang bersih dan responsif menggunakan Figma dan Canva dengan fokus pada kemudahan pengguna (usability).",
-    descEn: "Designing clean, responsive web and mobile application interfaces using Figma and Canva with a strong focus on usability.",
-    skills: ["Figma", "Canva", "UI/UX Design", "Wireframing", "Prototyping"]
   }
 ];
 
@@ -56,8 +47,8 @@ export function Experience() {
         </h2>
         <p className="text-sm text-muted-foreground font-sans">
           {t(
-            "Rekam jejak implementasi jaringan, pengerasan keamanan, dan desain antarmuka digital.",
-            "Track record of network deployments, security hardening, and interface design."
+            "Rekam jejak implementasi jaringan, simulasi topologi Cisco, dan pengerasan keamanan.",
+            "Track record of network deployments, Cisco topology simulations, and security hardening."
           )}
         </p>
       </div>

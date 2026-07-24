@@ -10,12 +10,23 @@ export function About() {
   const { t } = useLanguage();
 
   const skills = [
-    { category: t("Jaringan", "Network Engineering"), items: ["MikroTik (MTCNA, MTCRE)", "Routing Protocols (OSPF, EIGRP, BGP)", "VLAN & Subnetting", "Network Troubleshooting", "Firewall & Security Hardening"] },
-    { category: t("Desain & UI/UX", "UI/UX & Graphic Design"), items: ["Figma", "Canva", "Clean UI Design", "Usability & Wireframing"] }
+    {
+      category: t("Infrastruktur Jaringan", "Network Infrastructure"),
+      items: [
+        "MikroTik (MTCNA, MTCRE)",
+        "Routing Protocols (OSPF, EIGRP, BGP)",
+        "VLAN & Inter-VLAN Routing",
+        "Subnetting & IP Addressing",
+        "Network Troubleshooting & Diagnostics",
+        "Firewall Rules & Security Hardening",
+        "IPSec & VPN Tunneling",
+        "Switching (STP, RSTP, EtherChannel)"
+      ]
+    }
   ];
 
   const education = [
-    { school: "IDN Boarding School", period: "June 2025 - June 2028", field: t("Teknik Komputer dan Jaringan", "Computer and Network Engineering") },
+    { school: "IDN Boarding School", period: "June 2025 - June 2028", field: t("Teknik Komputer dan Jaringan (TKJ)", "Computer and Network Engineering") },
     { school: "IDN Boarding School", period: "June 2022 - June 2025", field: t("SMP / Middle School", "Middle School") }
   ];
 
@@ -27,8 +38,8 @@ export function About() {
         </h2>
         <p className="text-sm text-muted-foreground font-sans">
           {t(
-            "Ringkasan profesional, keahlian utama, sertifikasi, dan latar belakang pendidikan.",
-            "Professional summary, key skills, certifications, and educational background."
+            "Ringkasan profesional, keahlian teknis TKJ, sertifikasi MikroTik, dan latar belakang pendidikan.",
+            "Professional summary, TKJ technical skills, MikroTik certifications, and educational background."
           )}
         </p>
       </div>
@@ -44,25 +55,19 @@ export function About() {
           <div className="space-y-4 text-base sm:text-lg font-sans text-muted-foreground leading-relaxed">
             <p className="text-foreground font-medium">
               {t(
-                "Sebagai Network Engineer yang menyukai infrastruktur aman dan desain digital intuitif, saya berspesialisasi dalam membangun serta mengelola sistem jaringan yang efisien, andal, dan skalabel.",
-                "As a Network Engineer with a passion for secure infrastructure and intuitive digital design, I specialize in building and managing efficient, reliable, and scalable network systems."
+                "Sebagai Network Engineer spesialis Teknik Komputer dan Jaringan (TKJ), saya berfokus pada pembangunan, pengolahan, dan pengamanan sistem jaringan komputer yang efisien, andal, dan skalabel.",
+                "As a Network Engineer specializing in Computer and Network Engineering (TKJ), I focus on building, managing, and securing efficient, reliable, and scalable network systems."
               )}
             </p>
             <p>
               {t(
-                "Saya terbiasa bekerja dengan MikroTik, protokol jaringan, dan platform cloud untuk menciptakan konfigurasi optimal yang mendukung performa dan keamanan. Latar belakang teknis saya mencakup routing, pengalamatan IP, serta pengerasan keamanan jaringan (hardening).",
-                "I work with tools like MikroTik, networking protocols, and cloud platforms to create optimized setups that support both performance and security. My technical background includes experience in routing, IP addressing, and network troubleshooting."
-              )}
-            </p>
-            <p>
-              {t(
-                "Di sisi kreatif, saya juga seorang desainer UI/UX menggunakan Figma dan Canva untuk merancang antarmuka yang bersih dan ramah pengguna.",
-                "On the creative side, I also work as a UI/UX designer using tools like Figma and Canva to design clean, user-friendly interfaces that enhance usability."
+                "Saya terbiasa bekerja dengan router MikroTik, perangkat Cisco, protokol routing dinamis, serta pengerasan keamanan jaringan (hardening). Latar belakang teknis saya mencakup routing, switching Layer 2/Layer 3, pengalamatan IP, dan troubleshooting jaringan mendalam.",
+                "I work extensively with MikroTik routers, Cisco hardware, dynamic routing protocols, and network security hardening. My technical background encompasses routing, Layer 2/Layer 3 switching, IP addressing, and deep network troubleshooting."
               )}
             </p>
           </div>
 
-          {/* Certifications & Skills Grid */}
+          {/* Certifications & Education Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border/40">
             {/* Certifications */}
             <div className="space-y-3">
@@ -111,7 +116,7 @@ export function About() {
           {/* Top Skills List */}
           <div className="pt-4 border-t border-border/40 space-y-3">
             <h3 className="text-sm font-bold font-sans uppercase tracking-wider text-foreground">
-              {t("Keahlian Utama (Top Skills)", "Top Skills")}
+              {t("Keahlian Utama TKJ (Technical Skills)", "TKJ Technical Skills")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {skills.flatMap((s) => s.items).map((item) => (

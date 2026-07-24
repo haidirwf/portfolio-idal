@@ -52,8 +52,8 @@ export function Contact() {
             </h2>
             <p className="text-sm sm:text-base font-sans text-muted-foreground">
               {t(
-                "Open untuk proyek freelance, kontrak jaringan, arsitektur MikroTik/Cisco, dan UI/UX design.",
-                "Open for freelance projects and long-term collaborations in networking, cybersecurity, or interface design."
+                "Open untuk proyek jaringan, konsultasi MikroTik/Cisco, dan pengerasan keamanan sistem.",
+                "Open for network infrastructure projects, MikroTik/Cisco consulting, and network security hardening."
               )}
             </p>
           </div>
