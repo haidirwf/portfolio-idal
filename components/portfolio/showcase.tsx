@@ -62,7 +62,7 @@ export function Showcase({ projects }: { projects: Project[] }) {
                   </CardTitle>
 
                   <CardDescription className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {project.description}
+                    {t(project.descriptionId, project.descriptionEn)}
                   </CardDescription>
                 </div>
               </div>
