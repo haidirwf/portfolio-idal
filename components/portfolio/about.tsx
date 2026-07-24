@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
-import { Award, GraduationCap } from "lucide-react";
+import { Award, GraduationCap, Calendar, ShieldCheck } from "lucide-react";
 
 export function About() {
   const { t } = useLanguage();
@@ -22,6 +22,27 @@ export function About() {
         "IPSec & VPN Tunneling",
         "Switching (STP, RSTP, EtherChannel)"
       ]
+    }
+  ];
+
+  const certifications = [
+    {
+      name: "MikroTik Certified Network Associate",
+      code: "MTCNA",
+      issuer: "MikroTik",
+      credentialId: "2601NA9959",
+      issued: "Jan 2026",
+      expires: "Jan 2029",
+      badgeColor: "bg-primary/10 text-primary border-primary/30"
+    },
+    {
+      name: "MikroTik Certified Routing Engineer",
+      code: "MTCRE",
+      issuer: "MikroTik",
+      credentialId: "2601RE9976",
+      issued: "Jan 2026",
+      expires: "Jan 2029",
+      badgeColor: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
     }
   ];
 
@@ -73,23 +94,32 @@ export function About() {
             <div className="space-y-3">
               <h3 className="text-sm font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-2">
                 <Award className="size-4 text-primary" />
-                <span>{t("Sertifikasi Resmi", "Certifications")}</span>
+                <span>{t("Sertifikasi Resmi MikroTik", "Official MikroTik Certifications")}</span>
               </h3>
-              <div className="space-y-2">
-                <div className="p-3 rounded-xl bg-secondary/40 border border-border/50 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-bold font-mono text-foreground">MikroTik Certified Network Associate</p>
-                    <p className="text-[11px] font-mono text-muted-foreground">MTCNA</p>
+              <div className="space-y-3">
+                {certifications.map((cert) => (
+                  <div key={cert.code} className="p-3.5 rounded-xl bg-secondary/40 border border-border/50 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-xs font-bold font-sans text-foreground leading-snug">{cert.name}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground">{cert.issuer}</p>
+                      </div>
+                      <Badge variant="outline" className={`font-mono text-[10px] shrink-0 ${cert.badgeColor}`}>
+                        {cert.code}
+                      </Badge>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between text-[10px] font-mono text-muted-foreground pt-1 border-t border-border/30 gap-1">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="size-3" />
+                        <span>Issued: {cert.issued} · Exp: {cert.expires}</span>
+                      </span>
+                      <span className="text-foreground/80 font-semibold">
+                        ID: {cert.credentialId}
+                      </span>
+                    </div>
                   </div>
-                  <Badge variant="outline" className="font-mono text-[10px] bg-primary/10 text-primary border-primary/30">Verified</Badge>
-                </div>
-                <div className="p-3 rounded-xl bg-secondary/40 border border-border/50 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-bold font-mono text-foreground">MikroTik Certified Routing Engineer</p>
-                    <p className="text-[11px] font-mono text-muted-foreground">MTCRE</p>
-                  </div>
-                  <Badge variant="outline" className="font-mono text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/30">Verified</Badge>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -99,9 +129,9 @@ export function About() {
                 <GraduationCap className="size-4 text-primary" />
                 <span>{t("Pendidikan", "Education")}</span>
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {education.map((edu, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-secondary/40 border border-border/50 space-y-1">
+                  <div key={i} className="p-3.5 rounded-xl bg-secondary/40 border border-border/50 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <p className="text-xs font-bold font-sans text-foreground">{edu.school}</p>
                       <span className="text-[10px] font-mono text-muted-foreground">{edu.period}</span>
