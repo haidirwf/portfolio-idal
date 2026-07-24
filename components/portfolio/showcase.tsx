@@ -45,10 +45,6 @@ export function Showcase({ projects }: { projects: Project[] }) {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   />
-                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-background/80 backdrop-blur-xs text-[10px] font-mono text-muted-foreground border border-border/50">
-                    <span className="size-1.5 rounded-full bg-emerald-500" />
-                    <span>{project.year}</span>
-                  </div>
                 </div>
 
                 <div className="px-3 pt-1 space-y-1.5">
