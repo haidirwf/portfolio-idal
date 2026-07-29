@@ -88,8 +88,8 @@ export function Hero() {
 
             <p className="text-sm sm:text-base text-muted-foreground/80 font-sans max-w-xl leading-relaxed">
               {t(
-                "Fokus pada perancangan jaringan komputer yang aman, andal, efisien, dan skalabel. Cikarang Selatan, Jawa Barat, Indonesia.",
-                "Focusing on designing secure, reliable, efficient, and scalable computer network infrastructure. Cikarang Selatan, West Java, Indonesia."
+                "Fokus pada perancangan jaringan komputer yang aman, andal, efisien, dan skalabel. Bekasi, Jawa Barat, Indonesia.",
+                "Focusing on designing secure, reliable, efficient, and scalable computer network infrastructure. Bekasi, West Java, Indonesia."
               )}
             </p>
 
