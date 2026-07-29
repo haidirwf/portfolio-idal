@@ -3,46 +3,61 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
+import { Server, Cpu, Gem } from "lucide-react";
 
 interface ExperienceItem {
   company: string;
+  employmentType: string;
   roleId: string;
   roleEn: string;
-  period: string;
+  periodId: string;
+  periodEn: string;
+  locationId: string;
+  locationEn: string;
   descId: string;
   descEn: string;
-  skills: string[];
-  image: string;
-  imageCaptionId: string;
-  imageCaptionEn: string;
+  skillsTextId: string;
+  skillsTextEn: string;
+  logoBg: string;
+  icon: React.ElementType;
+  image?: string;
 }
 
 const EXPERIENCES: ExperienceItem[] = [
   {
     company: "Freelance & Network Infrastructure",
+    employmentType: "Freelance / Contract",
     roleId: "Network Engineer & Consultant",
     roleEn: "Network Engineer & Consultant",
-    period: "2024 — Present",
-    descId: "Merancang dan mengonfigurasi jaringan skala kecil hingga menengah, otomatisasi routing MikroTik (OSPF, MTCRE level), firewall hardening, serta penyediaan VPN Site-to-Site.",
-    descEn: "Designing and configuring small to medium scale networks, MikroTik routing automation (OSPF, MTCRE level), firewall hardening, and Site-to-Site VPN provisioning.",
-    skills: ["MikroTik", "MTCNA", "MTCRE", "OSPF", "Firewall", "IPSec"],
-    image: "/projects/hyperscale.svg",
-    imageCaptionId: "Dokumentasi Topologi & Gateway Firewall MikroTik",
-    imageCaptionEn: "MikroTik Gateway & Firewall Topology Documentation"
+    periodId: "2024 - Sekarang · 1 thn+",
+    periodEn: "2024 - Present · 1 yr+",
+    locationId: "Cikarang Selatan, Jawa Barat · Remote / On-site",
+    locationEn: "South Cikarang, West Java · Remote / On-site",
+    descId: "Bertanggung jawab atas perancangan topologi jaringan skala kecil-menengah, konfigurasi otomatisasi routing MikroTik (OSPF & MTCRE level), pengerasan keamanan firewall, dan penyediaan IPSec VPN Tunnel.",
+    descEn: "Responsible for designing small-to-medium network topologies, configuring MikroTik routing automation (OSPF & MTCRE level), firewall security hardening, and IPSec VPN Tunnel provisioning.",
+    skillsTextId: "MikroTik, MTCNA, MTCRE, OSPF, Firewall, IPSec VPN",
+    skillsTextEn: "MikroTik, MTCNA, MTCRE, OSPF, Firewall, IPSec VPN",
+    logoBg: "bg-primary/10 text-primary border-primary/20",
+    icon: Server,
+    image: "/projects/hyperscale.svg"
   },
   {
     company: "IDN Boarding School Network Lab",
     roleId: "Network & Systems Lab Engineer",
     roleEn: "Network & Systems Lab Engineer",
-    period: "2023 — Present",
-    descId: "Mengelola topologi jaringan lab sekolah, simulasi switching & routing bertingkat pada Cisco Packet Tracer & GNS3, serta pemeliharaan server lokal.",
-    descEn: "Managing school lab network topologies, simulating multi-layer switching & routing on Cisco Packet Tracer & GNS3, and local server maintenance.",
-    skills: ["Cisco Packet Tracer", "VLAN", "STP", "EtherChannel", "Linux"],
-    image: "/projects/aether-engine-arch.svg",
-    imageCaptionId: "Cisco Packet Tracer Lab & Switch Infrastructure Diagram",
-    imageCaptionEn: "Cisco Packet Tracer Lab & Switch Infrastructure Diagram"
+    employmentType: "Contract / Practical",
+    periodId: "2023 - Sekarang · 2 thn",
+    periodEn: "2023 - Present · 2 yrs",
+    locationId: "Indonesia · On-site Lab",
+    locationEn: "Indonesia · On-site Lab",
+    descId: "Mengelola infrastruktur jaringan lab sekolah, merancang simulasi switching & routing bertingkat di Cisco Packet Tracer & GNS3, serta pemeliharaan server Linux lokal.",
+    descEn: "Managing school lab network infrastructure, simulating multi-layer switching & routing on Cisco Packet Tracer & GNS3, and maintaining local Linux servers.",
+    skillsTextId: "Cisco Packet Tracer, VLAN, STP, EtherChannel, Linux Server",
+    skillsTextEn: "Cisco Packet Tracer, VLAN, STP, EtherChannel, Linux Server",
+    logoBg: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+    icon: Cpu,
+    image: "/projects/aether-engine-arch.svg"
   }
 ];
 
@@ -50,78 +65,68 @@ export function Experience() {
   const { t } = useLanguage();
 
   return (
-    <section id="experience" className="py-12 px-4 sm:px-6 space-y-8">
+    <section id="experience" className="py-12 px-4 sm:px-6 space-y-6">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Pengalaman & Proyek", "Experience & Projects")}
+          {t("Pengalaman", "Experience")}
         </h2>
         <p className="text-sm text-muted-foreground font-sans">
           {t(
-            "Rekam jejak implementasi jaringan, simulasi topologi Cisco, dan pengerasan keamanan.",
-            "Track record of network deployments, Cisco topology simulations, and security hardening."
+            "Rekam jejak profesional, konsultasi jaringan, dan pengurusan lab infrastruktur.",
+            "Professional track record, network consulting, and lab infrastructure management."
           )}
         </p>
       </div>
 
-      <div className="space-y-4 w-full">
-        {EXPERIENCES.map((exp, idx) => (
-          <motion.div
-            key={exp.company}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: idx * 0.08 }}
-          >
-            <Card className="border-border/80 bg-card/60 rounded-2xl p-6 sm:p-8 hover:bg-card transition-all duration-300 space-y-4">
-              <div className="space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-border/40 pb-3">
-                  <div>
-                    <h3 className="text-lg font-bold font-sans text-foreground">
-                      {t(exp.roleId, exp.roleEn)}
-                    </h3>
-                    <p className="text-sm font-sans font-medium text-muted-foreground">{exp.company}</p>
-                  </div>
-                  <span className="text-xs font-mono text-muted-foreground/80 px-2.5 py-1 rounded-full bg-secondary/50 border border-border/40 w-fit">
-                    {exp.period}
-                  </span>
+      <Card className="border-border/80 bg-card/60 rounded-3xl p-6 sm:p-10 shadow-xs w-full divide-y divide-border/40">
+        {EXPERIENCES.map((exp, idx) => {
+          const LogoIcon = exp.icon;
+          return (
+            <motion.div
+              key={exp.company}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              className={`flex gap-4 sm:gap-5 ${idx !== 0 ? "pt-6" : ""} ${idx !== EXPERIENCES.length - 1 ? "pb-6" : ""}`}
+            >
+              {/* LinkedIn Style Company Avatar Icon */}
+              <div className={`size-11 sm:size-12 rounded-xl border flex items-center justify-center shrink-0 shadow-xs ${exp.logoBg}`}>
+                <LogoIcon className="size-5 sm:size-6" />
+              </div>
+
+              {/* Experience Details Content */}
+              <div className="space-y-2 flex-1">
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold font-sans text-foreground leading-snug">
+                    {t(exp.roleId, exp.roleEn)}
+                  </h3>
+                  <p className="text-xs sm:text-sm font-sans font-medium text-foreground/90">
+                    {exp.company} · <span className="text-muted-foreground font-normal">{exp.employmentType}</span>
+                  </p>
+                  <p className="text-[11px] font-mono text-muted-foreground pt-0.5">
+                    {t(exp.periodId, exp.periodEn)}
+                  </p>
+                  <p className="text-[11px] font-mono text-muted-foreground/80">
+                    {t(exp.locationId, exp.locationEn)}
+                  </p>
                 </div>
 
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                {/* Job Summary */}
+                <p className="text-xs sm:text-sm font-sans text-muted-foreground leading-relaxed">
                   {t(exp.descId, exp.descEn)}
                 </p>
 
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {exp.skills.map((skill) => (
-                    <Badge key={skill} variant="secondary" className="font-mono text-[10px] rounded-md">
-                      {skill}
-                    </Badge>
-                  ))}
+                {/* LinkedIn Style Skills Footer */}
+                <div className="flex items-center gap-1.5 pt-1 text-xs font-sans text-foreground/90 font-medium">
+                  <Gem className="size-3.5 text-primary shrink-0" />
+                  <span className="truncate">{t(exp.skillsTextId, exp.skillsTextEn)}</span>
                 </div>
               </div>
-
-              {/* LinkedIn Style Media Attachment Thumbnail */}
-              <div className="pt-2 border-t border-border/40">
-                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/30 border border-border/50 hover:bg-secondary/50 transition-colors group cursor-pointer">
-                  <div className="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 border border-border/40 bg-secondary/40">
-                    <Image
-                      src={exp.image}
-                      alt={exp.company}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="space-y-1 overflow-hidden">
-                    <p className="text-xs font-sans font-semibold text-foreground truncate">
-                      {t(exp.imageCaptionId, exp.imageCaptionEn)}
-                    </p>
-                    <p className="text-[11px] font-mono text-muted-foreground">Media Attachment · Documentation</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+            </motion.div>
+          );
+        })}
+      </Card>
     </section>
   );
 }
