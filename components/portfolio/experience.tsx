@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
-import { Server, Cpu, Gem } from "lucide-react";
+import { Share2, Rocket, Gem } from "lucide-react";
 
 interface ExperienceItem {
   company: string;
@@ -21,43 +20,40 @@ interface ExperienceItem {
   skillsTextEn: string;
   logoBg: string;
   icon: React.ElementType;
-  image?: string;
 }
 
 const EXPERIENCES: ExperienceItem[] = [
   {
-    company: "Freelance & Network Infrastructure",
-    employmentType: "Freelance / Contract",
-    roleId: "Network Engineer & Consultant",
-    roleEn: "Network Engineer & Consultant",
-    periodId: "2024 - Sekarang · 1 thn+",
-    periodEn: "2024 - Present · 1 yr+",
-    locationId: "Cikarang Selatan, Jawa Barat · Remote / On-site",
-    locationEn: "South Cikarang, West Java · Remote / On-site",
-    descId: "Bertanggung jawab atas perancangan topologi jaringan skala kecil-menengah, konfigurasi otomatisasi routing MikroTik (OSPF & MTCRE level), pengerasan keamanan firewall, dan penyediaan IPSec VPN Tunnel.",
-    descEn: "Responsible for designing small-to-medium network topologies, configuring MikroTik routing automation (OSPF & MTCRE level), firewall security hardening, and IPSec VPN Tunnel provisioning.",
-    skillsTextId: "MikroTik, MTCNA, MTCRE, OSPF, Firewall, IPSec VPN",
-    skillsTextEn: "MikroTik, MTCNA, MTCRE, OSPF, Firewall, IPSec VPN",
-    logoBg: "bg-primary/10 text-primary border-primary/20",
-    icon: Server,
-    image: "/projects/hyperscale.svg"
+    roleId: "Divisi Media (Media Division)",
+    roleEn: "Media Division",
+    company: "IDN Solo Student Council",
+    employmentType: "Contract",
+    periodId: "Mei 2026 - Sekarang · 3 bln",
+    periodEn: "May 2026 - Present · 3 mos",
+    locationId: "Karanganyar, Jawa Tengah, Indonesia · On-site",
+    locationEn: "Karanganyar, Central Java, Indonesia · On-site",
+    descId: "Bertanggung jawab mengelola publikasi digital resmi OSIS, hubungan masyarakat, dokumentasi acara, serta branding visual di seluruh platform media sosial.",
+    descEn: "Responsible for managing the student council's official digital presence, public relations, event documentation, and visual branding across all social media platforms.",
+    skillsTextId: "Media Sosial, Manfaat Konten, dan +3 keahlian",
+    skillsTextEn: "Social Media, Content Management and +3 skills",
+    logoBg: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+    icon: Share2
   },
   {
-    company: "IDN Boarding School Network Lab",
-    roleId: "Network & Systems Lab Engineer",
-    roleEn: "Network & Systems Lab Engineer",
-    employmentType: "Contract / Practical",
-    periodId: "2023 - Sekarang · 2 thn",
-    periodEn: "2023 - Present · 2 yrs",
-    locationId: "Indonesia · On-site Lab",
-    locationEn: "Indonesia · On-site Lab",
-    descId: "Mengelola infrastruktur jaringan lab sekolah, merancang simulasi switching & routing bertingkat di Cisco Packet Tracer & GNS3, serta pemeliharaan server Linux lokal.",
-    descEn: "Managing school lab network infrastructure, simulating multi-layer switching & routing on Cisco Packet Tracer & GNS3, and maintaining local Linux servers.",
-    skillsTextId: "Cisco Packet Tracer, VLAN, STP, EtherChannel, Linux Server",
-    skillsTextEn: "Cisco Packet Tracer, VLAN, STP, EtherChannel, Linux Server",
+    roleId: "Pendiri (Founder)",
+    roleEn: "Founder",
+    company: "Luncur Tech",
+    employmentType: "Full-time",
+    periodId: "Jan 2026 - Sekarang · 7 bln",
+    periodEn: "Jan 2026 - Present · 7 mos",
+    locationId: "Indonesia · Hybrid",
+    locationEn: "Indonesia · Hybrid",
+    descId: "Pendiri dan pembangun di Luncur Tech.",
+    descEn: "Founder, builder at Luncur Tech.",
+    skillsTextId: "Pengembangan Web, Konsultasi IT, dan +1 keahlian",
+    skillsTextEn: "Web Development, IT Consulting and +1 skill",
     logoBg: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-    icon: Cpu,
-    image: "/projects/aether-engine-arch.svg"
+    icon: Rocket
   }
 ];
 
@@ -72,8 +68,8 @@ export function Experience() {
         </h2>
         <p className="text-sm text-muted-foreground font-sans">
           {t(
-            "Rekam jejak profesional, konsultasi jaringan, dan pengurusan lab infrastruktur.",
-            "Professional track record, network consulting, and lab infrastructure management."
+            "Rekam jejak profesional, organisasi siswa, dan konsultasi teknologi.",
+            "Professional track record, student organization, and tech consulting."
           )}
         </p>
       </div>
