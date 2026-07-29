@@ -4,7 +4,6 @@ import * as React from "react";
 import { Navbar } from "@/components/portfolio/navbar";
 import { Footer } from "@/components/portfolio/footer";
 import { CommandPalette } from "@/components/portfolio/command-palette";
-import { CustomCursor } from "@/components/ui/custom-cursor";
 import { Project } from "@/lib/projects";
 
 export function MainWrapper({
@@ -18,7 +17,6 @@ export function MainWrapper({
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto">
-      <CustomCursor />
       <Navbar onOpenCommand={() => setCmdOpen(true)} />
       <main>{children}</main>
       <Footer />
