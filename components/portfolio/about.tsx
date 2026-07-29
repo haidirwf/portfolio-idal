@@ -75,7 +75,7 @@ export function About() {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-xs font-mono text-primary">
               <MapPin className="size-3.5" />
-              <span>Cikarang Selatan, Jawa Barat, Indonesia</span>
+              <span>Bekasi, Jawa Barat, Indonesia</span>
             </div>
             <p className="text-base sm:text-lg font-sans text-foreground/90 font-medium leading-relaxed">
               {t(
