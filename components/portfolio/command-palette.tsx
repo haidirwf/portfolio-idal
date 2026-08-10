@@ -13,6 +13,8 @@ import {
 import { PROJECTS } from "@/lib/projects";
 import { Folder, User, Briefcase, Mail, Cpu, ExternalLink } from "lucide-react";
 
+import { useLanguage } from "@/components/language-provider";
+
 export function CommandPalette({
   open,
   setOpen
@@ -21,6 +23,7 @@ export function CommandPalette({
   setOpen: (open: boolean) => void;
 }) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -40,22 +43,22 @@ export function CommandPalette({
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search project..." className="font-mono text-xs" />
+      <CommandInput placeholder={t("Ketik perintah atau cari topologi...", "Type a command or search project...")} className="font-mono text-xs" />
       <CommandList className="font-mono text-xs">
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>{t("Tidak ada hasil ditemukan.", "No results found.")}</CommandEmpty>
 
-        <CommandGroup heading="Navigation">
+        <CommandGroup heading={t("Navigasi", "Navigation")}>
           <CommandItem onSelect={() => runCommand(() => router.push("/#projects"))}>
             <Folder className="mr-2 size-3.5" />
-            <span>Projects</span>
+            <span>{t("Topologi & Proyek", "Projects & Topologies")}</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push("/#about"))}>
             <User className="mr-2 size-3.5" />
-            <span>About</span>
+            <span>{t("Tentang Saya", "About Me")}</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push("/#experience"))}>
             <Briefcase className="mr-2 size-3.5" />
-            <span>Experience</span>
+            <span>{t("Pengalaman", "Experience")}</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push("/#tech-stack"))}>
             <Cpu className="mr-2 size-3.5" />
