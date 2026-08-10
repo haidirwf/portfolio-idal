@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Moon, Sun, Command, Code2, Globe } from "lucide-react";
+import { Moon, Sun, Command, Router, Globe } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
@@ -43,8 +43,8 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
           href="/"
           className="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight hover:opacity-80 transition-opacity"
         >
-          <Code2 className="size-4" />
-          <span>haidar.dev</span>
+          <Router className="size-4 text-primary" />
+          <span>haidar portfolio</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-xs font-mono">
