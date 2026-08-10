@@ -88,12 +88,12 @@ export function Experience() {
             transition={{ duration: 0.3, delay: idx * 0.05 }}
             className="h-full"
           >
-            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-border transition-all duration-300 group">
+            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs">
               <div className="space-y-4">
                 {/* Header Row: Company Logo + Period Badge */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="relative size-12 rounded-lg overflow-hidden border border-border/60 bg-background shrink-0 p-1 flex items-center justify-center group-hover:border-primary transition-colors">
+                    <div className="relative size-12 rounded-lg overflow-hidden border border-border/60 bg-background shrink-0 p-1 flex items-center justify-center">
                       <Image
                         src={exp.logo}
                         alt={exp.company}
@@ -102,7 +102,7 @@ export function Experience() {
                       />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold font-sans text-foreground leading-snug group-hover:text-primary transition-colors">
+                      <h3 className="text-base font-bold font-sans text-foreground leading-snug">
                         {t(exp.roleId, exp.roleEn)}
                       </h3>
                       <p className="text-xs font-sans font-semibold text-foreground/80">
