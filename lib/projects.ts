@@ -21,6 +21,9 @@ export interface Project {
   architectureEn?: string;
   resultId?: string;
   resultEn?: string;
+  downloadPkt?: string;
+  downloadGns3?: string;
+  rawConfig?: string;
 }
 
 export const PROJECTS: Project[] = [
@@ -48,7 +51,22 @@ export const PROJECTS: Project[] = [
     architectureId: "Core Switch Layer 3 -> ABR (Area Border Router) -> OSPF Area 0 Backbone -> Edge Access Switches & VLANs.",
     architectureEn: "Layer 3 Core Switch -> ABR (Area Border Router) -> OSPF Area 0 Backbone -> Edge Access Switches & VLANs.",
     resultId: "Efisiensi tabel routing meningkat hingga 60% dan konvergensi jalur cadangan tercapai dalam waktu <1 detik.",
-    resultEn: "Routing table efficiency improved by 60% with sub-second failover convergence time."
+    resultEn: "Routing table efficiency improved by 60% with sub-second failover convergence time.",
+    downloadPkt: "/downloads/multi-area-ospf.pkt",
+    downloadGns3: "/downloads/multi-area-ospf.gns3project",
+    rawConfig: `! Router OSPF Backbone Area 0 & Border Router Config
+router ospf 1
+ router-id 1.1.1.1
+ log-adjacency-changes
+ area 0 authentication message-digest
+ area 10 stub no-summary
+ network 10.0.0.0 0.255.255.255 area 0
+ network 192.168.10.0 0.0.0.255 area 10
+!
+interface GigabitEthernet0/0/0
+ ip address 10.0.0.1 255.255.255.252
+ ip ospf message-digest-key 1 md5 CiscoPass2026
+!`
   },
   {
     title: "EIGRP Dual-Stack & Route Redistribution",

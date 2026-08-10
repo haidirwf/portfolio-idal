@@ -4,20 +4,40 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getProjectBySlug } from "@/lib/projects";
-import { MainWrapper } from "@/components/portfolio/main-wrapper";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants, Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, GitBranch, ExternalLink, Cpu, AlertTriangle, CheckCircle2, Award } from "lucide-react";
+import {
+  ArrowLeft,
+  ExternalLink,
+  Cpu,
+  AlertTriangle,
+  CheckCircle2,
+  Award,
+  Download,
+  Terminal,
+  Copy,
+  Check,
+  FileCode,
+  FileDown
+} from "lucide-react";
 
 export function ProjectDetailContent({ slug }: { slug: string }) {
   const project = getProjectBySlug(slug);
   const { t } = useLanguage();
+  const [copiedConfig, setCopiedConfig] = React.useState(false);
 
   if (!project) return null;
+
+  const handleCopyConfig = () => {
+    if (!project.rawConfig) return;
+    navigator.clipboard.writeText(project.rawConfig);
+    setCopiedConfig(true);
+    setTimeout(() => setCopiedConfig(false), 2000);
+  };
 
   return (
     <div className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
@@ -53,13 +73,36 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           {t(project.descriptionId, project.descriptionEn)}
         </p>
 
-        <div className="flex items-center gap-3 pt-2">
+        {/* Downloads & External Link Bar */}
+        <div className="flex flex-wrap items-center gap-3 pt-2">
+          {project.downloadPkt && (
+            <a
+              href={project.downloadPkt}
+              download
+              className={cn(buttonVariants({ variant: "default", size: "sm" }), "font-mono text-xs gap-2 rounded-lg")}
+            >
+              <Download className="size-4" />
+              <span>{t("Unduh File .PKT (Packet Tracer)", "Download .PKT File")}</span>
+            </a>
+          )}
+
+          {project.downloadGns3 && (
+            <a
+              href={project.downloadGns3}
+              download
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-2 rounded-lg bg-background")}
+            >
+              <FileDown className="size-4 text-emerald-500" />
+              <span>{t("Unduh Proyek GNS3", "Download GNS3 Project")}</span>
+            </a>
+          )}
+
           {project.demo && (
             <a
               href={project.demo}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-2")}
+              className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "font-mono text-xs gap-2")}
             >
               <ExternalLink className="size-4" />
               <span>Live Demo</span>
@@ -68,19 +111,59 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </div>
       </div>
 
-      {/* Hero Image */}
-      <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border bg-secondary/30 shadow-lg">
-        <Image
-          src={project.cover}
-          alt={project.title}
-          fill
-          className="object-cover"
-          priority
-        />
+      {/* Hero Screenshot / Diagram */}
+      <div className="space-y-2">
+        <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
+          {t("Tangkapan Layar & Skema Topologi", "Topology Screenshot & Blueprint")}
+        </h3>
+        <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border bg-secondary/30 shadow-lg">
+          <Image
+            src={project.cover}
+            alt={project.title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
       </div>
 
+      {/* Raw Router / Switch Configuration Block */}
+      {project.rawConfig && (
+        <Card className="p-6 border-border/80 bg-card/60 rounded-xl space-y-3">
+          <div className="flex items-center justify-between border-b border-border/40 pb-3">
+            <div className="flex items-center gap-2 text-xs font-mono text-foreground font-semibold">
+              <Terminal className="size-4 text-primary" />
+              <span>{t("Konfigurasi Perangkat (Cisco / MikroTik Config)", "Device Script & Raw Configuration")}</span>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyConfig}
+              className="h-8 px-2.5 font-mono text-xs gap-1.5 rounded-lg"
+            >
+              {copiedConfig ? (
+                <>
+                  <Check className="size-3.5 text-emerald-500" />
+                  <span>{t("Tersalin", "Copied")}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="size-3.5" />
+                  <span>{t("Salin Konfig", "Copy Config")}</span>
+                </>
+              )}
+            </Button>
+          </div>
+
+          <pre className="p-4 rounded-lg bg-black/80 text-emerald-400 font-mono text-xs overflow-x-auto border border-border/40 leading-relaxed select-all">
+            <code>{project.rawConfig}</code>
+          </pre>
+        </Card>
+      )}
+
       {/* Tech Stack Bar */}
-      <Card className="p-6 border-border bg-card/40 space-y-3">
+      <Card className="p-6 border-border bg-card/40 rounded-xl space-y-3">
         <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
           {t("Perangkat & Teknologi", "Tech Stack & Tooling")}
         </h3>
@@ -98,7 +181,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
 
       {/* Breakdown: Overview, Problem, Solution */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 border-border bg-card/30 space-y-3">
+        <Card className="p-6 border-border bg-card/30 rounded-xl space-y-3">
           <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
             <Cpu className="size-4 text-primary" />
             <span>{t("Gambaran Umum", "Overview")}</span>
@@ -108,7 +191,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           </p>
         </Card>
 
-        <Card className="p-6 border-border bg-card/30 space-y-3">
+        <Card className="p-6 border-border bg-card/30 rounded-xl space-y-3">
           <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
             <AlertTriangle className="size-4 text-amber-500" />
             <span>{t("Masalah / Tantangan", "The Problem")}</span>
@@ -118,7 +201,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           </p>
         </Card>
 
-        <Card className="p-6 border-border bg-card/30 space-y-3">
+        <Card className="p-6 border-border bg-card/30 rounded-xl space-y-3">
           <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
             <CheckCircle2 className="size-4 text-emerald-500" />
             <span>{t("Solusi Implementasi", "The Solution")}</span>
@@ -160,11 +243,11 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </div>
       )}
 
-      {/* Gallery */}
+      {/* Gallery / Additional Screenshots */}
       {project.gallery && project.gallery.length > 0 && (
         <div className="space-y-4 pt-4">
           <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
-            {t("Visual & Blueprint Topologi", "Project Blueprint & System Visuals")}
+            {t("Galeri Tangkapan Layar & Dokumentasi", "Project Screenshots & Gallery")}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {project.gallery.map((img, i) => (
@@ -172,7 +255,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                 key={i}
                 className="relative aspect-video rounded-lg overflow-hidden border border-border/60 bg-secondary/20"
               >
-                <Image src={img} alt={`${project.title} visual ${i + 1}`} fill className="object-cover" />
+                <Image src={img} alt={`${project.title} screenshot ${i + 1}`} fill className="object-cover" />
               </div>
             ))}
           </div>
