@@ -136,17 +136,6 @@ export function Showcase({ projects }: { projects: Project[] }) {
 
                   <div className="flex items-center justify-between pt-2.5 border-t border-border/40 text-xs font-mono">
                     <div className="flex items-center gap-3">
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-                        >
-                          <GitBranch className="size-3.5" />
-                          <span>Code</span>
-                        </a>
-                      )}
                       {project.demo && (
                         <a
                           href={project.demo}

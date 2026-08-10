@@ -109,16 +109,6 @@ export function Hero() {
                 <Mail className="size-4" />
                 <span>{t("Kontak", "Contact")}</span>
               </a>
-
-              <a
-                href="https://github.com/haidirwf"
-                target="_blank"
-                rel="noreferrer"
-                className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm gap-1.5 text-muted-foreground px-4")}
-              >
-                <span>GitHub</span>
-                <ArrowUpRight className="size-4" />
-              </a>
             </div>
           </div>
         </Card>

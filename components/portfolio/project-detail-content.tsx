@@ -54,17 +54,6 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </p>
 
         <div className="flex items-center gap-3 pt-2">
-          {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              className={cn(buttonVariants({ variant: "default", size: "sm" }), "font-mono text-xs gap-2")}
-            >
-              <GitBranch className="size-4" />
-              <span>GitHub Repository</span>
-            </a>
-          )}
           {project.demo && (
             <a
               href={project.demo}
