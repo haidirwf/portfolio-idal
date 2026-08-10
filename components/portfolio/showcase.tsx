@@ -38,42 +38,16 @@ export function Showcase({ projects }: { projects: Project[] }) {
 
   return (
     <section id="projects" className="py-12 px-4 sm:px-6 space-y-6">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="space-y-1 text-center sm:text-left">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-            {t("Topologi & Proyek Jaringan", "Network Topologies & Works")}
-          </h2>
-          <p className="text-sm text-muted-foreground font-sans">
-            {t(
-              "Arsitektur jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik.",
-              "Enterprise network architecture, Cisco Packet Tracer simulations, and MikroTik edge management."
-            )}
-          </p>
-        </div>
-
-        {/* Carousel Navigation Buttons */}
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handleScroll("left")}
-            disabled={!canScrollLeft}
-            className="size-9 rounded-full bg-background border-border/80"
-            aria-label="Previous Topologies"
-          >
-            <ChevronLeft className="size-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handleScroll("right")}
-            disabled={!canScrollRight}
-            className="size-9 rounded-full bg-background border-border/80"
-            aria-label="Next Topologies"
-          >
-            <ChevronRight className="size-4" />
-          </Button>
-        </div>
+      <div className="text-center space-y-2 max-w-2xl mx-auto">
+        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
+          {t("Topologi & Proyek Jaringan", "Network Topologies & Works")}
+        </h2>
+        <p className="text-sm text-muted-foreground font-sans">
+          {t(
+            "Arsitektur jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik.",
+            "Enterprise network architecture, Cisco Packet Tracer simulations, and MikroTik edge management."
+          )}
+        </p>
       </div>
 
       {/* Horizontal Carousel: Shows 3 cards on desktop, scrollable */}
