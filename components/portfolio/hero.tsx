@@ -43,7 +43,7 @@ export function Hero() {
   const { t } = useLanguage();
 
   return (
-    <section className="pt-20 pb-8 px-4 sm:px-6">
+    <section className="pt-8 pb-8 px-4 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}

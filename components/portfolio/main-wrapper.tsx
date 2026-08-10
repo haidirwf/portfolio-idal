@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Navbar } from "@/components/portfolio/navbar";
+import { TopAnnouncementBanner } from "@/components/portfolio/top-announcement-banner";
 import { Footer } from "@/components/portfolio/footer";
 import { CommandPalette } from "@/components/portfolio/command-palette";
 import { Project } from "@/lib/projects";
@@ -17,6 +18,7 @@ export function MainWrapper({
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto">
+      <TopAnnouncementBanner />
       <Navbar onOpenCommand={() => setCmdOpen(true)} />
       <main>{children}</main>
       <Footer />
