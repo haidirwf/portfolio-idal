@@ -5,75 +5,88 @@ import {
   Layers,
   Cpu,
   Server,
-  Database,
-  Terminal,
-  Cloud,
   Workflow,
   ShieldCheck,
-  Globe
+  Globe,
+  Terminal,
+  Radio,
+  Lock,
+  Cable
 } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
 
-interface TechItem {
+interface TechBrand {
   name: string;
   category: string;
   icon: React.ElementType;
 }
 
-const TECH_STACK: TechItem[] = [
+const TECH_BRANDS: TechBrand[] = [
   { name: "MikroTik RouterOS", category: "Routing & Switching", icon: Server },
-  { name: "MTCNA & MTCRE", category: "Certification", icon: ShieldCheck },
-  { name: "Cisco Packet Tracer", category: "Network Simulation", icon: Cpu },
-  { name: "GNS3", category: "Network Emulation", icon: Cpu },
+  { name: "Cisco IOS", category: "Enterprise Hardware", icon: Cpu },
+  { name: "MTCNA & MTCRE", category: "Certified Skill", icon: ShieldCheck },
+  { name: "Cisco Packet Tracer", category: "Network Simulation", icon: Layers },
+  { name: "GNS3", category: "Network Emulation", icon: Cable },
   { name: "OSPF & EIGRP", category: "Routing Protocols", icon: Workflow },
-  { name: "BGP Inter-Domain", category: "Routing Protocols", icon: Globe },
-  { name: "VLAN & Subnetting", category: "Switching & L2/L3", icon: Layers },
-  { name: "Firewall & NAT", category: "Security Hardening", icon: ShieldCheck },
-  { name: "IPSec VPN", category: "Tunneling & Encryption", icon: ShieldCheck },
-  { name: "Linux Server", category: "OS & Infrastructure", icon: Terminal }
+  { name: "BGP Peering", category: "Inter-Domain Routing", icon: Globe },
+  { name: "VLAN & Subnetting", category: "Layer 2/3 Switching", icon: Radio },
+  { name: "Firewall & NAT", category: "Security Hardening", icon: Lock },
+  { name: "Linux Infrastructure", category: "OS & Server", icon: Terminal }
 ];
 
 export function TechStack() {
   const { t } = useLanguage();
 
   return (
-    <section id="tech-stack" className="py-12 px-4 sm:px-6 space-y-8">
-      <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Keahlian & Perangkat", "Skills & Toolset")}
-        </h2>
-        <p className="text-sm text-muted-foreground font-sans">
+    <section id="tech-stack" className="py-16 px-4 sm:px-6 space-y-8 overflow-hidden">
+      <div className="text-center space-y-2 max-w-3xl mx-auto">
+        <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground font-sans">
           {t(
-            "Perangkat jaringan, protokol routing, sertifikasi MikroTik, dan sistem operasi yang dikuasai.",
-            "Networking hardware, routing protocols, MikroTik certifications, and OS proficiency."
+            "Digunakan dalam 10+ Topologi & Infrastruktur Jaringan Enterprise",
+            "Used across 10+ Topologies & Enterprise Network Infrastructures"
+          )}
+        </h2>
+        <p className="text-xs sm:text-sm text-muted-foreground font-sans font-medium">
+          {t(
+            "Perangkat keras, protokol routing dinamis, simulasi, dan sistem pengerasan keamanan jaringan.",
+            "Networking hardware, dynamic routing protocols, simulations, and security hardening systems."
           )}
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {TECH_STACK.map((item, idx) => {
-          const Icon = item.icon;
-          return (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.2, delay: idx * 0.03 }}
-            >
-              <Card className="p-4 border-border/80 bg-card/60 rounded-2xl hover:bg-card hover:border-border transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group">
-                <Icon className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
-                <span className="text-xs font-sans font-semibold text-foreground">
-                  {item.name}
-                </span>
-                <span className="text-[10px] font-sans text-muted-foreground">
-                  {item.category}
-                </span>
-              </Card>
-            </motion.div>
-          );
-        })}
+      {/* Marquee Banner Logos Container (Persis shadcn.io university logo bar) */}
+      <div className="relative w-full overflow-hidden pt-4 pb-2">
+        {/* Gradient Blur Overlay Left & Right */}
+        <div className="absolute top-0 bottom-0 left-0 w-20 sm:w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute top-0 bottom-0 right-0 w-20 sm:w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
+        {/* Infinite Moving Row */}
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 25, ease: "linear", repeat: Infinity }}
+          className="flex items-center gap-10 sm:gap-16 w-max"
+        >
+          {/* Double array for seamless loop */}
+          {[...TECH_BRANDS, ...TECH_BRANDS].map((item, idx) => {
+            const IconComponent = item.icon;
+            return (
+              <div
+                key={`${item.name}-${idx}`}
+                className="flex items-center gap-2.5 opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer select-none group shrink-0"
+              >
+                <IconComponent className="size-5 sm:size-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                <div className="flex flex-col text-left">
+                  <span className="text-xs sm:text-sm font-sans font-bold text-foreground/80 group-hover:text-foreground tracking-tight">
+                    {item.name}
+                  </span>
+                  <span className="text-[10px] font-mono text-muted-foreground/70">
+                    {item.category}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );
