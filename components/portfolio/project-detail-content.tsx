@@ -7,7 +7,6 @@ import { getProjectBySlug } from "@/lib/projects";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants, Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
 import {
@@ -21,7 +20,6 @@ import {
   Terminal,
   Copy,
   Check,
-  FileCode,
   FileDown
 } from "lucide-react";
 
@@ -40,7 +38,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
   };
 
   return (
-    <div className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
+    <div className="py-12 max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
       {/* Navigation back */}
       <div>
         <Link
@@ -52,8 +50,8 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="space-y-4">
+      {/* Header Compact */}
+      <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="font-mono text-xs">
             {project.year}
@@ -65,24 +63,36 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           ))}
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-bold font-sans tracking-tight">
+        <h1 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight">
           {project.title}
         </h1>
 
-        <p className="text-lg text-muted-foreground font-sans max-w-3xl leading-relaxed">
+        <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
           {t(project.descriptionId, project.descriptionEn)}
         </p>
 
-        {/* Downloads & External Link Bar */}
-        <div className="flex flex-wrap items-center gap-3 pt-2">
+        {/* Tech Stack Pills */}
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {project.stack.map((item) => (
+            <span
+              key={item}
+              className="px-2 py-0.5 rounded-md font-mono text-[11px] bg-muted/80 text-muted-foreground border border-border/40"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+
+        {/* Downloads & Links Bar */}
+        <div className="flex flex-wrap items-center gap-2.5 pt-2">
           {project.downloadPkt && (
             <a
               href={project.downloadPkt}
               download
-              className={cn(buttonVariants({ variant: "default", size: "sm" }), "font-mono text-xs gap-2 rounded-lg")}
+              className={cn(buttonVariants({ variant: "default", size: "sm" }), "font-mono text-xs gap-1.5 rounded-lg px-3.5")}
             >
-              <Download className="size-4" />
-              <span>{t("Unduh File .PKT (Packet Tracer)", "Download .PKT File")}</span>
+              <Download className="size-3.5" />
+              <span>{t("Unduh .PKT File", "Download .PKT File")}</span>
             </a>
           )}
 
@@ -90,10 +100,10 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             <a
               href={project.downloadGns3}
               download
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-2 rounded-lg bg-background")}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-1.5 rounded-lg bg-background px-3.5")}
             >
-              <FileDown className="size-4 text-emerald-500" />
-              <span>{t("Unduh Proyek GNS3", "Download GNS3 Project")}</span>
+              <FileDown className="size-3.5 text-emerald-500" />
+              <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
             </a>
           )}
 
@@ -102,164 +112,122 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
               href={project.demo}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "font-mono text-xs gap-2")}
+              className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "font-mono text-xs gap-1.5")}
             >
-              <ExternalLink className="size-4" />
+              <ExternalLink className="size-3.5" />
               <span>Live Demo</span>
             </a>
           )}
         </div>
       </div>
 
-      {/* Hero Screenshot / Diagram */}
-      <div className="space-y-2">
-        <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
-          {t("Tangkapan Layar & Skema Topologi", "Topology Screenshot & Blueprint")}
-        </h3>
-        <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border bg-secondary/30 shadow-lg">
-          <Image
-            src={project.cover}
-            alt={project.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+      {/* Hero Screenshot / Topology Visual */}
+      <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs">
+        <Image
+          src={project.cover}
+          alt={project.title}
+          fill
+          className="object-cover"
+          priority
+        />
       </div>
 
-      {/* Raw Router / Switch Configuration Block */}
-      {project.rawConfig && (
-        <Card className="p-6 border-border/80 bg-card/60 rounded-xl space-y-3">
-          <div className="flex items-center justify-between border-b border-border/40 pb-3">
-            <div className="flex items-center gap-2 text-xs font-mono text-foreground font-semibold">
-              <Terminal className="size-4 text-primary" />
-              <span>{t("Konfigurasi Perangkat (Cisco / MikroTik Config)", "Device Script & Raw Configuration")}</span>
-            </div>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopyConfig}
-              className="h-8 px-2.5 font-mono text-xs gap-1.5 rounded-lg"
-            >
-              {copiedConfig ? (
-                <>
-                  <Check className="size-3.5 text-emerald-500" />
-                  <span>{t("Tersalin", "Copied")}</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="size-3.5" />
-                  <span>{t("Salin Konfig", "Copy Config")}</span>
-                </>
-              )}
-            </Button>
-          </div>
-
-          <pre className="p-4 rounded-lg bg-black/80 text-emerald-400 font-mono text-xs overflow-x-auto border border-border/40 leading-relaxed select-all">
-            <code>{project.rawConfig}</code>
-          </pre>
-        </Card>
-      )}
-
-      {/* Tech Stack Bar */}
-      <Card className="p-6 border-border bg-card/40 rounded-xl space-y-3">
-        <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
-          {t("Perangkat & Teknologi", "Tech Stack & Tooling")}
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {project.stack.map((item) => (
-            <span
-              key={item}
-              className="px-2.5 py-1 rounded-md font-mono text-xs bg-muted text-foreground border border-border/50"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </Card>
-
-      {/* Breakdown: Overview, Problem, Solution */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 border-border bg-card/30 rounded-xl space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
-            <Cpu className="size-4 text-primary" />
+      {/* Structured Grid: Overview, Problem, Solution */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
+            <Cpu className="size-3.5 text-primary shrink-0" />
             <span>{t("Gambaran Umum", "Overview")}</span>
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             {t(project.overviewId, project.overviewEn)}
           </p>
         </Card>
 
-        <Card className="p-6 border-border bg-card/30 rounded-xl space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
-            <AlertTriangle className="size-4 text-amber-500" />
-            <span>{t("Masalah / Tantangan", "The Problem")}</span>
+        <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
+            <AlertTriangle className="size-3.5 text-amber-500 shrink-0" />
+            <span>{t("Masalah", "The Problem")}</span>
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             {t(project.problemId, project.problemEn)}
           </p>
         </Card>
 
-        <Card className="p-6 border-border bg-card/30 rounded-xl space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
-            <CheckCircle2 className="size-4 text-emerald-500" />
-            <span>{t("Solusi Implementasi", "The Solution")}</span>
+        <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
+            <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
+            <span>{t("Solusi", "The Solution")}</span>
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             {t(project.solutionId, project.solutionEn)}
           </p>
         </Card>
       </div>
 
-      {/* System Architecture & Results */}
+      {/* Architecture & Result Card */}
       {(project.architectureId || project.resultId) && (
-        <div className="space-y-6 pt-4">
-          <Separator />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {project.architectureId && project.architectureEn && (
-              <div className="space-y-2">
-                <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
+              <div className="space-y-1">
+                <h4 className="text-xs font-bold font-sans uppercase text-muted-foreground">
                   {t("Arsitektur Jaringan", "Network Architecture")}
-                </h3>
-                <p className="text-sm font-mono text-foreground/90 bg-muted/30 p-4 rounded-lg border border-border/40 leading-relaxed">
+                </h4>
+                <p className="text-xs font-mono text-foreground/90 bg-muted/30 p-3 rounded-lg border border-border/40 leading-relaxed">
                   {t(project.architectureId, project.architectureEn)}
                 </p>
               </div>
             )}
 
             {project.resultId && project.resultEn && (
-              <div className="space-y-2">
-                <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+              <div className="space-y-1">
+                <h4 className="text-xs font-bold font-sans uppercase text-muted-foreground flex items-center gap-1.5">
                   <Award className="size-3.5 text-primary" />
                   <span>{t("Hasil Terukur", "Quantified Result")}</span>
-                </h3>
-                <p className="text-sm font-mono text-foreground/90 bg-muted/30 p-4 rounded-lg border border-border/40 leading-relaxed">
+                </h4>
+                <p className="text-xs font-mono text-foreground/90 bg-muted/30 p-3 rounded-lg border border-border/40 leading-relaxed">
                   {t(project.resultId, project.resultEn)}
                 </p>
               </div>
             )}
           </div>
-        </div>
+        </Card>
       )}
 
-      {/* Gallery / Additional Screenshots */}
-      {project.gallery && project.gallery.length > 0 && (
-        <div className="space-y-4 pt-4">
-          <h3 className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
-            {t("Galeri Tangkapan Layar & Dokumentasi", "Project Screenshots & Gallery")}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {project.gallery.map((img, i) => (
-              <div
-                key={i}
-                className="relative aspect-video rounded-lg overflow-hidden border border-border/60 bg-secondary/20"
-              >
-                <Image src={img} alt={`${project.title} screenshot ${i + 1}`} fill className="object-cover" />
-              </div>
-            ))}
+      {/* Collapsible/Compact Script Config Block */}
+      {project.rawConfig && (
+        <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-3">
+          <div className="flex items-center justify-between border-b border-border/40 pb-2.5">
+            <div className="flex items-center gap-2 text-xs font-mono text-foreground font-semibold">
+              <Terminal className="size-3.5 text-primary" />
+              <span>{t("Skrip Konfigurasi (Device Script)", "Device Script / Raw Config")}</span>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyConfig}
+              className="h-7 px-2.5 font-mono text-[11px] gap-1.5 rounded-md"
+            >
+              {copiedConfig ? (
+                <>
+                  <Check className="size-3 text-emerald-500" />
+                  <span>{t("Tersalin", "Copied")}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="size-3" />
+                  <span>{t("Salin Konfig", "Copy Config")}</span>
+                </>
+              )}
+            </Button>
           </div>
-        </div>
+
+          <pre className="p-3.5 rounded-lg bg-black/80 text-emerald-400 font-mono text-[11px] max-h-56 overflow-y-auto border border-border/40 leading-relaxed">
+            <code>{project.rawConfig}</code>
+          </pre>
+        </Card>
       )}
     </div>
   );
