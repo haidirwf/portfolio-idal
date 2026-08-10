@@ -17,7 +17,6 @@ const SECTIONS: NavSection[] = [
   { id: "about", labelId: "Tentang", labelEn: "About" },
   { id: "experience", labelId: "Pengalaman", labelEn: "Experiences" },
   { id: "tech-stack", labelId: "Keahlian", labelEn: "Stacks" },
-  { id: "testimonials", labelId: "Ulasan", labelEn: "Feedback" },
   { id: "contact", labelId: "Kontak", labelEn: "Contact" }
 ];
 
