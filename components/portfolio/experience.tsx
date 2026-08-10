@@ -72,7 +72,7 @@ export function Experience() {
         </p>
       </div>
 
-      <Card className="border-border/80 bg-card/60 rounded-3xl p-6 sm:p-10 shadow-xs w-full divide-y divide-border/40">
+      <Card className="border-border/80 bg-card/60 rounded-xl p-6 sm:p-10 shadow-xs w-full divide-y divide-border/40">
         {EXPERIENCES.map((exp, idx) => (
           <motion.div
             key={exp.company}
@@ -83,7 +83,7 @@ export function Experience() {
             className={`flex gap-4 sm:gap-5 ${idx !== 0 ? "pt-6" : ""} ${idx !== EXPERIENCES.length - 1 ? "pb-6" : ""}`}
           >
             {/* Real Company Avatar Logo Image (LinkedIn Style) */}
-            <div className="relative size-11 sm:size-12 rounded-xl overflow-hidden border border-border/60 bg-background shrink-0 shadow-xs p-1 flex items-center justify-center">
+            <div className="relative size-11 sm:size-12 rounded-lg overflow-hidden border border-border/60 bg-background shrink-0 shadow-xs p-1 flex items-center justify-center">
               <Image
                 src={exp.logo}
                 alt={exp.company}

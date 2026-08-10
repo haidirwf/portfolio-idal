@@ -88,7 +88,7 @@ export function About() {
           transition={{ duration: 0.3 }}
           className="md:col-span-2 h-full"
         >
-          <Card className="h-full border-border/80 bg-card/60 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xs hover:border-border transition-all duration-300">
+          <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xs hover:border-border transition-all duration-300">
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-xs font-mono text-primary font-semibold">
                 <MapPin className="size-3.5" />
@@ -115,7 +115,7 @@ export function About() {
               {coreFocus.map((focus, idx) => {
                 const IconComponent = focus.icon;
                 return (
-                  <div key={idx} className="p-3 rounded-2xl bg-secondary/40 border border-border/50 space-y-1">
+                  <div key={idx} className="p-3 rounded-lg bg-secondary/40 border border-border/50 space-y-1">
                     <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
                       <IconComponent className="size-3.5 text-primary shrink-0" />
                       <span className="truncate">{t(focus.titleId, focus.titleEn)}</span>
@@ -138,7 +138,7 @@ export function About() {
           transition={{ duration: 0.3, delay: 0.05 }}
           className="h-full"
         >
-          <Card className="h-full border-border/80 bg-card/60 rounded-3xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-border transition-all duration-300">
+          <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-border transition-all duration-300">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-1.5">
@@ -152,7 +152,7 @@ export function About() {
 
               <div className="space-y-2.5">
                 {certifications.map((cert) => (
-                  <div key={cert.code} className="p-3 rounded-2xl bg-secondary/30 border border-border/50 space-y-1">
+                  <div key={cert.code} className="p-3 rounded-lg bg-secondary/30 border border-border/50 space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-extrabold font-sans text-foreground">{cert.code}</span>
                       <span className="text-[10px] font-mono text-muted-foreground">{cert.period}</span>
@@ -179,7 +179,7 @@ export function About() {
           transition={{ duration: 0.3, delay: 0.1 }}
           className="md:col-span-3 w-full"
         >
-          <Card className="border-border/80 bg-card/60 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs hover:border-border transition-all duration-300">
+          <Card className="border-border/80 bg-card/60 rounded-xl p-6 sm:p-8 space-y-4 shadow-xs hover:border-border transition-all duration-300">
             <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-2">
               <GraduationCap className="size-4 text-primary" />
               <span>{t("Latar Belakang Pendidikan", "Education Background")}</span>
@@ -187,14 +187,14 @@ export function About() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {education.map((edu, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-secondary/30 border border-border/50 flex items-center justify-between gap-3">
+                <div key={idx} className="p-4 rounded-lg bg-secondary/30 border border-border/50 flex items-center justify-between gap-3">
                   <div className="space-y-0.5 overflow-hidden">
                     <p className="text-xs sm:text-sm font-bold font-sans text-foreground truncate">{edu.school}</p>
                     <p className="text-xs font-sans text-muted-foreground truncate">{edu.field}</p>
                   </div>
                   <div className="text-right shrink-0 space-y-1">
                     <span className="text-xs font-mono text-muted-foreground block">{edu.period}</span>
-                    <Badge variant="secondary" className="font-mono text-[9px] rounded-full">
+                    <Badge variant="secondary" className="font-mono text-[9px]">
                       {edu.status}
                     </Badge>
                   </div>
