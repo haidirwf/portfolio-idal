@@ -41,7 +41,7 @@ export function Contact() {
         viewport={{ once: true }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="border-border/80 bg-card/60 rounded-3xl p-8 sm:p-14 text-center space-y-8 w-full shadow-xs relative overflow-hidden">
+        <Card className="border-border/80 bg-card/60 rounded-xl p-8 sm:p-14 text-center space-y-8 w-full shadow-xs relative overflow-hidden">
           {/* Background grid pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
 

@@ -95,9 +95,9 @@ export function Showcase({ projects }: { projects: Project[] }) {
               transition={{ duration: 0.3, delay: idx * 0.05 }}
               className="h-full"
             >
-              <Card className="h-full flex flex-col justify-between overflow-hidden border-border/80 bg-card/60 rounded-2xl p-2.5 hover:bg-card hover:shadow-md transition-all duration-300 group">
+              <Card className="h-full flex flex-col justify-between overflow-hidden border-border/80 bg-card/60 rounded-xl p-2.5 hover:bg-card hover:shadow-md transition-all duration-300 group">
                 <div className="space-y-3">
-                  <div className="relative aspect-video rounded-xl bg-secondary/40 overflow-hidden border border-border/40">
+                  <div className="relative aspect-video rounded-lg bg-secondary/40 overflow-hidden border border-border/40">
                     <Image
                       src={project.cover}
                       alt={project.title}

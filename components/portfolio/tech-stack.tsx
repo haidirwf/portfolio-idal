@@ -60,7 +60,7 @@ export function TechStack() {
               viewport={{ once: true }}
               transition={{ duration: 0.2, delay: idx * 0.03 }}
             >
-              <Card className="p-4 border-border/80 bg-card/60 rounded-2xl hover:bg-card hover:border-border transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group">
+              <Card className="p-4 border-border/80 bg-card/60 rounded-lg hover:bg-card hover:border-border transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group">
                 <Icon className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
                 <span className="text-xs font-sans font-semibold text-foreground">
                   {item.name}
