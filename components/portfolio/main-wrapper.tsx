@@ -7,6 +7,8 @@ import { Footer } from "@/components/portfolio/footer";
 import { CommandPalette } from "@/components/portfolio/command-palette";
 import { Project } from "@/lib/projects";
 
+import { FloatingSectionTracker } from "@/components/portfolio/floating-section-tracker";
+
 export function MainWrapper({
   children,
   projects
@@ -17,7 +19,8 @@ export function MainWrapper({
   const [cmdOpen, setCmdOpen] = React.useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto relative">
+      <FloatingSectionTracker />
       <TopAnnouncementBanner />
       <Navbar onOpenCommand={() => setCmdOpen(true)} />
       <main>{children}</main>
