@@ -49,7 +49,7 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <Card className="min-h-[420px] sm:min-h-[480px] flex flex-col justify-center items-center text-center overflow-hidden border-border/80 bg-card/60 rounded-xl p-8 sm:p-16 md:p-20 shadow-xs relative">
+        <Card className="min-h-[360px] sm:min-h-[480px] flex flex-col justify-center items-center text-center overflow-hidden border-border/80 bg-card/60 rounded-xl p-6 sm:p-16 md:p-20 shadow-xs relative">
           {/* Background grid pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-35 pointer-events-none" />
 
@@ -62,7 +62,7 @@ export function Hero() {
                   key={idx}
                   style={{ top: item.top, left: item.left, right: item.right }}
                   className={cn(
-                    "absolute text-muted-foreground/25 dark:text-muted-foreground/20 transition-all duration-700",
+                    "absolute text-muted-foreground/25 dark:text-muted-foreground/20 transition-all duration-700 hidden sm:block",
                     item.size
                   )}
                 >
@@ -72,13 +72,13 @@ export function Hero() {
             })}
           </div>
 
-          <div className="relative space-y-6 max-w-3xl flex flex-col items-center z-10">
-            <div className="space-y-3">
-              <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground font-sans leading-none">
+          <div className="relative space-y-4 sm:space-y-6 max-w-3xl flex flex-col items-center z-10">
+            <div className="space-y-2 sm:space-y-3">
+              <h1 className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground font-sans leading-tight">
                 Muhammad Haidar Rauf Prayogo
               </h1>
 
-              <p className="text-lg sm:text-2xl text-muted-foreground font-medium font-sans max-w-2xl leading-snug">
+              <p className="text-base sm:text-2xl text-muted-foreground font-medium font-sans max-w-2xl leading-snug">
                 {t(
                   "Network Engineer | MTCNA & MTCRE | Spesialis Infrastruktur Jaringan Computer & Security",
                   "Network Engineer | MTCNA & MTCRE | Computer Network Infrastructure & Security Specialist"
@@ -86,17 +86,17 @@ export function Hero() {
               </p>
             </div>
 
-            <p className="text-sm sm:text-base text-muted-foreground/80 font-sans max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-base text-muted-foreground/80 font-sans max-w-xl leading-relaxed">
               {t(
                 "Fokus pada perancangan jaringan komputer yang aman, andal, efisien, dan skalabel. Bekasi, Jawa Barat, Indonesia.",
                 "Focusing on designing secure, reliable, efficient, and scalable computer network infrastructure. Bekasi, West Java, Indonesia."
               )}
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto">
               <a
                 href="#projects"
-                className={cn(buttonVariants({ variant: "default", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 shadow-xs")}
+                className={cn(buttonVariants({ variant: "default", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 shadow-xs w-full sm:w-auto justify-center")}
               >
                 <span>{t("Lihat Topologi", "View Topologies")}</span>
                 <ArrowDown className="size-4" />
@@ -104,7 +104,7 @@ export function Hero() {
 
               <a
                 href="#contact"
-                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 bg-background")}
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 bg-background w-full sm:w-auto justify-center")}
               >
                 <Mail className="size-4" />
                 <span>{t("Kontak", "Contact")}</span>

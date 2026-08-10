@@ -41,15 +41,15 @@ export function Contact() {
         viewport={{ once: true }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="border-border/80 bg-card/60 rounded-xl p-8 sm:p-14 text-center space-y-8 w-full shadow-xs relative overflow-hidden">
+        <Card className="border-border/80 bg-card/60 rounded-xl p-6 sm:p-14 text-center space-y-6 sm:space-y-8 w-full shadow-xs relative overflow-hidden">
           {/* Background grid pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
 
           <div className="relative space-y-3 max-w-lg mx-auto">
-            <h2 className="text-3xl sm:text-5xl font-extrabold font-sans tracking-tight">
+            <h2 className="text-2xl sm:text-5xl font-extrabold font-sans tracking-tight">
               {t("Mari Bekerja Sama.", "Let's build something together.")}
             </h2>
-            <p className="text-sm sm:text-base font-sans text-muted-foreground">
+            <p className="text-xs sm:text-base font-sans text-muted-foreground">
               {t(
                 "Open untuk proyek jaringan, konsultasi MikroTik/Cisco, dan pengerasan keamanan sistem.",
                 "Open for network infrastructure projects, MikroTik/Cisco consulting, and network security hardening."
@@ -57,27 +57,27 @@ export function Contact() {
             </p>
           </div>
 
-          <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 pt-2 w-full max-w-md mx-auto">
             <Button
               onClick={handleCopyEmail}
               variant="default"
               size="lg"
-              className="rounded-full font-sans text-xs sm:text-sm px-6 gap-2"
+              className="rounded-full font-sans text-xs sm:text-sm px-6 gap-2 w-full sm:w-auto justify-center"
             >
               <Mail className="size-4" />
-              <span>{copiedEmail ? t("Email Tersalin!", "Email Copied!") : email}</span>
-              {copiedEmail ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+              <span className="truncate">{copiedEmail ? t("Email Tersalin!", "Email Copied!") : email}</span>
+              {copiedEmail ? <Check className="size-3.5 text-emerald-400 shrink-0" /> : <Copy className="size-3.5 shrink-0" />}
             </Button>
 
             <Button
               onClick={handleCopyPhone}
               variant="outline"
               size="lg"
-              className="rounded-full font-sans text-xs sm:text-sm px-6 gap-2 bg-background"
+              className="rounded-full font-sans text-xs sm:text-sm px-6 gap-2 bg-background w-full sm:w-auto justify-center"
             >
               <Phone className="size-4" />
-              <span>{copiedPhone ? t("Nomor Tersalin!", "Phone Copied!") : phone}</span>
-              {copiedPhone ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+              <span className="truncate">{copiedPhone ? t("Nomor Tersalin!", "Phone Copied!") : phone}</span>
+              {copiedPhone ? <Check className="size-3.5 text-emerald-400 shrink-0" /> : <Copy className="size-3.5 shrink-0" />}
             </Button>
           </div>
 
