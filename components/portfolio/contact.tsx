@@ -46,7 +46,7 @@ export function Contact() {
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
 
           <div className="relative space-y-3 max-w-lg mx-auto">
-            <h2 className="text-2xl sm:text-5xl font-extrabold font-sans tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
               {t("Mari Bekerja Sama.", "Let's build something together.")}
             </h2>
             <p className="text-xs sm:text-base font-sans text-muted-foreground">
