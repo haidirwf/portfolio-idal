@@ -210,9 +210,9 @@ ip route 0.0.0.0 0.0.0.0 203.0.113.1`
     problemEn: "Broadcast storms and data leakage risks across departments due to a flat, single broadcast domain environment.",
     solutionId: "Membuat VLAN 10, 20, 30 pada Switch Layer 2, mengonfigurasi 802.1Q Trunking, dan membangun subinterfaces (.10, .20, .30) pada Router gateway.",
     solutionEn: "Created VLANs 10, 20, 30 on Layer 2 Switches, configured 802.1Q Trunking, and engineered Router-on-a-Stick subinterfaces.",
-    cover: "/projects/kubecraft.svg",
+    cover: "/projects/ENTERPRISENETWORK.webp",
     gallery: [
-      "/projects/kubecraft.svg"
+      "/projects/ENTERPRISENETWORK.webp"
     ],
     year: "2025",
     stack: ["Cisco Packet Tracer", "VLAN", "802.1Q Trunking", "Inter-VLAN", "Cisco IOS"],
