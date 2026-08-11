@@ -91,7 +91,25 @@ interface GigabitEthernet0/0/0
     architectureId: "AS 100 EIGRP Mesh Core -> Redistribution Border Router -> Dual-Stack IPv4/IPv6 Gateway.",
     architectureEn: "AS 100 EIGRP Mesh Core -> Redistribution Border Router -> Dual-Stack IPv4/IPv6 Gateway.",
     resultId: "Failover otomatis tanpa drop paket saat simulasi link terputus (Zero packet loss during failover).",
-    resultEn: "Zero packet loss during simulated link failure via instant Feasible Successor path activation."
+    resultEn: "Zero packet loss during simulated link failure via instant Feasible Successor path activation.",
+    downloadPkt: "/downloads/eigrp-dual-stack.pkt",
+    downloadGns3: "/downloads/eigrp-dual-stack.gns3project",
+    rawConfig: `! EIGRP Dual-Stack AS 100 Configuration
+router eigrp Enterprise-WAN
+ !
+ address-family ipv4 autonomous-system 100
+  topology base
+   redistribute static
+  exit-af-topology
+  network 10.1.0.0 0.0.255.255
+  network 172.16.0.0 0.0.255.255
+ exit-address-family
+ !
+ address-family ipv6 autonomous-system 100
+  topology base
+  exit-af-topology
+ exit-address-family
+!`
   },
   {
     title: "Enterprise VLAN, STP & EtherChannel Bond",
@@ -116,7 +134,23 @@ interface GigabitEthernet0/0/0
     architectureId: "Dual Distribution Switches (LACP Trunk) -> RSTP Root Bridge -> Access Switches (Port Security).",
     architectureEn: "Dual Distribution Switches (LACP Trunk) -> RSTP Root Bridge -> Access Switches (Port Security).",
     resultId: "Penggandaan kapasitas throughput antar-switch hingga 2Gbps dengan proteksi anti-looping 100% aktif.",
-    resultEn: "Doubled inter-switch throughput to 2Gbps with 100% active loop prevention."
+    resultEn: "Doubled inter-switch throughput to 2Gbps with 100% active loop prevention.",
+    downloadPkt: "/downloads/vlan-lacp-stp.pkt",
+    downloadGns3: "/downloads/vlan-lacp-stp.gns3project",
+    rawConfig: `! LACP EtherChannel & Spanning-Tree Priority Config
+vtp domain ENTERPRISE-LAB
+vtp mode server
+!
+interface Port-channel1
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+!
+interface range GigabitEthernet0/1 - 2
+ switchport mode trunk
+ channel-group 1 mode active
+!
+spanning-tree mode rapid-pvst
+spanning-tree vlan 10,20 root primary`
   },
   {
     title: "Mikrotik RouterOS Edge Gateway & Firewall",
@@ -141,7 +175,21 @@ interface GigabitEthernet0/0/0
     architectureId: "ISP Connection -> Mikrotik Gateway (Firewall + Mangle) -> IPSec Site-to-Site Tunnel -> Local LAN Switches.",
     architectureEn: "ISP Connection -> Mikrotik Gateway (Firewall + Mangle) -> IPSec Site-to-Site Tunnel -> Local LAN Switches.",
     resultId: "Pengaturan alokasi bandwidth merata untuk 100+ pengguna simultan dan koneksi antar cabang terenkripsi penuh.",
-    resultEn: "Fair bandwidth allocation for 100+ concurrent users with fully encrypted inter-branch data tunnel."
+    resultEn: "Fair bandwidth allocation for 100+ concurrent users with fully encrypted inter-branch data tunnel.",
+    downloadPkt: "/downloads/mikrotik-edge-firewall.rsc",
+    downloadGns3: "/downloads/mikrotik-edge-firewall.gns3project",
+    rawConfig: `/ip firewall nat
+add chain=srcnat out-interface=ether1-WAN action=masquerade comment="NAT Outbound"
+
+/ip firewall filter
+add chain=input connection-state=established,related action=accept
+add chain=input connection-state=invalid action=drop comment="Drop Invalid"
+add chain=input protocol=icmp action=accept
+add chain=input in-interface=ether1-WAN action=drop comment="Drop Unsolicited WAN"
+
+/queue type
+add name=pcq-download kind=pcq pcq-rate=5M pcq-classifier=dst-address
+add name=pcq-upload kind=pcq pcq-rate=2M pcq-classifier=src-address`
   },
   {
     title: "BGP Autonomous System Inter-Domain Topology",
@@ -166,7 +214,27 @@ interface GigabitEthernet0/0/0
     architectureId: "AS 100 (Primary ISP) <-> eBGP Peering <-> AS 200 (Enterprise Edge) -> iBGP Mesh -> Internal Core Routers.",
     architectureEn: "AS 100 (Primary ISP) <-> eBGP Peering <-> AS 200 (Enterprise Edge) -> iBGP Mesh -> Internal Core Routers.",
     resultId: "Kemampuan kontrol penuh terhadap traffic engineering kustom untuk jalur utama dan failover backup otomatis.",
-    resultEn: "Complete custom traffic engineering control with deterministic primary/backup path failover."
+    resultEn: "Complete custom traffic engineering control with deterministic primary/backup path failover.",
+    downloadPkt: "/downloads/bgp-inter-domain.pkt",
+    downloadGns3: "/downloads/bgp-inter-domain.gns3project",
+    rawConfig: `! BGP Autonomous System Peering & Local-Pref Policy
+router bgp 200
+ bgp router-id 2.2.2.2
+ bgp log-neighbor-changes
+ neighbor 192.168.1.1 remote-as 100
+ neighbor 192.168.1.1 description PRIMARY-ISP-AS100
+ neighbor 10.2.0.1 remote-as 200
+ neighbor 10.2.0.1 update-source Loopback0
+ !
+ address-family ipv4
+  neighbor 192.168.1.1 activate
+  neighbor 192.168.1.1 route-map SET-LOCAL-PREF-IN in
+  neighbor 10.2.0.1 activate
+  neighbor 10.2.0.1 next-hop-self
+ exit-address-family
+!
+route-map SET-LOCAL-PREF-IN permit 10
+ set local-preference 200`
   }
 ];
 
