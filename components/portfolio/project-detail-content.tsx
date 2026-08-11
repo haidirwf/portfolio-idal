@@ -22,28 +22,14 @@ import {
   Check,
   FileDown,
   Maximize2,
-  X
+  Minimize2
 } from "lucide-react";
 
 export function ProjectDetailContent({ slug }: { slug: string }) {
   const project = getProjectBySlug(slug);
   const { t } = useLanguage();
   const [copiedConfig, setCopiedConfig] = React.useState(false);
-  const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsPreviewOpen(false);
-    };
-    if (isPreviewOpen) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isPreviewOpen]);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   if (!project) return null;
 
@@ -116,63 +102,43 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         )}
       </div>
 
-      {/* Hero Screenshot / Topology Visual (Clickable Full Preview) */}
+      {/* Hero Screenshot / Topology Visual (Toggle Enlarged View) */}
       <div
-        onClick={() => setIsPreviewOpen(true)}
-        className="group relative aspect-video w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs cursor-pointer select-none"
+        onClick={() => setIsExpanded((prev) => !prev)}
+        className={cn(
+          "group relative w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs cursor-pointer select-none transition-all duration-500 ease-in-out",
+          isExpanded ? "min-h-[500px] sm:min-h-[700px] aspect-auto" : "aspect-video"
+        )}
       >
         <Image
           src={project.cover}
           alt={project.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+          fill={!isExpanded}
+          width={isExpanded ? 1600 : undefined}
+          height={isExpanded ? 1200 : undefined}
+          sizes="100vw"
+          className={cn(
+            "transition-all duration-500",
+            isExpanded ? "w-full h-auto object-contain" : "object-cover group-hover:scale-[1.01]"
+          )}
           priority
         />
 
         {/* Hover overlay hint */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white font-mono text-xs font-semibold backdrop-blur-[2px]">
-          <Maximize2 className="size-4" />
-          <span>{t("Klik untuk tampilan penuh", "Click for full view")}</span>
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white font-mono text-xs font-semibold backdrop-blur-[1px]">
+          {isExpanded ? (
+            <>
+              <Minimize2 className="size-4" />
+              <span>{t("Klik untuk mengecilkan", "Click to shrink")}</span>
+            </>
+          ) : (
+            <>
+              <Maximize2 className="size-4" />
+              <span>{t("Klik untuk memperbesar", "Click to enlarge")}</span>
+            </>
+          )}
         </div>
       </div>
-
-      {/* Full Size Image Preview Modal / Lightbox */}
-      {isPreviewOpen && (
-        <div
-          onClick={() => setIsPreviewOpen(false)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200"
-        >
-          {/* Close button */}
-          <button
-            onClick={() => setIsPreviewOpen(false)}
-            className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-secondary/80 text-foreground hover:bg-secondary transition-colors cursor-pointer border border-border/40"
-            aria-label="Close Preview"
-          >
-            <X className="size-5" />
-          </button>
-
-          {/* Modal Container */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-w-6xl max-h-[90vh] w-full h-full flex flex-col items-center justify-center"
-          >
-            <div className="relative w-full h-full flex items-center justify-center">
-              <Image
-                src={project.cover}
-                alt={project.title}
-                fill
-                sizes="100vw"
-                className="object-contain rounded-lg"
-                quality={95}
-              />
-            </div>
-            <p className="pt-3 font-mono text-xs text-muted-foreground/80 text-center">
-              {project.title} — {t("Tekan Esc atau klik di mana saja untuk menutup", "Press Esc or click anywhere to close")}
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Structured Grid: Overview, Problem, Solution */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
