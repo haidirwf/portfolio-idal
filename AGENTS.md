@@ -10,6 +10,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Merge**: DO NOT merge `dev` to `main` unless explicitly requested by the user.
 - **Push**: DO NOT run `git push` under any circumstances unless explicitly instructed by the user.
 - **Verification**: After committing, always run `rtk npm run build` to verify there are no build or compilation errors.
+- **Push**: DO NOT EVER PUSH ANY CHANGE EXCEPT I ASK YOU TO.
 
 # UI/UX & LANGUAGE RULES
 
