@@ -41,9 +41,9 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold tracking-tight hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2.5 font-mono text-xs sm:text-sm font-semibold tracking-tight hover:opacity-80 transition-opacity"
         >
-          <Router className="size-4 text-primary" />
+          <img src="/icon.png" alt="wf logo" className="size-5 rounded-xs border border-border/40 object-cover" />
           <span>haidar portfolio</span>
         </Link>
 

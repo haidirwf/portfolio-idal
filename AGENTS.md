@@ -32,4 +32,4 @@ Never assume or force a switch to Indonesian (ID) unless the user specifically a
 -   Always verify build success (npm run build) after making changes.
 -   Maintain a clean, modern, and professional UI/UX.
 -   Always respect the user's current language preference for any output or display.
--   Always use rtk, ponytail skills.
+-   Always use rtk and ponytail skills.
