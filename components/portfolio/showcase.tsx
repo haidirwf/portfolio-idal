@@ -85,9 +85,9 @@ export function Showcase({ projects }: { projects: Project[] }) {
                     <CardTitle className="text-base font-bold font-sans tracking-tight">
                       <Link
                         href={`/projects/${project.slug}`}
-                        className="hover:underline flex items-center justify-between group-hover:text-primary transition-colors"
+                        className="hover:underline group-hover:text-primary transition-colors"
                       >
-                        <span>{project.title}</span>
+                        {project.title}
                       </Link>
                     </CardTitle>
 
@@ -97,40 +97,40 @@ export function Showcase({ projects }: { projects: Project[] }) {
                   </div>
                 </div>
 
-                <div className="p-3 pt-2 space-y-3">
-                  <div className="flex flex-wrap gap-1">
-                    {project.stack.map((s) => (
-                      <span
-                        key={s}
-                        className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-muted/80 text-muted-foreground"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2.5 border-t border-border/40 text-xs font-mono">
-                    <div className="flex items-center gap-3">
-                      {project.demo && (
-                        <a
-                          href={project.demo}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+                <div className="p-3 pt-2">
+                  <div className="flex items-end justify-between gap-2">
+                    <div className="flex flex-wrap gap-1 flex-1">
+                      {project.stack.map((s) => (
+                        <span
+                          key={s}
+                          className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-muted/80 text-muted-foreground"
                         >
-                          <ExternalLink className="size-3.5" />
-                          <span>Demo</span>
-                        </a>
-                      )}
+                          {s}
+                        </span>
+                      ))}
                     </div>
 
                     <Link
                       href={`/projects/${project.slug}`}
-                      className="text-xs font-sans font-medium text-foreground hover:underline"
+                      className="text-xs font-sans font-medium text-foreground hover:underline shrink-0 pb-0.5"
                     >
                       Details →
                     </Link>
                   </div>
+
+                  {project.demo && (
+                    <div className="pt-2 border-t border-border/40 mt-2 text-xs font-mono">
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+                      >
+                        <ExternalLink className="size-3.5" />
+                        <span>Demo</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
               </Card>
             </motion.div>
