@@ -233,7 +233,7 @@ interface GigabitEthernet0/1.40
     resultEn: "100% full-mesh connectivity between OSPF domain (Router0 & PC0) and RIPv2 domain (Router2 & PC2) via Router1 ASBR mutual redistribution.",
     downloadPkt: "/downloads/redistribute_ospf_rip.pkt",
     rawConfig: `! ==========================================
-! ROUTER 0 (OSPF Domain - Area 0)
+! ROUTER 0 (OSPF Domain)
 ! ==========================================
 hostname Router0
 !
@@ -249,6 +249,7 @@ router ospf 1
  router-id 1.1.1.1
  network 10.10.10.0 0.0.0.3 area 0
  network 192.168.10.0 0.0.0.255 area 0
+ passive-interface GigabitEthernet0/1
 
 ! ==========================================
 ! ROUTER 1 (ASBR - Redistribution Gateway)
@@ -267,17 +268,20 @@ interface GigabitEthernet0/2
  ip address 192.168.20.1 255.255.255.0
  no shutdown
 !
+! OSPF: Membawa link Router0, LAN PC1, dan hasil redistribusi dari RIP
 router ospf 1
  router-id 2.2.2.2
  network 10.10.10.0 0.0.0.3 area 0
  network 192.168.20.0 0.0.0.255 area 0
+ passive-interface GigabitEthernet0/2
  redistribute rip subnets metric-type 2 metric 20
 !
+! RIP: Mengaktifkan link Router2 dan mendistribusikan OSPF ke RIP
 router rip
  version 2
  no auto-summary
- network 10.10.20.0
- network 192.168.20.0
+ network 10.0.0.0
+ passive-interface GigabitEthernet0/0
  redistribute ospf 1 metric 5
 
 ! ==========================================
@@ -296,8 +300,9 @@ interface GigabitEthernet0/1
 router rip
  version 2
  no auto-summary
- network 10.10.20.0
- network 192.168.30.0`
+ network 10.0.0.0
+ network 192.168.30.0
+ passive-interface GigabitEthernet0/1`
   },
   {
     title: "Standard ACL for Granular Network Access Control",
