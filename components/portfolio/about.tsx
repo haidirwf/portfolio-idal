@@ -104,11 +104,8 @@ export function About() {
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-1.5">
                 <Award className="size-3.5 text-primary" />
-                <span>{t("Sertifikasi MikroTik", "MikroTik Certifications")}</span>
+                <span>{t("Sertifikasi", "Certifications")}</span>
               </h3>
-              <Badge variant="outline" className="font-mono text-[9px] bg-primary/10 text-primary border-primary/30">
-                Official
-              </Badge>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
