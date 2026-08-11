@@ -202,7 +202,12 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             </Button>
           </div>
 
-          <pre className="p-3.5 rounded-lg bg-black/80 text-emerald-400 font-mono text-[11px] max-h-56 overflow-y-auto overscroll-contain border border-border/40 leading-relaxed touch-pan-y">
+          <pre
+            onWheel={(e) => {
+              e.stopPropagation();
+            }}
+            className="p-3.5 rounded-lg bg-black/80 text-emerald-400 font-mono text-[11px] max-h-56 overflow-y-auto overscroll-contain border border-border/40 leading-relaxed touch-pan-y"
+          >
             <code>{project.rawConfig}</code>
           </pre>
         </Card>
