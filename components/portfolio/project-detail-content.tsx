@@ -20,9 +20,7 @@ import {
   Terminal,
   Copy,
   Check,
-  FileDown,
-  Maximize2,
-  Minimize2
+  FileDown
 } from "lucide-react";
 
 export function ProjectDetailContent({ slug }: { slug: string }) {
@@ -30,6 +28,20 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
   const { t } = useLanguage();
   const [copiedConfig, setCopiedConfig] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsExpanded(false);
+    };
+    if (isExpanded) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isExpanded]);
 
   if (!project) return null;
 
@@ -102,43 +114,40 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         )}
       </div>
 
-      {/* Hero Screenshot / Topology Visual (Toggle Enlarged View) */}
+      {/* Hero Screenshot / Topology Visual */}
       <div
-        onClick={() => setIsExpanded((prev) => !prev)}
-        className={cn(
-          "group relative w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs cursor-pointer select-none transition-all duration-500 ease-in-out",
-          isExpanded ? "min-h-[500px] sm:min-h-[700px] aspect-auto" : "aspect-video"
-        )}
+        onClick={() => setIsExpanded(true)}
+        className="group relative aspect-video w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs cursor-pointer select-none"
       >
         <Image
           src={project.cover}
           alt={project.title}
-          fill={!isExpanded}
-          width={isExpanded ? 1600 : undefined}
-          height={isExpanded ? 1200 : undefined}
-          sizes="100vw"
-          className={cn(
-            "transition-all duration-500",
-            isExpanded ? "w-full h-auto object-contain" : "object-cover group-hover:scale-[1.01]"
-          )}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
           priority
         />
-
-        {/* Hover overlay hint */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white font-mono text-xs font-semibold backdrop-blur-[1px]">
-          {isExpanded ? (
-            <>
-              <Minimize2 className="size-4" />
-              <span>{t("Klik untuk mengecilkan", "Click to shrink")}</span>
-            </>
-          ) : (
-            <>
-              <Maximize2 className="size-4" />
-              <span>{t("Klik untuk memperbesar", "Click to enlarge")}</span>
-            </>
-          )}
-        </div>
       </div>
+
+      {/* Pure Full Screen Image Overlay (No black box card, no close button, no text) */}
+      {isExpanded && (
+        <div
+          onClick={() => setIsExpanded(false)}
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-2 sm:p-6 cursor-zoom-out animate-in fade-in duration-200"
+        >
+          <div className="relative w-full h-full max-w-7xl max-h-[95vh] flex items-center justify-center">
+            <Image
+              src={project.cover}
+              alt={project.title}
+              fill
+              sizes="100vw"
+              className="object-contain select-none"
+              quality={100}
+              priority
+            />
+          </div>
+        </div>
+      )}
 
       {/* Structured Grid: Overview, Problem, Solution */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
