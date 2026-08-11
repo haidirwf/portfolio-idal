@@ -323,6 +323,7 @@ router rip
     architectureEn: "LAN Subnet (PC0: 192.168.10.10 - PERMITTED, PC1: 192.168.10.20 - DENIED) -> Router0 (10.10.10.0/30) -> Router1 (ACL Filter on Gig0/1 Out) -> Server0 (192.168.20.10).",
     resultId: "Akses PC0 (192.168.10.10) DITERIMA 100% dan PC1 (192.168.10.20) DITOLAK secara presisi oleh Standard ACL pada Router1.",
     resultEn: "Host PC0 (192.168.10.10) PERMITTED 100% while PC1 (192.168.10.20) DENIED precisely by Standard ACL on Router1.",
+    downloadPkt: "/downloads/acl_topology.pkt",
     rawConfig: `! ==========================================
 ! ROUTER 0 CONFIGURATION (LAN Gateway)
 ! ==========================================
