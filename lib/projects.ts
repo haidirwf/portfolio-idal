@@ -52,7 +52,6 @@ export const PROJECTS: Project[] = [
     resultId: "Konektivitas terenkripsi antar-domain routing OSPF & EIGRP 100% stabil dengan alokasi DHCP /28 otomatis dan filtrasi keamanan ACL yang presisi.",
     resultEn: "100% stable encrypted inter-domain connectivity between OSPF & EIGRP with dynamic /28 DHCP pools and precise ACL security filtering.",
     downloadPkt: "/downloads/enterprise_topology.pkt",
-    downloadGns3: "/downloads/vlan-inter-vlan.gns3project",
     rawConfig: `! ======================================================================
 ! ENTERPRISE INTER-VLAN & HYBRID ROUTING COMPLETE CONFIGURATION
 ! ======================================================================
@@ -232,8 +231,6 @@ interface GigabitEthernet0/1.40
     architectureEn: "Router5 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router6 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/2, Gig0/1: 192.168.20.1/24) <-> Router7 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
     resultId: "Konektivitas full-mesh 100% antar wilayah OSPF (Router5 & PC3) dan RIPv2 (Router7 & PC5) melalui Router6 ASBR dengan mutual redistribution.",
     resultEn: "100% full-mesh connectivity between OSPF domain (Router5 & PC3) and RIPv2 domain (Router7 & PC5) via Router6 ASBR mutual redistribution.",
-    downloadPkt: "/downloads/ospf-rip-redistribution.pkt",
-    downloadGns3: "/downloads/ospf-rip-redistribution.gns3project",
     rawConfig: `! ==========================================
 ! ROUTER 5 (OSPF Domain - Area 0)
 ! ==========================================
@@ -325,8 +322,6 @@ router rip
     architectureEn: "Client Subnets (VLAN 10/20) -> Edge Router (ACL Filter on G0/0/1) -> Secure Server Subnet (VLAN 99).",
     resultId: "Partisi hak akses jaringan 100% efektif; memblokir akses subnet terlarang sambil mempertahankan akses bagi staf terotorisasi.",
     resultEn: "100% effective network access segmentation; blocking unauthorized subnets while maintaining access for authorized personnel.",
-    downloadPkt: "/downloads/standard-acl-control.pkt",
-    downloadGns3: "/downloads/standard-acl-control.gns3project",
     rawConfig: `! Cisco Standard Access Control List (ACL) Configuration
 ip access-list standard RESTRICT-SERVER-ACCESS
  deny host 192.168.20.50
@@ -362,8 +357,6 @@ interface GigabitEthernet0/0/1
     architectureEn: "Internal LAN (192.168.0.0/16) -> Edge Router NAT Engine (PAT) -> ISP Gateway (Public IP 203.0.113.1).",
     resultId: "Seluruh pengguna lokal (200+ host) berhasil terhubung ke internet menggunakan 1 IP publik tunggal tanpa kendala port exhaustion.",
     resultEn: "200+ internal hosts successfully sharing 1 single public IP address for internet access without port exhaustion.",
-    downloadPkt: "/downloads/nat-overload-pat.pkt",
-    downloadGns3: "/downloads/nat-overload-pat.gns3project",
     rawConfig: `! NAT Overload (PAT) Edge Router Configuration
 interface GigabitEthernet0/0/0
  description LAN-Internal
@@ -403,8 +396,6 @@ ip route 0.0.0.0 0.0.0.0 203.0.113.1`
     architectureEn: "Core Switch 1 (Root Primary) <-> Core Switch 2 (Root Backup) <-> Access Switches (PortFast & BPDU Guard).",
     resultId: "Perlindungan anti-looping 100% aktif dengan failover jalur redundan otomatis saat link utama terputus.",
     resultEn: "100% active anti-loop protection with seamless automated link failover during primary trunk failures.",
-    downloadPkt: "/downloads/stp-pvst-prevention.pkt",
-    downloadGns3: "/downloads/stp-pvst-prevention.gns3project",
     rawConfig: `! PVST+ Spanning-Tree Priority & BPDU Guard Config
 spanning-tree mode pvst
 spanning-tree vlan 1,10,20 root primary
