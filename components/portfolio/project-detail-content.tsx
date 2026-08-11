@@ -86,20 +86,51 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           ))}
         </div>
 
-        {/* Links Bar */}
-        {project.demo && (
-          <div className="pt-1">
+        {/* Links & Download Bar */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {project.downloadPkt && (
+            <a
+              href={project.downloadPkt}
+              download
+              className={cn(
+                buttonVariants({ variant: "default", size: "sm" }),
+                "h-8 font-mono text-xs gap-1.5 rounded-lg px-3 shadow-xs"
+              )}
+            >
+              <Download className="size-3.5" />
+              <span>{t("Unduh .PKT (Packet Tracer)", "Download .PKT (Packet Tracer)")}</span>
+            </a>
+          )}
+
+          {project.downloadGns3 && (
+            <a
+              href={project.downloadGns3}
+              download
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "h-8 font-mono text-xs gap-1.5 rounded-lg bg-background border-border/80 px-3"
+              )}
+            >
+              <FileDown className="size-3.5 text-emerald-500" />
+              <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
+            </a>
+          )}
+
+          {project.demo && (
             <a
               href={project.demo}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-1.5 rounded-lg bg-background")}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "h-8 font-mono text-xs gap-1.5 rounded-lg bg-background border-border/80 px-3"
+              )}
             >
               <ExternalLink className="size-3.5" />
               <span>Live Demo / Documentation</span>
             </a>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Hero Screenshot / Topology Visual */}
@@ -238,39 +269,6 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             <code>{project.rawConfig}</code>
           </pre>
         </Card>
-      )}
-
-      {/* Download Action Buttons (Compact Sleek Buttons) */}
-      {(project.downloadPkt || project.downloadGns3) && (
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          {project.downloadPkt && (
-            <a
-              href={project.downloadPkt}
-              download
-              className={cn(
-                buttonVariants({ variant: "default", size: "sm" }),
-                "h-8 sm:h-9 font-mono text-xs gap-1.5 rounded-md px-3"
-              )}
-            >
-              <Download className="size-3.5" />
-              <span>{t("Unduh .PKT (Packet Tracer)", "Download .PKT (Packet Tracer)")}</span>
-            </a>
-          )}
-
-          {project.downloadGns3 && (
-            <a
-              href={project.downloadGns3}
-              download
-              className={cn(
-                buttonVariants({ variant: "outline", size: "sm" }),
-                "h-8 sm:h-9 font-mono text-xs gap-1.5 rounded-md bg-background border-border/80 px-3"
-              )}
-            >
-              <FileDown className="size-3.5 text-emerald-500" />
-              <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
-            </a>
-          )}
-        </div>
       )}
     </div>
   );
