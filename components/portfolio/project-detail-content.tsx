@@ -208,96 +208,36 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </Card>
       )}
 
-      {/* Download Action Buttons (Boxy Modern Card Grid, Responsive) */}
+      {/* Download Action Buttons (Clean & Prominent Large Buttons) */}
       {(project.downloadPkt || project.downloadGns3) && (
-        <div className="space-y-3 pt-2">
-          <div className="space-y-1">
-            <h3 className="text-sm font-bold font-sans text-foreground">
-              {t("Unduh Berkas Lab & Topologi", "Download Lab & Topology Files")}
-            </h3>
-            <p className="text-xs text-muted-foreground font-sans">
-              {t(
-                "Pilih format berkas simulasi untuk dijalankan langsung di Packet Tracer atau GNS3.",
-                "Select simulation file format to run directly in Packet Tracer or GNS3."
+        <div className="flex flex-col sm:flex-row items-stretch gap-3 pt-2">
+          {project.downloadPkt && (
+            <a
+              href={project.downloadPkt}
+              download
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "h-12 sm:h-14 font-mono text-sm sm:text-base font-bold gap-2.5 rounded-xl shadow-xs justify-center flex-1"
               )}
-            </p>
-          </div>
+            >
+              <Download className="size-5" />
+              <span>{t("Unduh .PKT (Packet Tracer)", "Download .PKT (Packet Tracer)")}</span>
+            </a>
+          )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {project.downloadPkt && (
-              <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl hover:border-primary/50 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-xs group">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/20 text-primary group-hover:scale-105 transition-transform">
-                    <Download className="size-5 sm:size-6" />
-                  </div>
-                  <Badge variant="outline" className="font-mono text-[10px] bg-background">
-                    Cisco .PKT
-                  </Badge>
-                </div>
-
-                <div className="space-y-1">
-                  <h4 className="text-sm font-bold font-sans text-foreground">
-                    Cisco Packet Tracer
-                  </h4>
-                  <p className="text-xs text-muted-foreground font-sans line-clamp-2">
-                    {t(
-                      "File skenario terkonfigurasi (.pkt) siap dibuka di Packet Tracer.",
-                      "Pre-configured scenario file (.pkt) ready for Packet Tracer."
-                    )}
-                  </p>
-                </div>
-
-                <a
-                  href={project.downloadPkt}
-                  download
-                  className={cn(
-                    buttonVariants({ variant: "default", size: "default" }),
-                    "w-full font-mono text-xs font-semibold gap-2 rounded-lg shadow-xs justify-center"
-                  )}
-                >
-                  <Download className="size-4" />
-                  <span>{t("Unduh .PKT File", "Download .PKT File")}</span>
-                </a>
-              </Card>
-            )}
-
-            {project.downloadGns3 && (
-              <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl hover:border-emerald-500/50 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-xs group">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 group-hover:scale-105 transition-transform">
-                    <FileDown className="size-5 sm:size-6" />
-                  </div>
-                  <Badge variant="outline" className="font-mono text-[10px] bg-background text-emerald-600 border-emerald-500/30">
-                    GNS3 Project
-                  </Badge>
-                </div>
-
-                <div className="space-y-1">
-                  <h4 className="text-sm font-bold font-sans text-foreground">
-                    GNS3 Network Lab
-                  </h4>
-                  <p className="text-xs text-muted-foreground font-sans line-clamp-2">
-                    {t(
-                      "File proyek GNS3 beserta pemetaan topologi & appliance.",
-                      "GNS3 project file with topology mapping & appliances."
-                    )}
-                  </p>
-                </div>
-
-                <a
-                  href={project.downloadGns3}
-                  download
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "default" }),
-                    "w-full font-mono text-xs font-semibold gap-2 rounded-lg bg-background border-border/80 justify-center hover:border-emerald-500/50"
-                  )}
-                >
-                  <FileDown className="size-4 text-emerald-500" />
-                  <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
-                </a>
-              </Card>
-            )}
-          </div>
+          {project.downloadGns3 && (
+            <a
+              href={project.downloadGns3}
+              download
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "h-12 sm:h-14 font-mono text-sm sm:text-base font-bold gap-2.5 rounded-xl bg-background border-border/80 justify-center flex-1"
+              )}
+            >
+              <FileDown className="size-5 text-emerald-500" />
+              <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
+            </a>
+          )}
         </div>
       )}
     </div>
