@@ -48,25 +48,79 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
     tags: ["Routing", "OSPF", "RIPv2"],
-    architectureId: "OSPF Core Area 0 <-> ASBR Router (Mutual Redistribution) <-> RIPv2 Branch Domain.",
-    architectureEn: "OSPF Core Area 0 <-> ASBR Router (Mutual Redistribution) <-> RIPv2 Branch Domain.",
-    resultId: "Konektivitas full-mesh 100% antar wilayah OSPF dan RIPv2 dengan konvergensi otomatis dan tabel rute yang optimal.",
-    resultEn: "100% end-to-end connectivity between OSPF and RIPv2 domains with automated convergence and clean routing tables.",
+    architectureId: "Router5 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router6 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/2, Gig0/1: 192.168.20.1/24) <-> Router7 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
+    architectureEn: "Router5 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router6 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/2, Gig0/1: 192.168.20.1/24) <-> Router7 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
+    resultId: "Konektivitas full-mesh 100% antar wilayah OSPF (Router5 & PC3) dan RIPv2 (Router7 & PC5) melalui Router6 ASBR dengan mutual redistribution.",
+    resultEn: "100% full-mesh connectivity between OSPF domain (Router5 & PC3) and RIPv2 domain (Router7 & PC5) via Router6 ASBR mutual redistribution.",
     downloadPkt: "/downloads/ospf-rip-redistribution.pkt",
     downloadGns3: "/downloads/ospf-rip-redistribution.gns3project",
-    rawConfig: `! Router ASBR - OSPF & RIPv2 Mutual Redistribution Config
+    rawConfig: `! ==========================================
+! ROUTER 5 (OSPF Domain - Area 0)
+! ==========================================
+hostname Router5
+!
+interface GigabitEthernet0/0
+ ip address 10.10.10.1 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ ip address 192.168.10.1 255.255.255.0
+ no shutdown
+!
 router ospf 1
- router-id 1.1.1.1
- log-adjacency-changes
- network 10.0.0.0 0.0.0.255 area 0
+ router-id 5.5.5.5
+ network 10.10.10.0 0.0.0.3 area 0
+ network 192.168.10.0 0.0.0.255 area 0
+
+! ==========================================
+! ROUTER 6 (ASBR - Redistribution Gateway)
+! ==========================================
+hostname Router6
+!
+interface GigabitEthernet0/0
+ ip address 10.10.10.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ ip address 192.168.20.1 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/2
+ ip address 10.10.20.1 255.255.255.252
+ no shutdown
+!
+router ospf 1
+ router-id 6.6.6.6
+ network 10.10.10.0 0.0.0.3 area 0
+ network 192.168.20.0 0.0.0.255 area 0
  redistribute rip subnets metric-type 2 metric 20
 !
 router rip
  version 2
  no auto-summary
- network 192.168.1.0
+ network 10.10.20.0
+ network 192.168.20.0
  redistribute ospf 1 metric 5
-!`
+
+! ==========================================
+! ROUTER 7 (RIPv2 Domain)
+! ==========================================
+hostname Router7
+!
+interface GigabitEthernet0/0
+ ip address 10.10.20.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ ip address 192.168.30.1 255.255.255.0
+ no shutdown
+!
+router rip
+ version 2
+ no auto-summary
+ network 10.10.20.0
+ network 192.168.30.0`
+
   },
   {
     title: "Standard ACL for Granular Network Access Control",

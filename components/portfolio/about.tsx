@@ -83,11 +83,6 @@ export function About() {
                 )}
               </p>
             </div>
-
-            <div className="pt-2 border-t border-border/40 flex items-center gap-2 text-xs font-mono text-muted-foreground">
-              <ShieldCheck className="size-3.5 text-emerald-500 shrink-0" />
-              <span>{t("Spesialis TKJ & Infrastruktur", "TKJ & Infrastructure Specialist")}</span>
-            </div>
           </Card>
         </motion.div>
 
