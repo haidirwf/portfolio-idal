@@ -24,6 +24,18 @@ export function FloatingSectionTracker() {
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = React.useState("hero");
   const [isHovered, setIsHovered] = React.useState(false);
+  const [showActiveLabel, setShowActiveLabel] = React.useState(true);
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const resetTimer = React.useCallback(() => {
+    setShowActiveLabel(true);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      setShowActiveLabel(false);
+    }, 1000);
+  }, []);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -39,15 +51,21 @@ export function FloatingSectionTracker() {
           }
         }
       }
+
+      resetTimer();
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Initial check
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [resetTimer]);
 
   const scrollToSection = (id: string) => {
+    resetTimer();
     if (id === "hero") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -67,7 +85,7 @@ export function FloatingSectionTracker() {
       <div className="relative flex flex-col items-end space-y-4 pr-3 border-r border-border/40 py-2">
         {SECTIONS.map((sec) => {
           const isActive = activeSection === sec.id;
-          const showLabel = isActive || isHovered;
+          const showLabel = isHovered || (isActive && showActiveLabel);
 
           return (
             <button
@@ -80,14 +98,14 @@ export function FloatingSectionTracker() {
                   : "text-muted-foreground/50 hover:text-foreground/90 font-medium"
               )}
             >
-              {/* Section Label (Hanya muncul jika section sedang AKTIF atau mouse HOVER) */}
+              {/* Section Label (Muncul saat scroll lalu menghilang setelah 1 detik, atau muncul terus saat kursor di-hover) */}
               <AnimatePresence>
                 {showLabel && (
                   <motion.span
                     initial={{ opacity: 0, x: 6 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 6 }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.2 }}
                     className="whitespace-nowrap"
                   >
                     {t(sec.labelId, sec.labelEn)}
