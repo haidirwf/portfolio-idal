@@ -34,7 +34,7 @@ export function FloatingSectionTracker() {
     }
     timerRef.current = setTimeout(() => {
       setShowActiveLabel(false);
-    }, 1000);
+    }, 500);
   }, []);
 
   React.useEffect(() => {
