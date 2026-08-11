@@ -4,7 +4,6 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getProjectBySlug } from "@/lib/projects";
-import { Badge } from "@/components/ui/badge";
 import { buttonVariants, Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
@@ -67,17 +66,6 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
 
       {/* Header Compact */}
       <div className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="outline" className="font-mono text-xs">
-            {project.year}
-          </Badge>
-          {project.tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="font-mono text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-
         <h1 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight">
           {project.title}
         </h1>
