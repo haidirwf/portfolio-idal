@@ -38,9 +38,9 @@ export const PROJECTS: Project[] = [
     problemEn: "Integrating multi-branch networks across distinct routing domains (OSPF 100 & EIGRP 10), automating IP assignment for /28 VLAN subnets, and enforcing granular HTTP & PING access control via ACL.",
     solutionId: "Membangun 802.1Q Subinterfaces (Router-on-a-Stick), mengonfigurasi IP DHCP Pool /28, mengaktifkan Mutual Redistribution OSPF 100 <-> EIGRP 10 pada Multilayer Switch, mengonfigurasi GRE Tunnel 100.100.100.0/30, serta menerapkan Standard & Extended ACL (ICMP permit & HTTP deny / sebaliknya).",
     solutionEn: "Configured 802.1Q Subinterfaces (Router-on-a-Stick), dynamic /28 DHCP Pools, OSPF 100 <-> EIGRP 10 Mutual Redistribution on Multilayer Switch 3560, GRE Tunnel 100.100.100.0/30, and Standard/Extended ACL traffic policies.",
-    cover: "/projects/ENTERPRISENETWORK.webp",
+    cover: "/projects/enterprise.webp",
     gallery: [
-      "/projects/ENTERPRISENETWORK.webp"
+      "/projects/enterprise.webp"
     ],
     year: "2026",
     stack: ["Cisco Packet Tracer", "Inter-VLAN 802.1Q", "DHCP Server /28", "OSPF 100", "EIGRP 10", "GRE Tunnel", "Extended ACL"],
@@ -51,7 +51,7 @@ export const PROJECTS: Project[] = [
     architectureEn: "VLAN 10/20/21/30/40 (/28) -> Router 802.1Q Subinterfaces & DHCP -> Core Multilayer Switch (OSPF 100 & EIGRP 10 Redistribution + Server 8.8.8.0/28) -> GRE Tunnel (100.100.100.0/30) -> Edge Branch Routers & Extended ACL.",
     resultId: "Konektivitas terenkripsi antar-domain routing OSPF & EIGRP 100% stabil dengan alokasi DHCP /28 otomatis dan filtrasi keamanan ACL yang presisi.",
     resultEn: "100% stable encrypted inter-domain connectivity between OSPF & EIGRP with dynamic /28 DHCP pools and precise ACL security filtering.",
-    downloadPkt: "/downloads/vlan-inter-vlan.pkt",
+    downloadPkt: "/downloads/enterprise_topology.pkt",
     downloadGns3: "/downloads/vlan-inter-vlan.gns3project",
     rawConfig: `! ======================================================================
 ! ENTERPRISE INTER-VLAN & HYBRID ROUTING COMPLETE CONFIGURATION
@@ -219,9 +219,9 @@ interface GigabitEthernet0/1.40
     problemEn: "Metric mismatch between OSPF (cost/bandwidth) and RIPv2 (hop count) prevents automated route exchange across network boundaries.",
     solutionId: "Mengonfigurasi mutual redistribution pada ASBR dengan penetapan seed metric yang tepat (metric cost pada OSPF dan hop count pada RIP) serta filter prefix-list untuk mencegah routing loop.",
     solutionEn: "Configured mutual redistribution on the ASBR with explicit seed metrics (cost for OSPF, hop count for RIP) and prefix-list filtering to eliminate routing loops.",
-    cover: "/projects/REDISOSPFRIP.webp",
+    cover: "/projects/redistributeospfrip.webp",
     gallery: [
-      "/projects/REDISOSPFRIP.webp"
+      "/projects/redistributeospfrip.webp"
     ],
     year: "2026",
     stack: ["Cisco Packet Tracer", "OSPFv2", "RIPv2", "Route Redistribution", "Cisco IOS"],
