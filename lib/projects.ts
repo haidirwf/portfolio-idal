@@ -227,15 +227,15 @@ interface GigabitEthernet0/1.40
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
     tags: ["Routing", "OSPF", "RIPv2"],
-    architectureId: "Router5 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router6 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/2, Gig0/1: 192.168.20.1/24) <-> Router7 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
-    architectureEn: "Router5 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router6 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/2, Gig0/1: 192.168.20.1/24) <-> Router7 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
-    resultId: "Konektivitas full-mesh 100% antar wilayah OSPF (Router5 & PC3) dan RIPv2 (Router7 & PC5) melalui Router6 ASBR dengan mutual redistribution.",
-    resultEn: "100% full-mesh connectivity between OSPF domain (Router5 & PC3) and RIPv2 domain (Router7 & PC5) via Router6 ASBR mutual redistribution.",
+    architectureId: "Router0 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router1 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/1, Gig0/2: 192.168.20.1/24) <-> Router2 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
+    architectureEn: "Router0 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router1 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/1, Gig0/2: 192.168.20.1/24) <-> Router2 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
+    resultId: "Konektivitas full-mesh 100% antar wilayah OSPF (Router0 & PC0) dan RIPv2 (Router2 & PC2) melalui Router1 ASBR dengan mutual redistribution.",
+    resultEn: "100% full-mesh connectivity between OSPF domain (Router0 & PC0) and RIPv2 domain (Router2 & PC2) via Router1 ASBR mutual redistribution.",
     downloadPkt: "/downloads/redistribute_ospf_rip.pkt",
     rawConfig: `! ==========================================
-! ROUTER 5 (OSPF Domain - Area 0)
+! ROUTER 0 (OSPF Domain - Area 0)
 ! ==========================================
-hostname Router5
+hostname Router0
 !
 interface GigabitEthernet0/0
  ip address 10.10.10.1 255.255.255.252
@@ -246,29 +246,29 @@ interface GigabitEthernet0/1
  no shutdown
 !
 router ospf 1
- router-id 5.5.5.5
+ router-id 1.1.1.1
  network 10.10.10.0 0.0.0.3 area 0
  network 192.168.10.0 0.0.0.255 area 0
 
 ! ==========================================
-! ROUTER 6 (ASBR - Redistribution Gateway)
+! ROUTER 1 (ASBR - Redistribution Gateway)
 ! ==========================================
-hostname Router6
+hostname Router1
 !
 interface GigabitEthernet0/0
  ip address 10.10.10.2 255.255.255.252
  no shutdown
 !
 interface GigabitEthernet0/1
- ip address 192.168.20.1 255.255.255.0
- no shutdown
-!
-interface GigabitEthernet0/2
  ip address 10.10.20.1 255.255.255.252
  no shutdown
 !
+interface GigabitEthernet0/2
+ ip address 192.168.20.1 255.255.255.0
+ no shutdown
+!
 router ospf 1
- router-id 6.6.6.6
+ router-id 2.2.2.2
  network 10.10.10.0 0.0.0.3 area 0
  network 192.168.20.0 0.0.0.255 area 0
  redistribute rip subnets metric-type 2 metric 20
@@ -281,9 +281,9 @@ router rip
  redistribute ospf 1 metric 5
 
 ! ==========================================
-! ROUTER 7 (RIPv2 Domain)
+! ROUTER 2 (RIPv2 Domain)
 ! ==========================================
-hostname Router7
+hostname Router2
 !
 interface GigabitEthernet0/0
  ip address 10.10.20.2 255.255.255.252
