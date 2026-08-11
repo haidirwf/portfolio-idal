@@ -38,10 +38,9 @@ export const PROJECTS: Project[] = [
     problemEn: "Metric mismatch between OSPF (cost/bandwidth) and RIPv2 (hop count) prevents automated route exchange across network boundaries.",
     solutionId: "Mengonfigurasi mutual redistribution pada ASBR dengan penetapan seed metric yang tepat (metric cost pada OSPF dan hop count pada RIP) serta filter prefix-list untuk mencegah routing loop.",
     solutionEn: "Configured mutual redistribution on the ASBR with explicit seed metrics (cost for OSPF, hop count for RIP) and prefix-list filtering to eliminate routing loops.",
-    cover: "/projects/aether-engine.svg",
+    cover: "/projects/REDISOSPFRIP.webp",
     gallery: [
-      "/projects/aether-engine.svg",
-      "/projects/aether-engine-arch.svg"
+      "/projects/REDISOSPFRIP.webp"
     ],
     year: "2026",
     stack: ["Cisco Packet Tracer", "OSPFv2", "RIPv2", "Route Redistribution", "Cisco IOS"],
