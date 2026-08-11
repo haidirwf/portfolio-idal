@@ -173,7 +173,7 @@ interface GigabitEthernet0/0/1
     gallery: [
       "/projects/hyperscale.svg"
     ],
-    year: "2025",
+    year: "2028",
     stack: ["Cisco Packet Tracer", "NAT Overload", "PAT", "Cisco IOS", "Edge Security"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
@@ -202,48 +202,183 @@ ip route 0.0.0.0 0.0.0.0 203.0.113.1`
   {
     title: "Enterprise VLAN & Inter-VLAN Router-on-a-Stick",
     slug: "enterprise-vlan-inter-vlan-routing",
-    descriptionId: "Segmentasi domain broadcast Layer 2 menggunakan 802.1Q VLAN Trunking dan Inter-VLAN Routing (Router-on-a-Stick subinterfaces).",
-    descriptionEn: "Layer 2 broadcast domain segmentation utilizing 802.1Q VLAN Trunking and Inter-VLAN Routing via Router-on-a-Stick subinterfaces.",
-    overviewId: "Perancangan infrastruktur LAN enterprise dengan memisahkan grup departemen (HR, IT, Finance) ke dalam VLAN terisolasi untuk meningkatkan keamanan dan performa.",
-    overviewEn: "Enterprise LAN infrastructure design isolating departmental groups (HR, IT, Finance) into dedicated VLANs for security and performance optimization.",
-    problemId: "Broadcast storm dan risiko kebocoran data antar departemen akibat seluruh komputer berada dalam satu broadcast domain yang sama.",
-    problemEn: "Broadcast storms and data leakage risks across departments due to a flat, single broadcast domain environment.",
-    solutionId: "Membuat VLAN 10, 20, 30 pada Switch Layer 2, mengonfigurasi 802.1Q Trunking, dan membangun subinterfaces (.10, .20, .30) pada Router gateway.",
-    solutionEn: "Created VLANs 10, 20, 30 on Layer 2 Switches, configured 802.1Q Trunking, and engineered Router-on-a-Stick subinterfaces.",
+    descriptionId: "Infrastruktur enterprise terpadu memadukan Inter-VLAN Subinterfaces, DHCP Dynamic Pool, OSPF 100 & EIGRP 10 Redistribution pada Multilayer Switch, GRE Tunnel 100.100.100.0/30, serta Standard & Extended ACL.",
+    descriptionEn: "Unified enterprise infrastructure integrating Inter-VLAN Subinterfaces, Dynamic DHCP Pools, Multilayer Switch OSPF 100 & EIGRP 10 Redistribution, GRE Tunnel 100.100.100.0/30, and Standard & Extended ACL filtering.",
+    overviewId: "Topologi jaringan enterprise skala besar berarsitektur hybrid yang mengisolasi segmen LAN ke dalam VLAN 10, 20, 21, 30, 40 (/28), mendistribusikan IP secara dinamis via DHCP Server lokal & Router, serta menghubungkan domain routing OSPF 100 dan EIGRP 10 melalui Multilayer Switch 3560 dan GRE Tunnel.",
+    overviewEn: "Large-scale enterprise topology featuring segmented VLANs 10, 20, 21, 30, 40 (/28), local Server & Router DHCP pools, OSPF 100 & EIGRP 10 domain redistribution via Multilayer Switch 3560, and encrypted GRE Tunnel interconnection.",
+    problemId: "Kebutuhan mengintegrasikan dua cabang jaringan berprotokol routing berbeda (OSPF 100 & EIGRP 10), menyediakan pengalamatan IP otomatis di tiap segmen VLAN /28, serta membatasi akses HTTP & PING ke server sensitif.",
+    problemEn: "Integrating multi-branch networks across distinct routing domains (OSPF 100 & EIGRP 10), automating IP assignment for /28 VLAN subnets, and enforcing granular HTTP & PING access control via ACL.",
+    solutionId: "Membangun 802.1Q Subinterfaces (Router-on-a-Stick), mengonfigurasi IP DHCP Pool /28, mengaktifkan Mutual Redistribution OSPF 100 <-> EIGRP 10 pada Multilayer Switch, mengonfigurasi GRE Tunnel 100.100.100.0/30, serta menerapkan Standard & Extended ACL (ICMP permit & HTTP deny / sebaliknya).",
+    solutionEn: "Configured 802.1Q Subinterfaces (Router-on-a-Stick), dynamic /28 DHCP Pools, OSPF 100 <-> EIGRP 10 Mutual Redistribution on Multilayer Switch 3560, GRE Tunnel 100.100.100.0/30, and Standard/Extended ACL traffic policies.",
     cover: "/projects/ENTERPRISENETWORK.webp",
     gallery: [
       "/projects/ENTERPRISENETWORK.webp"
     ],
-    year: "2025",
-    stack: ["Cisco Packet Tracer", "VLAN", "802.1Q Trunking", "Inter-VLAN", "Cisco IOS"],
+    year: "2026",
+    stack: ["Cisco Packet Tracer", "Inter-VLAN 802.1Q", "DHCP Server /28", "OSPF 100", "EIGRP 10", "GRE Tunnel", "Extended ACL"],
     github: "https://github.com/haidirwf/portfolio-idal",
-    featured: false,
-    tags: ["VLAN", "Switching", "Cisco"],
-    architectureId: "Access Switch (VLAN 10/20/30) <-> 802.1Q Trunk Link <-> Gateway Router Subinterfaces (G0/0.10, G0/0.20, G0/0.30).",
-    architectureEn: "Access Switch (VLAN 10/20/30) <-> 802.1Q Trunk Link <-> Gateway Router Subinterfaces (G0/0.10, G0/0.20, G0/0.30).",
-    resultId: "Isolasi broadcast domain 100% terjamin dengan kontrol penuh lalu lintas komunikasi antar-VLAN.",
-    resultEn: "100% broadcast domain isolation achieved with full administrative control over inter-VLAN communication.",
+    featured: true,
+    tags: ["Enterprise Network", "VLAN", "OSPF & EIGRP", "ACL Security"],
+    architectureId: "VLAN 10/20/21/30/40 (/28) -> Router 802.1Q Subinterfaces & DHCP -> Core Multilayer Switch (OSPF 100 & EIGRP 10 Redistribution + Server 8.8.8.0/28) -> GRE Tunnel (100.100.100.0/30) -> Edge Branch Routers & Extended ACL.",
+    architectureEn: "VLAN 10/20/21/30/40 (/28) -> Router 802.1Q Subinterfaces & DHCP -> Core Multilayer Switch (OSPF 100 & EIGRP 10 Redistribution + Server 8.8.8.0/28) -> GRE Tunnel (100.100.100.0/30) -> Edge Branch Routers & Extended ACL.",
+    resultId: "Konektivitas terenkripsi antar-domain routing OSPF & EIGRP 100% stabil dengan alokasi DHCP /28 otomatis dan filtrasi keamanan ACL yang presisi.",
+    resultEn: "100% stable encrypted inter-domain connectivity between OSPF & EIGRP with dynamic /28 DHCP pools and precise ACL security filtering.",
     downloadPkt: "/downloads/vlan-inter-vlan.pkt",
     downloadGns3: "/downloads/vlan-inter-vlan.gns3project",
-    rawConfig: `! Switch VLAN Trunking & Router-on-a-Stick Subinterfaces
-! --- Switch Configuration ---
-vlan 10
- name HR_DEPT
-vlan 20
- name IT_DEPT
+    rawConfig: `! ======================================================================
+! ENTERPRISE INTER-VLAN & HYBRID ROUTING COMPLETE CONFIGURATION
+! ======================================================================
+
+! ----------------------------------------------------------------------
+! 1. LEFT BRANCH ROUTER (Router-on-a-Stick & Subinterfaces VLAN /28)
+! ----------------------------------------------------------------------
+hostname Branch-Router-Left
 !
-interface FastEthernet0/1
- switchport mode trunk
- switchport trunk allowed vlan 10,20
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
 !
-! --- Router Configuration ---
 interface GigabitEthernet0/0.10
  encapsulation dot1Q 10
- ip address 192.168.10.1 255.255.255.0
+ ip address 192.168.10.1 255.255.255.240
 !
 interface GigabitEthernet0/0.20
  encapsulation dot1Q 20
- ip address 192.168.20.1 255.255.255.0`
+ ip address 192.168.20.1 255.255.255.240
+!
+interface GigabitEthernet0/0.21
+ encapsulation dot1Q 21
+ ip address 192.168.21.1 255.255.255.240
+!
+! Local Server DHCP Helper (Local Server 192.168.10.2)
+interface GigabitEthernet0/0.10
+ ip helper-address 192.168.10.2
+!
+interface GigabitEthernet0/1
+ ip address 10.10.10.2 255.255.255.248
+!
+router ospf 100
+ router-id 2.2.2.2
+ network 10.10.10.0 0.0.0.7 area 0
+ network 192.168.10.0 0.0.0.15 area 0
+ network 192.168.20.0 0.0.0.15 area 0
+ network 192.168.21.0 0.0.0.15 area 0
+
+! ----------------------------------------------------------------------
+! 2. CORE MULTILAYER SWITCH (3560 - OSPF 100 & EIGRP 10 Redistribution)
+! ----------------------------------------------------------------------
+hostname Core-MultilayerSwitch
+ip routing
+!
+interface GigabitEthernet1/0/1
+ no switchport
+ ip address 10.10.10.1 255.255.255.248
+!
+interface GigabitEthernet1/0/2
+ no switchport
+ ip address 11.11.11.1 255.255.255.248
+!
+interface GigabitEthernet1/0/3
+ no switchport
+ ip address 21.21.21.1 255.255.255.248
+!
+interface GigabitEthernet1/0/4
+ no switchport
+ ip address 20.20.20.1 255.255.255.248
+!
+interface GigabitEthernet1/0/5
+ description Central-Google-Server
+ no switchport
+ ip address 8.8.8.1 255.255.255.240
+!
+! OSPF 100 Domain Config
+router ospf 100
+ router-id 1.1.1.1
+ network 10.10.10.0 0.0.0.7 area 0
+ network 11.11.11.0 0.0.0.7 area 0
+ network 8.8.8.0 0.0.0.15 area 0
+ redistribute eigrp 10 subnets
+!
+! EIGRP 10 Domain Config
+router eigrp 10
+ network 20.20.20.0 0.0.0.7
+ network 21.21.21.0 0.0.0.7
+ redistribute ospf 100 metric 10000 100 255 1 1500
+
+! ----------------------------------------------------------------------
+! 3. GRE TUNNEL CONFIGURATION (Inter-Branch Private Tunnel)
+! ----------------------------------------------------------------------
+! On Left Edge Router:
+interface Tunnel0
+ ip address 100.100.100.1 255.255.255.252
+ tunnel source GigabitEthernet0/1
+ tunnel destination 21.21.21.2
+!
+! On Right Edge Router:
+interface Tunnel0
+ ip address 100.100.100.2 255.255.255.252
+ tunnel source GigabitEthernet0/0
+ tunnel destination 11.11.11.2
+
+! ----------------------------------------------------------------------
+! 4. RIGHT BRANCH ROUTER & SWITCH (DHCP Pools & Extended ACL)
+! ----------------------------------------------------------------------
+hostname Branch-Router-Right
+!
+! Router On-Board DHCP Pools (/28 - 14 usable IPs per subnet)
+ip dhcp pool VLAN30_RIGHT
+ network 192.168.30.0 255.255.255.240
+ default-router 192.168.30.1
+!
+ip dhcp pool VLAN40_RIGHT
+ network 192.168.40.0 255.255.255.240
+ default-router 192.168.40.1
+!
+interface GigabitEthernet0/0
+ ip address 20.20.20.2 255.255.255.248
+!
+interface GigabitEthernet0/1
+ no ip address
+!
+interface GigabitEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.240
+!
+interface GigabitEthernet0/1.40
+ encapsulation dot1Q 40
+ ip address 192.168.40.1 255.255.255.240
+!
+router eigrp 10
+ network 20.20.20.0 0.0.0.7
+ network 192.168.30.0 0.0.0.15
+ network 192.168.40.0 0.0.0.15
+!
+! ----------------------------------------------------------------------
+! 5. ACL POLICIES (Standard & Extended Access Control Lists)
+! ----------------------------------------------------------------------
+! ACL Standard Policy (Block Host Access to LAN)
+access-list 10 deny host 192.168.70.5
+access-list 10 permit any
+!
+! ACL Extended Policy:
+! 1. Permit ICMP PING but Deny HTTP Web Access (Port 80)
+ip access-list extended BLOCK-WEB-ONLY
+ permit icmp any host 8.8.8.8
+ deny tcp any host 8.8.8.8 eq 80
+ permit ip any any
+!
+! 2. Permit HTTP Web Access but Deny ICMP PING
+ip access-list extended BLOCK-PING-ONLY
+ permit tcp any host 8.8.8.8 eq 80
+ deny icmp any host 8.8.8.8
+ permit ip any any
+!
+interface GigabitEthernet0/1.30
+ ip access-group BLOCK-WEB-ONLY in
+!
+interface GigabitEthernet0/1.40
+ ip access-group BLOCK-PING-ONLY in`
   },
   {
     title: "Spanning Tree Protocol (STP & PVST+) Loop Prevention",
