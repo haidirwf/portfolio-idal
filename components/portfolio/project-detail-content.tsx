@@ -83,42 +83,20 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           ))}
         </div>
 
-        {/* Downloads & Links Bar */}
-        <div className="flex flex-wrap items-center gap-2.5 pt-2">
-          {project.downloadPkt && (
-            <a
-              href={project.downloadPkt}
-              download
-              className={cn(buttonVariants({ variant: "default", size: "sm" }), "font-mono text-xs gap-1.5 rounded-lg px-3.5")}
-            >
-              <Download className="size-3.5" />
-              <span>{t("Unduh .PKT File", "Download .PKT File")}</span>
-            </a>
-          )}
-
-          {project.downloadGns3 && (
-            <a
-              href={project.downloadGns3}
-              download
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-1.5 rounded-lg bg-background px-3.5")}
-            >
-              <FileDown className="size-3.5 text-emerald-500" />
-              <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
-            </a>
-          )}
-
-          {project.demo && (
+        {/* Links Bar */}
+        {project.demo && (
+          <div className="pt-1">
             <a
               href={project.demo}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "font-mono text-xs gap-1.5")}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "font-mono text-xs gap-1.5 rounded-lg bg-background")}
             >
               <ExternalLink className="size-3.5" />
-              <span>Live Demo</span>
+              <span>Live Demo / Documentation</span>
             </a>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Hero Screenshot / Topology Visual */}
@@ -227,6 +205,53 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           <pre className="p-3.5 rounded-lg bg-black/80 text-emerald-400 font-mono text-[11px] max-h-56 overflow-y-auto border border-border/40 leading-relaxed">
             <code>{project.rawConfig}</code>
           </pre>
+        </Card>
+      )}
+
+      {/* Download Action Buttons (Prominent under script) */}
+      {(project.downloadPkt || project.downloadGns3) && (
+        <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-3 shadow-xs">
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold font-sans text-foreground">
+              {t("Unduh Berkas Lab & Topologi", "Download Topology & Lab Files")}
+            </h3>
+            <p className="text-xs text-muted-foreground font-sans">
+              {t(
+                "Unduh berkas simulasi jaringan untuk dijalankan langsung di Cisco Packet Tracer atau GNS3.",
+                "Download network simulation files to execute directly in Cisco Packet Tracer or GNS3."
+              )}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+            {project.downloadPkt && (
+              <a
+                href={project.downloadPkt}
+                download
+                className={cn(
+                  buttonVariants({ variant: "default", size: "lg" }),
+                  "font-mono text-sm gap-2 rounded-xl px-5 shadow-xs justify-center sm:justify-start"
+                )}
+              >
+                <Download className="size-4" />
+                <span>{t("Unduh Berkas .PKT (Packet Tracer)", "Download .PKT (Packet Tracer)")}</span>
+              </a>
+            )}
+
+            {project.downloadGns3 && (
+              <a
+                href={project.downloadGns3}
+                download
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "font-mono text-sm gap-2 rounded-xl bg-background border-border/80 px-5 justify-center sm:justify-start"
+                )}
+              >
+                <FileDown className="size-4 text-emerald-500" />
+                <span>{t("Unduh Project GNS3", "Download GNS3 Project")}</span>
+              </a>
+            )}
+          </div>
         </Card>
       )}
     </div>
