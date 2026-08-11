@@ -218,9 +218,9 @@ interface GigabitEthernet0/1.40
     problemEn: "Metric mismatch between OSPF (cost/bandwidth) and RIPv2 (hop count) prevents automated route exchange across network boundaries.",
     solutionId: "Mengonfigurasi mutual redistribution pada ASBR dengan penetapan seed metric yang tepat (metric cost pada OSPF dan hop count pada RIP) serta filter prefix-list untuk mencegah routing loop.",
     solutionEn: "Configured mutual redistribution on the ASBR with explicit seed metrics (cost for OSPF, hop count for RIP) and prefix-list filtering to eliminate routing loops.",
-    cover: "/projects/redistribute_ospf_rip.png",
+    cover: "/projects/redistribute_ospf_rip.webp",
     gallery: [
-      "/projects/redistribute_ospf_rip.png"
+      "/projects/redistribute_ospf_rip.webp"
     ],
     year: "2026",
     stack: ["Cisco Packet Tracer", "OSPFv2", "RIPv2", "Route Redistribution", "Cisco IOS"],
@@ -302,37 +302,63 @@ router rip
   {
     title: "Standard ACL for Granular Network Access Control",
     slug: "standard-acl-access-control",
-    descriptionId: "Implementasi Standard Access Control List (ACL 1–99) untuk mengamankan dan membatasi akses segmen jaringan internal dan server sensitif.",
-    descriptionEn: "Standard Access Control List (ACL 1–99) implementation securing and restricting network segment access to sensitive internal servers.",
-    overviewId: "Perancangan sistem keamanan dasar di tingkat Layer 3 untuk memblokir host atau subnet yang tidak diizinkan masuk ke server data internal dan gateway manajemen.",
-    overviewEn: "Layer 3 perimeter security design blocking unauthorized hosts or subnets from accessing internal data servers and management gateways.",
-    problemId: "Perangkat pengguna dari subnet publik/guest dapat secara bebas mengakses IP server database internal tanpa adanya pembatasan lalu lintas data.",
-    problemEn: "Unrestricted host access allowed guest and public subnets to directly reach internal database servers without traffic filtering.",
-    solutionId: "Menerapkan Standard ACL pada antarmuka terdekat dengan tujuan (closest to destination interface) dengan aturan deny spesifik dan permit explicit.",
-    solutionEn: "Applied Standard ACL on the closest interface to the destination with specific host deny statements followed by explicit permit rules.",
-    cover: "/projects/vortex-analytics.svg",
+    descriptionId: "Implementasi Standard Access Control List (ACL 1–99) untuk memfilter hak akses host PC0 (DITERIMA) dan memblokir host PC1 (DITOLAK) menuju Server0.",
+    descriptionEn: "Standard Access Control List (ACL 1–99) implementation permitting host PC0 access while strictly denying host PC1 access to Server0.",
+    overviewId: "Perancangan perimeter security Layer 3 dengan Standard ACL untuk mengontrol akses antarsegmen LAN (192.168.10.0/24) menuju Server0 (192.168.20.10).",
+    overviewEn: "Layer 3 security design with Standard ACL controlling access from LAN subnet (192.168.10.0/24) to target Server0 (192.168.20.10).",
+    problemId: "Perangkat PC1 (192.168.10.20) tidak diizinkan mengakses Server0 (192.168.20.10), sedangkan PC0 (192.168.10.10) harus tetap memiliki akses penuh.",
+    problemEn: "Host PC1 (192.168.10.20) must be prevented from accessing Server0 (192.168.20.10), while host PC0 (192.168.10.10) retains full access.",
+    solutionId: "Menerapkan Standard ACL pada Router1 (Gig0/1 Outbound menuju Server0) dengan rule deny host 192.168.10.20 diikuti permit any.",
+    solutionEn: "Applied Standard ACL on Router1 (Gig0/1 Outbound facing Server0) with rule deny host 192.168.10.20 followed by permit any.",
+    cover: "/projects/acl.webp",
     gallery: [
-      "/projects/vortex-analytics.svg"
+      "/projects/acl.webp"
     ],
     year: "2026",
     stack: ["Cisco Packet Tracer", "Standard ACL", "Network Security", "Cisco IOS"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
     tags: ["Security", "ACL", "Cisco"],
-    architectureId: "Client Subnets (VLAN 10/20) -> Edge Router (ACL Filter on G0/0/1) -> Secure Server Subnet (VLAN 99).",
-    architectureEn: "Client Subnets (VLAN 10/20) -> Edge Router (ACL Filter on G0/0/1) -> Secure Server Subnet (VLAN 99).",
-    resultId: "Partisi hak akses jaringan 100% efektif; memblokir akses subnet terlarang sambil mempertahankan akses bagi staf terotorisasi.",
-    resultEn: "100% effective network access segmentation; blocking unauthorized subnets while maintaining access for authorized personnel.",
-    rawConfig: `! Cisco Standard Access Control List (ACL) Configuration
-ip access-list standard RESTRICT-SERVER-ACCESS
- deny host 192.168.20.50
- deny 192.168.30.0 0.0.0.255
- permit any
+    architectureId: "LAN Subnet (PC0: 192.168.10.10 - DITERIMA, PC1: 192.168.10.20 - DITOLAK) -> Router0 (10.10.10.0/30) -> Router1 (ACL Filter on Gig0/1 Out) -> Server0 (192.168.20.10).",
+    architectureEn: "LAN Subnet (PC0: 192.168.10.10 - PERMITTED, PC1: 192.168.10.20 - DENIED) -> Router0 (10.10.10.0/30) -> Router1 (ACL Filter on Gig0/1 Out) -> Server0 (192.168.20.10).",
+    resultId: "Akses PC0 (192.168.10.10) DITERIMA 100% dan PC1 (192.168.10.20) DITOLAK secara presisi oleh Standard ACL pada Router1.",
+    resultEn: "Host PC0 (192.168.10.10) PERMITTED 100% while PC1 (192.168.10.20) DENIED precisely by Standard ACL on Router1.",
+    rawConfig: `! ==========================================
+! ROUTER 0 CONFIGURATION (LAN Gateway)
+! ==========================================
+hostname Router0
 !
-interface GigabitEthernet0/0/1
- ip address 10.10.99.1 255.255.255.0
- ip access-group RESTRICT-SERVER-ACCESS out
-!`
+interface GigabitEthernet0/0
+ ip address 10.10.10.1 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ ip address 192.168.10.1 255.255.255.0
+ no shutdown
+!
+ip route 192.168.20.0 255.255.255.0 10.10.10.2
+
+! ==========================================
+! ROUTER 1 CONFIGURATION (ACL Security Filter)
+! ==========================================
+hostname Router1
+!
+interface GigabitEthernet0/0
+ ip address 10.10.10.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ ip address 192.168.20.1 255.255.255.0
+ ip access-group FILTER-SERVER-ACCESS out
+ no shutdown
+!
+ip route 192.168.10.0 255.255.255.0 10.10.10.1
+!
+! Standard Access Control List Policy
+! Deny PC1 (192.168.10.20) & Permit PC0 (192.168.10.10 / any)
+ip access-list standard FILTER-SERVER-ACCESS
+ deny host 192.168.10.20
+ permit any`
   },
   {
     title: "NAT Overload (PAT) Public IP Pool Gateway",
