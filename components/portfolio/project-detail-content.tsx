@@ -208,19 +208,19 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </Card>
       )}
 
-      {/* Download Action Buttons (Sleek Medium-Sized Buttons) */}
+      {/* Download Action Buttons (Compact Sleek Buttons) */}
       {(project.downloadPkt || project.downloadGns3) && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-2">
+        <div className="flex flex-wrap items-center gap-2 pt-2">
           {project.downloadPkt && (
             <a
               href={project.downloadPkt}
               download
               className={cn(
-                buttonVariants({ variant: "default" }),
-                "h-10 sm:h-11 font-mono text-xs sm:text-sm font-semibold gap-2 rounded-lg shadow-xs px-4 justify-center"
+                buttonVariants({ variant: "default", size: "sm" }),
+                "h-8 sm:h-9 font-mono text-xs gap-1.5 rounded-md px-3"
               )}
             >
-              <Download className="size-4" />
+              <Download className="size-3.5" />
               <span>{t("Unduh .PKT (Packet Tracer)", "Download .PKT (Packet Tracer)")}</span>
             </a>
           )}
@@ -230,11 +230,11 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
               href={project.downloadGns3}
               download
               className={cn(
-                buttonVariants({ variant: "outline" }),
-                "h-10 sm:h-11 font-mono text-xs sm:text-sm font-semibold gap-2 rounded-lg bg-background border-border/80 px-4 justify-center"
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "h-8 sm:h-9 font-mono text-xs gap-1.5 rounded-md bg-background border-border/80 px-3"
               )}
             >
-              <FileDown className="size-4 text-emerald-500" />
+              <FileDown className="size-3.5 text-emerald-500" />
               <span>{t("Unduh GNS3 Project", "Download GNS3 Project")}</span>
             </a>
           )}
