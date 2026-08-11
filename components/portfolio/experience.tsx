@@ -98,6 +98,7 @@ export function Experience() {
                         src={exp.logo}
                         alt={exp.company}
                         fill
+                        sizes="(max-width: 768px) 48px, 48px"
                         className="object-contain p-1 rounded-md"
                       />
                     </div>
