@@ -43,7 +43,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
           href="/"
           className="flex items-center gap-2.5 font-mono text-xs sm:text-sm font-semibold tracking-tight hover:opacity-80 transition-opacity"
         >
-          <img src="/icon.png" alt="wf logo" className="size-5 rounded-xs border border-border/40 object-cover" />
+          <img src="/icon.png" alt="wf logo" className="size-5 rounded-xs object-cover" />
           <span>haidar portfolio</span>
         </Link>
 
