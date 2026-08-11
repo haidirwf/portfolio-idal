@@ -28,213 +28,206 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
-    title: "Multi-Area OSPF Enterprise Topology",
-    slug: "multi-area-ospf-enterprise",
-    descriptionId: "Desain dan simulasi topologi jaringan skala besar dengan Multi-Area OSPF, Area 0 Backbone, dan Inter-VLAN Routing pada Cisco Packet Tracer.",
-    descriptionEn: "Design and simulation of large-scale enterprise network topology with Multi-Area OSPF, Area 0 Backbone, and Inter-VLAN Routing on Cisco Packet Tracer.",
-    overviewId: "Simulasi arsitektur jaringan enterprise yang memisahkan traffic jaringan ke dalam beberapa area OSPF (Area 0, Area 10, Area 20) untuk mengoptimalkan tabel routing dan mengurangi overhead LSDB (Link-State Database).",
-    overviewEn: "Enterprise network architecture simulation segmenting traffic into multiple OSPF areas (Area 0, Area 10, Area 20) to optimize routing tables and reduce LSDB overhead.",
-    problemId: "Jaringan skala besar tanpa pembagian area OSPF mengalami lonjakan pembengkakan tabel routing dan banjir LSA yang memperlambat pemrosesan router.",
-    problemEn: "Flat single-area networks suffer from bloated routing tables and LSA flooding that choke router CPU under topology changes.",
-    solutionId: "Mengimplementasikan pembagian OSPF Multi-Area, summarization subnet pada ABR (Area Border Router), serta otentikasi MD5 antar router.",
-    solutionEn: "Implemented Multi-Area OSPF, subnet summarization at ABRs, and MD5 router authentication for secure fast convergence.",
+    title: "OSPF & RIPv2 Dynamic Route Redistribution",
+    slug: "ospf-rip-route-redistribution",
+    descriptionId: "Arsitektur interoperabilitas dua protokol routing dinamis (OSPF & RIPv2) menggunakan mutual route redistribution dan seed metric tuning pada Cisco IOS.",
+    descriptionEn: "Dual dynamic routing protocol interoperability architecture (OSPF & RIPv2) using mutual route redistribution and seed metric tuning on Cisco IOS.",
+    overviewId: "Topologi hybrid enterprise yang menghubungkan jaringan inti berbasis OSPF dengan jaringan cabang legacy berbasis RIPv2 melalui router redistribusi (Autonomous System Boundary Router / ASBR).",
+    overviewEn: "Enterprise hybrid topology connecting an OSPF-based core network with a legacy RIPv2 branch network via Autonomous System Boundary Router (ASBR) route redistribution.",
+    problemId: "Perbedaan struktur metric antara OSPF (cost/bandwidth) dan RIPv2 (hop count) menyebabkan kegagalan pertukaran rute otomatis antar wilayah jaringan.",
+    problemEn: "Metric mismatch between OSPF (cost/bandwidth) and RIPv2 (hop count) prevents automated route exchange across network boundaries.",
+    solutionId: "Mengonfigurasi mutual redistribution pada ASBR dengan penetapan seed metric yang tepat (metric cost pada OSPF dan hop count pada RIP) serta filter prefix-list untuk mencegah routing loop.",
+    solutionEn: "Configured mutual redistribution on the ASBR with explicit seed metrics (cost for OSPF, hop count for RIP) and prefix-list filtering to eliminate routing loops.",
     cover: "/projects/aether-engine.svg",
     gallery: [
       "/projects/aether-engine.svg",
       "/projects/aether-engine-arch.svg"
     ],
     year: "2026",
-    stack: ["Cisco Packet Tracer", "OSPFv2", "Inter-VLAN", "Mikrotik", "Cisco IOS"],
+    stack: ["Cisco Packet Tracer", "OSPFv2", "RIPv2", "Route Redistribution", "Cisco IOS"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
-    tags: ["Networking", "Cisco", "OSPF"],
-    architectureId: "Core Switch Layer 3 -> ABR (Area Border Router) -> OSPF Area 0 Backbone -> Edge Access Switches & VLANs.",
-    architectureEn: "Layer 3 Core Switch -> ABR (Area Border Router) -> OSPF Area 0 Backbone -> Edge Access Switches & VLANs.",
-    resultId: "Efisiensi tabel routing meningkat hingga 60% dan konvergensi jalur cadangan tercapai dalam waktu <1 detik.",
-    resultEn: "Routing table efficiency improved by 60% with sub-second failover convergence time.",
-    downloadPkt: "/downloads/multi-area-ospf.pkt",
-    downloadGns3: "/downloads/multi-area-ospf.gns3project",
-    rawConfig: `! Router OSPF Backbone Area 0 & Border Router Config
+    tags: ["Routing", "OSPF", "RIPv2"],
+    architectureId: "OSPF Core Area 0 <-> ASBR Router (Mutual Redistribution) <-> RIPv2 Branch Domain.",
+    architectureEn: "OSPF Core Area 0 <-> ASBR Router (Mutual Redistribution) <-> RIPv2 Branch Domain.",
+    resultId: "Konektivitas full-mesh 100% antar wilayah OSPF dan RIPv2 dengan konvergensi otomatis dan tabel rute yang optimal.",
+    resultEn: "100% end-to-end connectivity between OSPF and RIPv2 domains with automated convergence and clean routing tables.",
+    downloadPkt: "/downloads/ospf-rip-redistribution.pkt",
+    downloadGns3: "/downloads/ospf-rip-redistribution.gns3project",
+    rawConfig: `! Router ASBR - OSPF & RIPv2 Mutual Redistribution Config
 router ospf 1
  router-id 1.1.1.1
  log-adjacency-changes
- area 0 authentication message-digest
- area 10 stub no-summary
- network 10.0.0.0 0.255.255.255 area 0
- network 192.168.10.0 0.0.0.255 area 10
+ network 10.0.0.0 0.0.0.255 area 0
+ redistribute rip subnets metric-type 2 metric 20
 !
-interface GigabitEthernet0/0/0
- ip address 10.0.0.1 255.255.255.252
- ip ospf message-digest-key 1 md5 CiscoPass2026
+router rip
+ version 2
+ no auto-summary
+ network 192.168.1.0
+ redistribute ospf 1 metric 5
 !`
   },
   {
-    title: "EIGRP Dual-Stack & Route Redistribution",
-    slug: "eigrp-dual-stack-redistribution",
-    descriptionId: "Topologi EIGRP berperforma tinggi dengan redistribusi rute dinamis antara IPv4/IPv6 dan optimasi metric bandwidth.",
-    descriptionEn: "High-performance EIGRP topology featuring dynamic IPv4/IPv6 route redistribution and composite metric optimization.",
-    overviewId: "Konfigurasi EIGRP Autonomous System (AS) 100 terintegrasi dengan kriteria DUAL algorithm untuk menyediakan rute bebas loop (Feasible Successor) secara instan.",
-    overviewEn: "EIGRP AS 100 configuration leveraging DUAL algorithm to provide loop-free Feasible Successor routes for instantaneous backup switching.",
-    problemId: "Terjadinya downtime komunikasi antar cabang ketika link ISP utama terputus karena belum adanya sistem penentuan jalur cadangan otomatis.",
-    problemEn: "Inter-branch communication downtime occurred during primary ISP link failures due to lack of automated path calculation.",
-    solutionId: "Mengatur EIGRP K-values, redistribusi rute statis ke EIGRP, serta mengaktifkan EIGRP Named Mode untuk mendukung dual-stack IPv4/IPv6.",
-    solutionEn: "Tuned EIGRP K-values, configured static route redistribution, and deployed EIGRP Named Mode for seamless dual-stack IPv4/IPv6 operation.",
+    title: "Standard ACL for Granular Network Access Control",
+    slug: "standard-acl-access-control",
+    descriptionId: "Implementasi Standard Access Control List (ACL 1–99) untuk mengamankan dan membatasi akses segmen jaringan internal dan server sensitif.",
+    descriptionEn: "Standard Access Control List (ACL 1–99) implementation securing and restricting network segment access to sensitive internal servers.",
+    overviewId: "Perancangan sistem keamanan dasar di tingkat Layer 3 untuk memblokir host atau subnet yang tidak diizinkan masuk ke server data internal dan gateway manajemen.",
+    overviewEn: "Layer 3 perimeter security design blocking unauthorized hosts or subnets from accessing internal data servers and management gateways.",
+    problemId: "Perangkat pengguna dari subnet publik/guest dapat secara bebas mengakses IP server database internal tanpa adanya pembatasan lalu lintas data.",
+    problemEn: "Unrestricted host access allowed guest and public subnets to directly reach internal database servers without traffic filtering.",
+    solutionId: "Menerapkan Standard ACL pada antarmuka terdekat dengan tujuan (closest to destination interface) dengan aturan deny spesifik dan permit explicit.",
+    solutionEn: "Applied Standard ACL on the closest interface to the destination with specific host deny statements followed by explicit permit rules.",
     cover: "/projects/vortex-analytics.svg",
     gallery: [
       "/projects/vortex-analytics.svg"
     ],
-    year: "2025",
-    stack: ["Cisco Packet Tracer", "EIGRP", "IPv6 Dual-Stack", "Cisco IOS", "Mikrotik"],
+    year: "2026",
+    stack: ["Cisco Packet Tracer", "Standard ACL", "Network Security", "Cisco IOS"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
-    tags: ["Networking", "EIGRP", "Routing"],
-    architectureId: "AS 100 EIGRP Mesh Core -> Redistribution Border Router -> Dual-Stack IPv4/IPv6 Gateway.",
-    architectureEn: "AS 100 EIGRP Mesh Core -> Redistribution Border Router -> Dual-Stack IPv4/IPv6 Gateway.",
-    resultId: "Failover otomatis tanpa drop paket saat simulasi link terputus (Zero packet loss during failover).",
-    resultEn: "Zero packet loss during simulated link failure via instant Feasible Successor path activation.",
-    downloadPkt: "/downloads/eigrp-dual-stack.pkt",
-    downloadGns3: "/downloads/eigrp-dual-stack.gns3project",
-    rawConfig: `! EIGRP Dual-Stack AS 100 Configuration
-router eigrp Enterprise-WAN
- !
- address-family ipv4 autonomous-system 100
-  topology base
-   redistribute static
-  exit-af-topology
-  network 10.1.0.0 0.0.255.255
-  network 172.16.0.0 0.0.255.255
- exit-address-family
- !
- address-family ipv6 autonomous-system 100
-  topology base
-  exit-af-topology
- exit-address-family
+    tags: ["Security", "ACL", "Cisco"],
+    architectureId: "Client Subnets (VLAN 10/20) -> Edge Router (ACL Filter on G0/0/1) -> Secure Server Subnet (VLAN 99).",
+    architectureEn: "Client Subnets (VLAN 10/20) -> Edge Router (ACL Filter on G0/0/1) -> Secure Server Subnet (VLAN 99).",
+    resultId: "Partisi hak akses jaringan 100% efektif; memblokir akses subnet terlarang sambil mempertahankan akses bagi staf terotorisasi.",
+    resultEn: "100% effective network access segmentation; blocking unauthorized subnets while maintaining access for authorized personnel.",
+    downloadPkt: "/downloads/standard-acl-control.pkt",
+    downloadGns3: "/downloads/standard-acl-control.gns3project",
+    rawConfig: `! Cisco Standard Access Control List (ACL) Configuration
+ip access-list standard RESTRICT-SERVER-ACCESS
+ deny host 192.168.20.50
+ deny 192.168.30.0 0.0.0.255
+ permit any
+!
+interface GigabitEthernet0/0/1
+ ip address 10.10.99.1 255.255.255.0
+ ip access-group RESTRICT-SERVER-ACCESS out
 !`
   },
   {
-    title: "Enterprise VLAN, STP & EtherChannel Bond",
-    slug: "vlan-stp-etherchannel",
-    descriptionId: "Perancangan switching jaringan enterprise menggunakan Rapid Spanning Tree (RSTP), LACP EtherChannel, dan VTP.",
-    descriptionEn: "Enterprise Layer 2 switching design incorporating Rapid Spanning Tree (RSTP), LACP EtherChannel bonding, and VTP trunking.",
-    overviewId: "Infrastruktur Layer 2 terpadu yang memadukan penggabungan port EtherChannel (LACP) untuk meningkatkan agregasi bandwidth dan redundancy switch link.",
-    overviewEn: "Unified Layer 2 infrastructure bundling switch ports via LACP EtherChannel to multiply bandwidth and ensure link redundancy.",
-    problemId: "Bottleneck bandwidth antar switch distribution dan risiko looping jaringan (broadcast storm) akibat keterbatasan port tunggal.",
-    problemEn: "Inter-switch bandwidth bottlenecks and switching loop risks (broadcast storms) from single link topology limits.",
-    solutionId: "Konfigurasi Port-Channel 802.3ad (LACP), Per-VLAN Spanning Tree (PVST+), serta penerapan VTP Server/Client untuk kemudahan manajemen VLAN.",
-    solutionEn: "Configured 802.3ad LACP Port-Channels, PVST+ Rapid Spanning Tree, and VTP Server/Client domain management.",
+    title: "NAT Overload (PAT) Public IP Pool Gateway",
+    slug: "nat-overload-pat-public-gateway",
+    descriptionId: "Konfigurasi Network Address Translation Overload (Port Address Translation / PAT) untuk mentranslasikan ribuan IP privat ke satu/beberapa IP publik.",
+    descriptionEn: "Network Address Translation Overload (Port Address Translation / PAT) configuration mapping internal private IPs to a single or pool of public IPs.",
+    overviewId: "Implementasi NAT Overload pada Edge Router untuk menghemat penggunaan alokasi IP publik ISP dan memungkinkan seluruh perangkat LAN mengakses internet secara simultan.",
+    overviewEn: "Edge Router NAT Overload deployment to conserve public IP address space while granting full internet access to internal LAN clients simultaneously.",
+    problemId: "Keterbatasan jumlah alamat IPv4 publik dari ISP mencegah ratusan perangkat internal di kantor cabang untuk terkoneksi ke jaringan internet.",
+    problemEn: "Limited public IPv4 address availability from the ISP prevented hundreds of internal LAN devices from connecting to the internet.",
+    solutionId: "Membuat IP NAT Inside/Outside interfaces, mendefinisikan Standard ACL untuk IP privat LAN, dan mengaktifkan 'ip nat inside source list overload'.",
+    solutionEn: "Configured NAT Inside/Outside interfaces, defined Standard ACL for private LAN ranges, and activated 'ip nat inside source list overload'.",
+    cover: "/projects/hyperscale.svg",
+    gallery: [
+      "/projects/hyperscale.svg"
+    ],
+    year: "2025",
+    stack: ["Cisco Packet Tracer", "NAT Overload", "PAT", "Cisco IOS", "Edge Security"],
+    github: "https://github.com/haidirwf/portfolio-idal",
+    featured: false,
+    tags: ["NAT", "PAT", "Networking"],
+    architectureId: "Internal LAN (192.168.0.0/16) -> Edge Router NAT Engine (PAT) -> ISP Gateway (Public IP 203.0.113.1).",
+    architectureEn: "Internal LAN (192.168.0.0/16) -> Edge Router NAT Engine (PAT) -> ISP Gateway (Public IP 203.0.113.1).",
+    resultId: "Seluruh pengguna lokal (200+ host) berhasil terhubung ke internet menggunakan 1 IP publik tunggal tanpa kendala port exhaustion.",
+    resultEn: "200+ internal hosts successfully sharing 1 single public IP address for internet access without port exhaustion.",
+    downloadPkt: "/downloads/nat-overload-pat.pkt",
+    downloadGns3: "/downloads/nat-overload-pat.gns3project",
+    rawConfig: `! NAT Overload (PAT) Edge Router Configuration
+interface GigabitEthernet0/0/0
+ description LAN-Internal
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/0/1
+ description WAN-ISP
+ ip address 203.0.113.2 255.255.255.252
+ ip nat outside
+!
+access-list 10 permit 192.168.10.0 0.0.0.255
+ip nat inside source list 10 interface GigabitEthernet0/0/1 overload
+ip route 0.0.0.0 0.0.0.0 203.0.113.1`
+  },
+  {
+    title: "Enterprise VLAN & Inter-VLAN Router-on-a-Stick",
+    slug: "enterprise-vlan-inter-vlan-routing",
+    descriptionId: "Segmentasi domain broadcast Layer 2 menggunakan 802.1Q VLAN Trunking dan Inter-VLAN Routing (Router-on-a-Stick subinterfaces).",
+    descriptionEn: "Layer 2 broadcast domain segmentation utilizing 802.1Q VLAN Trunking and Inter-VLAN Routing via Router-on-a-Stick subinterfaces.",
+    overviewId: "Perancangan infrastruktur LAN enterprise dengan memisahkan grup departemen (HR, IT, Finance) ke dalam VLAN terisolasi untuk meningkatkan keamanan dan performa.",
+    overviewEn: "Enterprise LAN infrastructure design isolating departmental groups (HR, IT, Finance) into dedicated VLANs for security and performance optimization.",
+    problemId: "Broadcast storm dan risiko kebocoran data antar departemen akibat seluruh komputer berada dalam satu broadcast domain yang sama.",
+    problemEn: "Broadcast storms and data leakage risks across departments due to a flat, single broadcast domain environment.",
+    solutionId: "Membuat VLAN 10, 20, 30 pada Switch Layer 2, mengonfigurasi 802.1Q Trunking, dan membangun subinterfaces (.10, .20, .30) pada Router gateway.",
+    solutionEn: "Created VLANs 10, 20, 30 on Layer 2 Switches, configured 802.1Q Trunking, and engineered Router-on-a-Stick subinterfaces.",
     cover: "/projects/kubecraft.svg",
     gallery: [
       "/projects/kubecraft.svg"
     ],
     year: "2025",
-    stack: ["Cisco Packet Tracer", "Switching", "VLAN", "STP", "EtherChannel"],
+    stack: ["Cisco Packet Tracer", "VLAN", "802.1Q Trunking", "Inter-VLAN", "Cisco IOS"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
-    tags: ["Switching", "L2 Infrastructure", "Cisco"],
-    architectureId: "Dual Distribution Switches (LACP Trunk) -> RSTP Root Bridge -> Access Switches (Port Security).",
-    architectureEn: "Dual Distribution Switches (LACP Trunk) -> RSTP Root Bridge -> Access Switches (Port Security).",
-    resultId: "Penggandaan kapasitas throughput antar-switch hingga 2Gbps dengan proteksi anti-looping 100% aktif.",
-    resultEn: "Doubled inter-switch throughput to 2Gbps with 100% active loop prevention.",
-    downloadPkt: "/downloads/vlan-lacp-stp.pkt",
-    downloadGns3: "/downloads/vlan-lacp-stp.gns3project",
-    rawConfig: `! LACP EtherChannel & Spanning-Tree Priority Config
-vtp domain ENTERPRISE-LAB
-vtp mode server
+    tags: ["VLAN", "Switching", "Cisco"],
+    architectureId: "Access Switch (VLAN 10/20/30) <-> 802.1Q Trunk Link <-> Gateway Router Subinterfaces (G0/0.10, G0/0.20, G0/0.30).",
+    architectureEn: "Access Switch (VLAN 10/20/30) <-> 802.1Q Trunk Link <-> Gateway Router Subinterfaces (G0/0.10, G0/0.20, G0/0.30).",
+    resultId: "Isolasi broadcast domain 100% terjamin dengan kontrol penuh lalu lintas komunikasi antar-VLAN.",
+    resultEn: "100% broadcast domain isolation achieved with full administrative control over inter-VLAN communication.",
+    downloadPkt: "/downloads/vlan-inter-vlan.pkt",
+    downloadGns3: "/downloads/vlan-inter-vlan.gns3project",
+    rawConfig: `! Switch VLAN Trunking & Router-on-a-Stick Subinterfaces
+! --- Switch Configuration ---
+vlan 10
+ name HR_DEPT
+vlan 20
+ name IT_DEPT
 !
-interface Port-channel1
+interface FastEthernet0/1
  switchport mode trunk
- switchport trunk allowed vlan 10,20,30
+ switchport trunk allowed vlan 10,20
 !
-interface range GigabitEthernet0/1 - 2
- switchport mode trunk
- channel-group 1 mode active
+! --- Router Configuration ---
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
 !
-spanning-tree mode rapid-pvst
-spanning-tree vlan 10,20 root primary`
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0`
   },
   {
-    title: "Mikrotik RouterOS Edge Gateway & Firewall",
-    slug: "mikrotik-edge-firewall",
-    descriptionId: "Konfigurasi Mikrotik RouterOS untuk manajemen bandwidth Queues, NAT, MANGLE, dan IPSec VPN Site-to-Site.",
-    descriptionEn: "MikroTik RouterOS edge configuration featuring PCQ bandwidth queues, NAT, MANGLE traffic marking, and Site-to-Site IPSec VPN.",
-    overviewId: "Penerapan edge router Mikrotik untuk mengamankan jaringan internal, membatasi kecepatan bandwidth pengguna secara adil (PCQ Queue), serta menghubungkan 2 kantor cabang via VPN Tunnel.",
-    overviewEn: "Deployment of MikroTik edge router to secure internal LAN, enforce fair PCQ bandwidth queues, and link branch offices via encrypted VPN tunnel.",
-    problemId: "Penggunaan internet yang tidak terkontrol oleh klien internal serta kerentanan lalu lintas data antar kantor cabang melalui jaringan publik.",
-    problemEn: "Uncontrolled client bandwidth consumption and vulnerable inter-branch communication over public internet links.",
-    solutionId: "Membangun firewall filter rules, NAT masquerade, Simple & Tree Queues dengan algoritma PCQ, serta enkripsi IPSec IKEv2.",
-    solutionEn: "Engineered firewall filter rules, NAT masquerade, Tree Queues with PCQ, and IKEv2 IPSec VPN tunnel.",
-    cover: "/projects/hyperscale.svg",
-    gallery: [
-      "/projects/hyperscale.svg"
-    ],
-    year: "2024",
-    stack: ["Mikrotik", "RouterOS", "Firewall", "IPSec", "Linux"],
-    github: "https://github.com/haidirwf/portfolio-idal",
-    featured: false,
-    tags: ["Mikrotik", "Security", "Firewall"],
-    architectureId: "ISP Connection -> Mikrotik Gateway (Firewall + Mangle) -> IPSec Site-to-Site Tunnel -> Local LAN Switches.",
-    architectureEn: "ISP Connection -> Mikrotik Gateway (Firewall + Mangle) -> IPSec Site-to-Site Tunnel -> Local LAN Switches.",
-    resultId: "Pengaturan alokasi bandwidth merata untuk 100+ pengguna simultan dan koneksi antar cabang terenkripsi penuh.",
-    resultEn: "Fair bandwidth allocation for 100+ concurrent users with fully encrypted inter-branch data tunnel.",
-    downloadPkt: "/downloads/mikrotik-edge-firewall.rsc",
-    downloadGns3: "/downloads/mikrotik-edge-firewall.gns3project",
-    rawConfig: `/ip firewall nat
-add chain=srcnat out-interface=ether1-WAN action=masquerade comment="NAT Outbound"
-
-/ip firewall filter
-add chain=input connection-state=established,related action=accept
-add chain=input connection-state=invalid action=drop comment="Drop Invalid"
-add chain=input protocol=icmp action=accept
-add chain=input in-interface=ether1-WAN action=drop comment="Drop Unsolicited WAN"
-
-/queue type
-add name=pcq-download kind=pcq pcq-rate=5M pcq-classifier=dst-address
-add name=pcq-upload kind=pcq pcq-rate=2M pcq-classifier=src-address`
-  },
-  {
-    title: "BGP Autonomous System Inter-Domain Topology",
-    slug: "bgp-inter-domain-topology",
-    descriptionId: "Simulasi BGP (Border Gateway Protocol) eBGP dan iBGP antar Autonomous System (AS) ISP global pada Packet Tracer.",
-    descriptionEn: "BGP (Border Gateway Protocol) eBGP and iBGP simulation connecting global ISP Autonomous Systems on Packet Tracer.",
-    overviewId: "Desain jaringan routing tingkat ISP menggunakan BGP untuk pertukaran rute eksternal antar AS yang berbeda serta pengaturan BGP Local Preference & AS-Path Prepend.",
-    overviewEn: "ISP-grade routing design utilizing BGP for inter-AS route exchange, Local Preference tuning, and AS-Path Prepend traffic engineering.",
-    problemId: "Kesulitan dalam mengatur jalur lalu lintas internet utama dan cadangan (inbound/outbound traffic engineering) pada multi-homed ISP.",
-    problemEn: "Inbound and outbound traffic engineering difficulties across multi-homed ISP connections.",
-    solutionId: "Mengonfigurasi peering eBGP antar AS, iBGP dengan Route Reflector di internal AS, serta manipulasi atribut BGP Path Selection.",
-    solutionEn: "Configured eBGP inter-AS peering, iBGP with Route Reflectors, and manipulated BGP path attributes for deterministic traffic routing.",
+    title: "Spanning Tree Protocol (STP & PVST+) Loop Prevention",
+    slug: "stp-pvst-loop-prevention",
+    descriptionId: "Penerapan Spanning Tree Protocol (STP/PVST+) untuk mencegah switching loop dan menyediakan redundant link failover otomatis.",
+    descriptionEn: "Spanning Tree Protocol (STP/PVST+) deployment preventing switching loops while delivering automated redundant link failover.",
+    overviewId: "Desain jaringan redundan Layer 2 dengan multiple switch link yang diatur secara otomatis oleh PVST+ untuk memblokir port cadangan (Blocking State) guna mencegah loop.",
+    overviewEn: "Redundant Layer 2 network topology with multiple switch interconnects dynamically managed by PVST+ to block redundant links and prevent loops.",
+    problemId: "Topologi fisik dengan jalur cadangan antar switch menyebabkan terjadinya loop Layer 2 (broadcast storm) yang melumpuhkan seluruh jaringan.",
+    problemEn: "Physical redundant switch links caused Layer 2 loops and broadcast storms that completely paralyzed the network infrastructure.",
+    solutionId: "Mengatur Spanning-Tree Mode PVST+, mengonfigurasi Root Bridge Primary & Secondary secara deterministik, serta mengaktifkan PortFast & BPDU Guard pada port akses.",
+    solutionEn: "Configured PVST+ Spanning Tree mode, designated primary/secondary Root Bridges deterministically, and enabled PortFast & BPDU Guard on access ports.",
     cover: "/projects/pulse-monitoring.svg",
     gallery: [
       "/projects/pulse-monitoring.svg"
     ],
     year: "2024",
-    stack: ["Cisco Packet Tracer", "BGP", "eBGP/iBGP", "Cisco IOS", "Networking"],
+    stack: ["Cisco Packet Tracer", "STP", "PVST+", "BPDU Guard", "Switching"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
-    tags: ["BGP", "ISP", "Routing"],
-    architectureId: "AS 100 (Primary ISP) <-> eBGP Peering <-> AS 200 (Enterprise Edge) -> iBGP Mesh -> Internal Core Routers.",
-    architectureEn: "AS 100 (Primary ISP) <-> eBGP Peering <-> AS 200 (Enterprise Edge) -> iBGP Mesh -> Internal Core Routers.",
-    resultId: "Kemampuan kontrol penuh terhadap traffic engineering kustom untuk jalur utama dan failover backup otomatis.",
-    resultEn: "Complete custom traffic engineering control with deterministic primary/backup path failover.",
-    downloadPkt: "/downloads/bgp-inter-domain.pkt",
-    downloadGns3: "/downloads/bgp-inter-domain.gns3project",
-    rawConfig: `! BGP Autonomous System Peering & Local-Pref Policy
-router bgp 200
- bgp router-id 2.2.2.2
- bgp log-neighbor-changes
- neighbor 192.168.1.1 remote-as 100
- neighbor 192.168.1.1 description PRIMARY-ISP-AS100
- neighbor 10.2.0.1 remote-as 200
- neighbor 10.2.0.1 update-source Loopback0
- !
- address-family ipv4
-  neighbor 192.168.1.1 activate
-  neighbor 192.168.1.1 route-map SET-LOCAL-PREF-IN in
-  neighbor 10.2.0.1 activate
-  neighbor 10.2.0.1 next-hop-self
- exit-address-family
+    tags: ["STP", "Switching", "L2 Infrastructure"],
+    architectureId: "Core Switch 1 (Root Primary) <-> Core Switch 2 (Root Backup) <-> Access Switches (PortFast & BPDU Guard).",
+    architectureEn: "Core Switch 1 (Root Primary) <-> Core Switch 2 (Root Backup) <-> Access Switches (PortFast & BPDU Guard).",
+    resultId: "Perlindungan anti-looping 100% aktif dengan failover jalur redundan otomatis saat link utama terputus.",
+    resultEn: "100% active anti-loop protection with seamless automated link failover during primary trunk failures.",
+    downloadPkt: "/downloads/stp-pvst-prevention.pkt",
+    downloadGns3: "/downloads/stp-pvst-prevention.gns3project",
+    rawConfig: `! PVST+ Spanning-Tree Priority & BPDU Guard Config
+spanning-tree mode pvst
+spanning-tree vlan 1,10,20 root primary
+spanning-tree vlan 30,40 root secondary
 !
-route-map SET-LOCAL-PREF-IN permit 10
- set local-preference 200`
+interface FastEthernet0/10
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ spanning-tree bpduguard enable`
   }
 ];
 
