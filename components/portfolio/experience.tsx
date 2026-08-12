@@ -1,11 +1,12 @@
 "use client";
 
+import * as React from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
-import { MapPin, Calendar, Briefcase, Gem, Sparkles } from "lucide-react";
+import { MapPin, Calendar, Briefcase, Gem, Sparkles, ExternalLink } from "lucide-react";
 
 interface ExperienceItem {
   company: string;
@@ -22,6 +23,7 @@ interface ExperienceItem {
   skillsTextEn: string;
   logo: string;
   tags: string[];
+  url: string;
 }
 
 const EXPERIENCES: ExperienceItem[] = [
@@ -39,7 +41,8 @@ const EXPERIENCES: ExperienceItem[] = [
     skillsTextId: "Media Sosial, Content Management, Event Branding",
     skillsTextEn: "Social Media, Content Management, Event Branding",
     logo: "/experience/issc.webp",
-    tags: ["Digital Branding", "Public Relations", "Event Management"]
+    tags: ["Digital Branding", "Public Relations", "Event Management"],
+    url: "https://www.linkedin.com/company/idnsolostudentcouncil/"
   },
   {
     roleId: "Pendiri (Founder)",
@@ -55,15 +58,51 @@ const EXPERIENCES: ExperienceItem[] = [
     skillsTextId: "Pengembangan Web, Konsultasi IT, Arsitektur Sistem",
     skillsTextEn: "Web Development, IT Consulting, System Architecture",
     logo: "/experience/luncur.webp",
-    tags: ["IT Consulting", "Infrastructure", "Leadership"]
+    tags: ["IT Consulting", "Infrastructure", "Leadership"],
+    url: "https://luncur.site/"
   }
 ];
 
 export function Experience() {
   const { t } = useLanguage();
+  const [tooltip, setTooltip] = React.useState<{ show: boolean; x: number; y: number; text: string }>({
+    show: false,
+    x: 0,
+    y: 0,
+    text: "",
+  });
+
+  const handleMouseMove = (e: React.MouseEvent, company: string) => {
+    setTooltip({
+      show: true,
+      x: e.clientX + 12,
+      y: e.clientY + 12,
+      text: `${company} — Open in new tab ↗`,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltip((prev) => ({ ...prev, show: false }));
+  };
 
   return (
-    <section id="experience" className="py-12 px-4 sm:px-6 space-y-8">
+    <section id="experience" className="py-12 px-4 sm:px-6 space-y-8 relative">
+      {/* Floating Mouse Tooltip for Desktop */}
+      <AnimatePresence>
+        {tooltip.show && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.15 }}
+            style={{ left: tooltip.x, top: tooltip.y }}
+            className="fixed z-50 pointer-events-none hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground text-background font-mono text-[11px] font-semibold shadow-lg border border-background/20"
+          >
+            <span>{tooltip.text}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Section Header */}
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
@@ -89,34 +128,43 @@ export function Experience() {
             transition={{ duration: 0.3, delay: idx * 0.05 }}
             className="h-full"
           >
-            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-primary/40 hover:bg-card/90 hover:shadow-md transition-all duration-300">
-              <div className="space-y-4">
-                {/* Header Row: Company Logo + Period Badge */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="relative size-12 rounded-lg overflow-hidden border border-border/60 bg-background shrink-0 p-1 flex items-center justify-center">
-                      <Image
-                        src={exp.logo}
-                        alt={exp.company}
-                        fill
-                        sizes="(max-width: 768px) 48px, 48px"
-                        className="object-contain p-1 rounded-md"
-                      />
+            <a
+              href={exp.url}
+              target="_blank"
+              rel="noreferrer"
+              onMouseMove={(e) => handleMouseMove(e, exp.company)}
+              onMouseLeave={handleMouseLeave}
+              className="group block h-full cursor-pointer"
+            >
+              <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-primary/50 hover:bg-card/90 hover:shadow-md transition-all duration-300 relative">
+                <div className="space-y-4">
+                  {/* Header Row: Company Logo + Period Badge */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="relative size-12 rounded-lg overflow-hidden border border-border/60 bg-background shrink-0 p-1 flex items-center justify-center">
+                        <Image
+                          src={exp.logo}
+                          alt={exp.company}
+                          fill
+                          sizes="(max-width: 768px) 48px, 48px"
+                          className="object-contain p-1 rounded-md"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold font-sans text-foreground group-hover:text-primary transition-colors flex items-center gap-1 leading-snug">
+                          <span>{t(exp.roleId, exp.roleEn)}</span>
+                          <ExternalLink className="size-3 text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity" />
+                        </h3>
+                        <p className="text-xs font-sans font-semibold text-foreground/80">
+                          {exp.company}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-base font-bold font-sans text-foreground leading-snug">
-                        {t(exp.roleId, exp.roleEn)}
-                      </h3>
-                      <p className="text-xs font-sans font-semibold text-foreground/80">
-                        {exp.company}
-                      </p>
-                    </div>
-                  </div>
 
-                  <Badge variant="outline" className="font-mono text-[10px] bg-secondary/50 shrink-0">
-                    {exp.employmentType}
-                  </Badge>
-                </div>
+                    <Badge variant="outline" className="font-mono text-[10px] bg-secondary/50 shrink-0">
+                      {exp.employmentType}
+                    </Badge>
+                  </div>
 
                 {/* Metadata Row: Period & Location */}
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-muted-foreground border-y border-border/40 py-2">
@@ -155,8 +203,9 @@ export function Experience() {
                 </div>
               </div>
             </Card>
-          </motion.div>
-        ))}
+          </a>
+        </motion.div>
+      ))}
       </div>
     </section>
   );
