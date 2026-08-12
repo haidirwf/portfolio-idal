@@ -83,45 +83,17 @@ export function AchievementShowcase() {
                     <p className="text-xs sm:text-sm font-sans text-muted-foreground line-clamp-2 leading-relaxed">
                       {t(item.descriptionId, item.descriptionEn)}
                     </p>
-
-                    <div className="pt-0.5 flex items-center gap-2">
-                      <span className="text-[11px] font-mono text-primary font-semibold">
-                        {t(item.positionId, item.positionEn)}
-                      </span>
-                    </div>
                   </div>
                 </div>
 
-                {/* Right Side: Stack Tags, Period & Detail Action Link */}
-                <div className="flex md:flex-col md:items-end justify-between sm:justify-start gap-1.5 shrink-0 text-left md:text-right pt-1 md:pt-0">
-                  <span className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider">
-                    {item.tags.slice(0, 3).join(" • ")}
-                  </span>
-
-                  <span className="text-[10px] font-mono text-muted-foreground/70">
-                    {t(item.periodId, item.periodEn)}
-                  </span>
-
-                  <div className="flex items-center gap-3 pt-1">
-                    {isExternal && (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(e) => handleLinkClick(e, item.url!, item.organization)}
-                        className="text-xs font-mono text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
-                      >
-                        <ExternalLink className="size-3" />
-                      </a>
-                    )}
-
-                    <Link
-                      href={`/achievements/${item.slug}`}
-                      className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
-                    >
-                      {t("Detail →", "Detail →")}
-                    </Link>
-                  </div>
+                {/* Right Side: Simple Detail Action Link */}
+                <div className="flex md:flex-col md:items-end justify-end shrink-0 text-left md:text-right pt-1 md:pt-0">
+                  <Link
+                    href={`/achievements/${item.slug}`}
+                    className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
+                  >
+                    {t("Detail →", "Detail →")}
+                  </Link>
                 </div>
               </div>
             </motion.div>
