@@ -137,7 +137,7 @@ export function Showcase({ projects }: { projects: Project[] }) {
                       alt={project.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      className="object-contain p-1 transition-transform duration-500 group-hover:scale-[1.02]"
                       priority={idx < 3}
                       loading={idx < 3 ? "eager" : "lazy"}
                     />
