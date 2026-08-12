@@ -49,14 +49,16 @@ export function About() {
 
   const education = [
     {
-      school: "IDN Boarding School",
-      field: t("Teknik Komputer dan Jaringan (TKJ)", "Computer & Network Engineering"),
-      period: "2025 – 2028"
+      school: "IDN Boarding School Solo",
+      field: t("SMK — TKJ (Teknik Komputer Jaringan)", "High School — Computer Network Engineering"),
+      period: "2025 – 2028",
+      url: "https://www.instagram.com/idnboardingschoolsolo/"
     },
     {
-      school: "IDN Boarding School",
+      school: "IDN Boarding School Pusat",
       field: t("SMP / Middle School", "Middle School"),
-      period: "2022 – 2025"
+      period: "2022 – 2025",
+      url: "https://www.instagram.com/idnboardingschool/"
     }
   ];
 
@@ -199,11 +201,24 @@ export function About() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {education.map((edu, idx) => (
-                  <div key={idx} className="p-2.5 rounded-lg bg-secondary/30 border border-border/40 space-y-0.5">
-                    <p className="text-xs font-bold font-sans text-foreground truncate">{edu.school}</p>
+                  <a
+                    key={idx}
+                    href={edu.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    onMouseMove={(e) => handleMouseMove(e, edu.school)}
+                    onMouseLeave={handleMouseLeave}
+                    className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold font-sans text-foreground group-hover:text-primary transition-colors flex items-center gap-1 truncate">
+                        <span className="truncate">{edu.school}</span>
+                        <ExternalLink className="size-3 text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0" />
+                      </p>
+                      <span className="text-[10px] font-mono text-muted-foreground shrink-0">{edu.period}</span>
+                    </div>
                     <p className="text-[11px] font-sans text-muted-foreground truncate">{edu.field}</p>
-                    <span className="text-[10px] font-mono text-muted-foreground/80 block">{edu.period}</span>
-                  </div>
+                  </a>
                 ))}
               </div>
             </Card>
