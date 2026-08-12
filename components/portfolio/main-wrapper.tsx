@@ -4,7 +4,6 @@ import * as React from "react";
 import { Navbar } from "@/components/portfolio/navbar";
 import { TopAnnouncementBanner } from "@/components/portfolio/top-announcement-banner";
 import { Footer } from "@/components/portfolio/footer";
-import { CommandPalette } from "@/components/portfolio/command-palette";
 import { Project } from "@/lib/projects";
 
 import { FloatingSectionTracker } from "@/components/portfolio/floating-section-tracker";
@@ -16,16 +15,13 @@ export function MainWrapper({
   children: React.ReactNode;
   projects?: Project[];
 }) {
-  const [cmdOpen, setCmdOpen] = React.useState(false);
-
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto relative">
+    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x-2 border-dashed border-border max-w-6xl mx-auto relative">
       <FloatingSectionTracker />
       <TopAnnouncementBanner />
-      <Navbar onOpenCommand={() => setCmdOpen(true)} />
+      <Navbar />
       <main>{children}</main>
       <Footer />
-      <CommandPalette open={cmdOpen} setOpen={setCmdOpen} />
     </div>
   );
 }
