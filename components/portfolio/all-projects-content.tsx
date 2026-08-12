@@ -88,6 +88,7 @@ export function AllProjectsContent() {
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    priority={idx < 2}
                   />
                 </Link>
 
