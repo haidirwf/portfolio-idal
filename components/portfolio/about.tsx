@@ -66,13 +66,13 @@ export function About() {
           <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-border transition-all duration-300">
             <div className="space-y-4">
               {/* Photo & Location Row */}
-              <div className="flex items-center gap-3.5">
-                <div className="relative size-14 sm:size-16 rounded-xl overflow-hidden border border-border/60 bg-secondary/40 shrink-0 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="relative size-24 sm:size-28 rounded-2xl overflow-hidden shrink-0 shadow-sm">
                   <Image
                     src="/experience/haidarphoto.webp"
                     alt="Muhammad Haidar Rauf Prayogo"
                     fill
-                    sizes="64px"
+                    sizes="112px"
                     className="object-cover"
                     priority
                   />
