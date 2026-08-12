@@ -112,7 +112,7 @@ export function Showcase({ projects }: { projects: Project[] }) {
         onMouseUp={handleMouseLeaveOrUp}
         onMouseMove={handleMouseMove}
         className={cn(
-          "flex gap-5 overflow-x-auto scrollbar-none pb-4 pt-1 px-1 select-none transition-cursor",
+          "flex gap-5 overflow-x-auto scrollbar-none pb-4 pt-1 px-3 select-none transition-cursor",
           isMouseDown ? "cursor-grabbing scroll-auto" : "cursor-grab scroll-smooth snap-x snap-mandatory"
         )}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
