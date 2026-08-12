@@ -78,17 +78,18 @@ export function Experience() {
       </div>
 
       {/* Grid of Distinct Experience Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full [perspective:1000px]">
         {EXPERIENCES.map((exp, idx) => (
           <motion.div
             key={exp.company}
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -6, rotateX: 2, rotateY: idx % 2 === 0 ? 2 : -2, scale: 1.01 }}
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: idx * 0.05 }}
             className="h-full"
           >
-            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs">
+            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-primary/40 hover:bg-card/90 transition-all duration-300">
               <div className="space-y-4">
                 {/* Header Row: Company Logo + Period Badge */}
                 <div className="flex items-start justify-between gap-3">

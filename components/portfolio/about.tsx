@@ -54,16 +54,17 @@ export function About() {
       </div>
 
       {/* Grid 2 Kolom Bersih & Simetris */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full [perspective:1000px]">
         {/* Profile Card (Kiri) */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ y: -6, rotateX: 2, rotateY: -2, scale: 1.01 }}
           viewport={{ once: true }}
           transition={{ duration: 0.3 }}
           className="h-full"
         >
-          <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-border transition-all duration-300">
+          <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-primary/40 hover:bg-card/90 transition-all duration-300">
             <div className="space-y-4">
               {/* Photo & Location Row */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -112,45 +113,49 @@ export function About() {
           className="h-full flex flex-col gap-4"
         >
           {/* Certifications Box */}
-          <Card className="border-border/80 bg-card/60 rounded-xl p-5 space-y-3 shadow-xs hover:border-border transition-all duration-300 flex-1">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                <Award className="size-3.5 text-primary" />
-                <span>{t("Sertifikasi", "Certifications")}</span>
-              </h3>
-            </div>
+          <motion.div whileHover={{ y: -4, rotateX: 2, rotateY: 2, scale: 1.01 }} transition={{ duration: 0.2 }} className="flex-1">
+            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-5 space-y-3 shadow-xs hover:border-primary/40 hover:bg-card/90 transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                  <Award className="size-3.5 text-primary" />
+                  <span>{t("Sertifikasi", "Certifications")}</span>
+                </h3>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {certifications.map((cert) => (
-                <div key={cert.code} className="p-2.5 rounded-lg bg-secondary/30 border border-border/40 space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold font-sans text-foreground">{cert.code}</span>
-                    <span className="text-[10px] font-mono text-muted-foreground">{cert.period}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {certifications.map((cert) => (
+                  <div key={cert.code} className="p-2.5 rounded-lg bg-secondary/30 border border-border/40 space-y-0.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-extrabold font-sans text-foreground">{cert.code}</span>
+                      <span className="text-[10px] font-mono text-muted-foreground">{cert.period}</span>
+                    </div>
+                    <p className="text-[11px] font-sans text-muted-foreground font-medium leading-tight truncate">{cert.name}</p>
+                    <p className="text-[10px] font-mono text-muted-foreground/70">ID: {cert.id}</p>
                   </div>
-                  <p className="text-[11px] font-sans text-muted-foreground font-medium leading-tight truncate">{cert.name}</p>
-                  <p className="text-[10px] font-mono text-muted-foreground/70">ID: {cert.id}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
 
           {/* Education Box */}
-          <Card className="border-border/80 bg-card/60 rounded-xl p-5 space-y-3 shadow-xs hover:border-border transition-all duration-300 flex-1">
-            <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-1.5">
-              <GraduationCap className="size-3.5 text-primary" />
-              <span>{t("Pendidikan", "Education")}</span>
-            </h3>
+          <motion.div whileHover={{ y: -4, rotateX: 2, rotateY: -2, scale: 1.01 }} transition={{ duration: 0.2 }} className="flex-1">
+            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-5 space-y-3 shadow-xs hover:border-primary/40 hover:bg-card/90 transition-all duration-300">
+              <h3 className="text-xs font-bold font-sans uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                <GraduationCap className="size-3.5 text-primary" />
+                <span>{t("Pendidikan", "Education")}</span>
+              </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {education.map((edu, idx) => (
-                <div key={idx} className="p-2.5 rounded-lg bg-secondary/30 border border-border/40 space-y-0.5">
-                  <p className="text-xs font-bold font-sans text-foreground truncate">{edu.school}</p>
-                  <p className="text-[11px] font-sans text-muted-foreground truncate">{edu.field}</p>
-                  <span className="text-[10px] font-mono text-muted-foreground/80 block">{edu.period}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {education.map((edu, idx) => (
+                  <div key={idx} className="p-2.5 rounded-lg bg-secondary/30 border border-border/40 space-y-0.5">
+                    <p className="text-xs font-bold font-sans text-foreground truncate">{edu.school}</p>
+                    <p className="text-[11px] font-sans text-muted-foreground truncate">{edu.field}</p>
+                    <span className="text-[10px] font-mono text-muted-foreground/80 block">{edu.period}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
         </motion.div>
       </div>
     </section>
