@@ -76,16 +76,19 @@ export function About() {
               </div>
 
               <h3 className="text-base sm:text-lg font-bold font-sans text-foreground leading-snug">
-                {t(
-                  "Network Engineer yang berfokus pada infrastruktur jaringan enterprise yang aman, andal, dan skalabel.",
-                  "Network Engineer focused on secure, reliable, and scalable enterprise network infrastructure."
-                )}
+                Muhammad Haidar Rauf Prayogo —{" "}
+                <span className="text-muted-foreground font-normal">
+                  {t(
+                    "Network Engineer yang berfokus pada infrastruktur jaringan enterprise yang aman, andal, dan skalabel.",
+                    "Network Engineer focused on secure, reliable, and scalable enterprise network infrastructure."
+                  )}
+                </span>
               </h3>
 
               <p className="text-xs font-sans text-muted-foreground leading-relaxed">
                 {t(
-                  "Spesialisasi mencakup perancangan topologi jaringan komputer, otomatisasi protokol routing dinamis MikroTik & Cisco, pengerasan sistem keamanan firewall, serta implementasi VPN tunnel.",
-                  "Specializing in computer network topology design, MikroTik & Cisco dynamic routing protocol automation, firewall security hardening, and VPN tunnel implementations."
+                  "Halo! Saya Muhammad Haidar Rauf Prayogo, seorang spesialis jaringan dengan fokus pada perancangan topologi jaringan komputer, otomatisasi protokol routing dinamis MikroTik & Cisco, pengerasan sistem keamanan firewall, serta implementasi VPN tunnel.",
+                  "Hello! I am Muhammad Haidar Rauf Prayogo, a network specialist focused on computer network topology design, MikroTik & Cisco dynamic routing protocol automation, firewall security hardening, and VPN tunnel implementations."
                 )}
               </p>
             </div>
