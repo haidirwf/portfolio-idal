@@ -112,7 +112,7 @@ export function Showcase({ projects }: { projects: Project[] }) {
         onMouseUp={handleMouseLeaveOrUp}
         onMouseMove={handleMouseMove}
         className={cn(
-          "flex gap-6 overflow-x-auto scrollbar-none pb-4 pt-1 select-none transition-cursor",
+          "flex gap-5 overflow-x-auto scrollbar-none pb-4 pt-1 px-1 select-none transition-cursor",
           isMouseDown ? "cursor-grabbing scroll-auto" : "cursor-grab scroll-smooth snap-x snap-mandatory"
         )}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -120,7 +120,7 @@ export function Showcase({ projects }: { projects: Project[] }) {
         {projects.map((project, idx) => (
           <div
             key={project.slug}
-            className="w-full min-w-[280px] sm:min-w-[320px] lg:w-[calc(33.333%-16px)] shrink-0 snap-start"
+            className="w-full min-w-[270px] sm:min-w-[300px] lg:w-[calc(33.333%-14px)] shrink-0 snap-start"
           >
             <motion.div
               initial={{ opacity: 0, y: 16 }}
