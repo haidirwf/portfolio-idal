@@ -85,6 +85,20 @@ export function Experience() {
     setTooltip((prev) => ({ ...prev, show: false }));
   };
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
+    if (window.innerWidth < 1024) {
+      const confirmOpen = window.confirm(
+        t(
+          `Buka halaman ${title}?`,
+          `Open ${title} page?`
+        )
+      );
+      if (!confirmOpen) {
+        e.preventDefault();
+      }
+    }
+  };
+
   return (
     <section id="experience" className="py-12 px-4 sm:px-6 space-y-8 relative">
       {/* Floating Mouse Tooltip for Desktop */}
@@ -132,6 +146,7 @@ export function Experience() {
               href={exp.url}
               target="_blank"
               rel="noreferrer"
+              onClick={(e) => handleLinkClick(e, exp.company)}
               onMouseMove={(e) => handleMouseMove(e, exp.company)}
               onMouseLeave={handleMouseLeave}
               className="group block h-full cursor-pointer"

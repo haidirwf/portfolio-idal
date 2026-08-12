@@ -47,9 +47,24 @@ export function About() {
     setTooltip((prev) => ({ ...prev, show: false }));
   };
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
+    // Only intercept on non-desktop / touch / small screens
+    if (window.innerWidth < 1024) {
+      const confirmOpen = window.confirm(
+        t(
+          `Buka halaman ${title}?`,
+          `Open ${title} page?`
+        )
+      );
+      if (!confirmOpen) {
+        e.preventDefault();
+      }
+    }
+  };
+
   const education = [
     {
-      school: "IDN Boarding School",
+      school: "IDN Boarding School Solo",
       field: t("Teknik Komputer dan Jaringan (TKJ)", "Computer & Network Engineering"),
       period: "2025 – 2028",
       url: "https://www.instagram.com/idnboardingschoolsolo/"
@@ -108,6 +123,7 @@ export function About() {
             href="https://www.linkedin.com/in/haidar-rauf/"
             target="_blank"
             rel="noreferrer"
+            onClick={(e) => handleLinkClick(e, "LinkedIn Profile")}
             onMouseMove={(e) => handleMouseMove(e, "LinkedIn Profile")}
             onMouseLeave={handleMouseLeave}
             className="group block h-full cursor-pointer"
@@ -172,6 +188,7 @@ export function About() {
                     href={cert.url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(e) => handleLinkClick(e, cert.code)}
                     onMouseMove={(e) => handleMouseMove(e, cert.code)}
                     onMouseLeave={handleMouseLeave}
                     className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
@@ -206,6 +223,7 @@ export function About() {
                     href={edu.url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(e) => handleLinkClick(e, edu.school)}
                     onMouseMove={(e) => handleMouseMove(e, edu.school)}
                     onMouseLeave={handleMouseLeave}
                     className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
