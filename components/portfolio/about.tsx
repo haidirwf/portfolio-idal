@@ -1,29 +1,51 @@
 "use client";
 
+import * as React from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
-import { Award, GraduationCap, ShieldCheck } from "lucide-react";
+import { Award, GraduationCap, ShieldCheck, ExternalLink } from "lucide-react";
 
 export function About() {
   const { t } = useLanguage();
+  const [tooltip, setTooltip] = React.useState<{ show: boolean; x: number; y: number; text: string }>({
+    show: false,
+    x: 0,
+    y: 0,
+    text: "",
+  });
 
   const certifications = [
     {
       code: "MTCNA",
       name: "MikroTik Certified Network Associate",
       id: "2601NA9959",
-      period: "2026 – 2029"
+      period: "2026 – 2029",
+      url: "https://mikrotik.com/training/certificates/c699976c6108324c354d"
     },
     {
       code: "MTCRE",
       name: "MikroTik Certified Routing Engineer",
       id: "2601RE9976",
-      period: "2026 – 2029"
+      period: "2026 – 2029",
+      url: "https://mikrotik.com/training/certificates/c699976c6108324c354d"
     }
   ];
+
+  const handleMouseMove = (e: React.MouseEvent, certCode: string) => {
+    setTooltip({
+      show: true,
+      x: e.clientX + 12,
+      y: e.clientY + 12,
+      text: `${certCode} — Open in new tab ↗`,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltip((prev) => ({ ...prev, show: false }));
+  };
 
   const education = [
     {
@@ -39,7 +61,23 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-12 px-4 sm:px-6 space-y-8">
+    <section id="about" className="py-12 px-4 sm:px-6 space-y-8 relative">
+      {/* Floating Mouse Tooltip for Desktop */}
+      <AnimatePresence>
+        {tooltip.show && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.15 }}
+            style={{ left: tooltip.x, top: tooltip.y }}
+            className="fixed z-50 pointer-events-none hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground text-background font-mono text-[11px] font-semibold shadow-lg border border-background/20"
+          >
+            <span>{tooltip.text}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header Section */}
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
@@ -117,14 +155,25 @@ export function About() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {certifications.map((cert) => (
-                  <div key={cert.code} className="p-2.5 rounded-lg bg-secondary/30 border border-border/40 space-y-0.5">
+                  <a
+                    key={cert.code}
+                    href={cert.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    onMouseMove={(e) => handleMouseMove(e, cert.code)}
+                    onMouseLeave={handleMouseLeave}
+                    className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-extrabold font-sans text-foreground">{cert.code}</span>
+                      <span className="text-xs font-extrabold font-sans text-foreground group-hover:text-primary transition-colors flex items-center gap-1">
+                        <span>{cert.code}</span>
+                        <ExternalLink className="size-3 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                      </span>
                       <span className="text-[10px] font-mono text-muted-foreground">{cert.period}</span>
                     </div>
                     <p className="text-[11px] font-sans text-muted-foreground font-medium leading-tight truncate">{cert.name}</p>
                     <p className="text-[10px] font-mono text-muted-foreground/70">ID: {cert.id}</p>
-                  </div>
+                  </a>
                 ))}
               </div>
             </Card>
