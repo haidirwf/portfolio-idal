@@ -1,18 +1,35 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
+import { ExternalLink, ArrowLeft, Trophy, Search } from "lucide-react";
 import { ACHIEVEMENTS, Achievement } from "@/lib/achievements";
-import { useLanguage } from "@/components/language-provider";
-import { ExternalLink, Trophy, ArrowRight, Award } from "lucide-react";
-import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/components/language-provider";
+import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
+import { cn } from "@/lib/utils";
 
-export function AchievementShowcase() {
+export function AllAchievementsContent() {
   const { t } = useLanguage();
+  const [searchQuery, setSearchQuery] = React.useState("");
   const { openConfirmation } = useExternalLinkConfirm();
+
+  const filteredAchievements = React.useMemo(() => {
+    if (!searchQuery.trim()) return ACHIEVEMENTS;
+    const query = searchQuery.toLowerCase();
+    return ACHIEVEMENTS.filter(
+      (a) =>
+        a.titleId.toLowerCase().includes(query) ||
+        a.titleEn.toLowerCase().includes(query) ||
+        a.organization.toLowerCase().includes(query) ||
+        a.descriptionId.toLowerCase().includes(query) ||
+        a.descriptionEn.toLowerCase().includes(query) ||
+        a.tags.some((tag) => tag.toLowerCase().includes(query))
+    );
+  }, [searchQuery]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string, title: string) => {
     if (window.innerWidth < 1024) {
@@ -22,43 +39,55 @@ export function AchievementShowcase() {
   };
 
   return (
-    <section id="achievements" className="py-12 px-4 sm:px-6 space-y-8 relative">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border/40 pb-4">
-        <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-primary/10 text-primary border border-primary/20 font-semibold">
-            <Trophy className="size-3.5" />
-            <span>{t("Pencapaian & Kegiatan", "Achievements & Activities")}</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-            {t("Rekam Jejak & Artikel Kegiatan", "Track Record & Activity Articles")}
-          </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground font-sans max-w-xl">
-            {t(
-              "Pengalaman mengikuti lomba jaringan, posisi kepemimpinan, dan ulasan artikel kegiatan.",
-              "Networking competition experience, leadership roles, and activity article reviews."
-            )}
-          </p>
-        </div>
-
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      {/* Back button */}
+      <div className="flex items-center justify-between">
         <Link
-          href="/achievements"
-          className="inline-flex items-center text-xs font-mono font-medium text-foreground hover:underline bg-muted/50 hover:bg-muted px-3.5 py-1.5 rounded-lg border border-border/50 transition-colors gap-1.5 shrink-0 self-start sm:self-auto"
+          href="/"
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "sm" }),
+            "font-mono text-xs gap-1.5 rounded-lg text-muted-foreground hover:text-foreground"
+          )}
         >
-          <span>{t("Lihat Semua Artikel →", "See All Articles →")}</span>
+          <ArrowLeft className="size-3.5" />
+          <span>{t("Kembali ke Beranda", "Back to Home")}</span>
         </Link>
       </div>
 
-      {/* Clean Minimal Horizontal List (Exact Format from Reference Image) */}
+      {/* Header */}
+      <div className="space-y-3">
+        <h1 className="text-3xl sm:text-5xl font-bold font-sans tracking-tight">
+          {t("Semua Pencapaian & Artikel Kegiatan", "All Achievements & Activity Articles")}
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
+          {t(
+            "Arsip lengkap pengalaman mengikuti lomba jaringan komputer, posisi kepemimpinan, dan ulasan artikel kegiatan.",
+            "Complete archive of networking competitions, leadership positions, and activity article reviews."
+          )}
+        </p>
+
+        {/* Search Bar */}
+        <div className="relative max-w-md pt-2">
+          <Search className="absolute left-3 top-5 size-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t("Cari lomba, posisi, atau kegiatan...", "Search competitions, roles, or activities...")}
+            className="w-full pl-9 pr-4 py-2 text-xs font-sans rounded-xl bg-card border border-border/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+          />
+        </div>
+      </div>
+
+      {/* Clean Minimal List (Exact Format from Reference Image) */}
       <div className="divide-y divide-border/40 w-full border-y border-border/40">
-        {ACHIEVEMENTS.map((item, idx) => {
+        {filteredAchievements.map((item, idx) => {
           const isExternal = Boolean(item.url);
           return (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: idx * 0.04 }}
             >
               <div className="py-6 flex flex-col md:flex-row md:items-center justify-between gap-6 group hover:bg-card/40 transition-colors px-2 rounded-lg">
@@ -97,7 +126,7 @@ export function AchievementShowcase() {
                   </div>
                 </div>
 
-                {/* Right Side: Stack Tags & Action Button */}
+                {/* Right Side: Stack Tags & Action Links */}
                 <div className="flex md:flex-col md:items-end justify-between sm:justify-start gap-2 shrink-0 text-left md:text-right">
                   <span className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider">
                     {item.tags.slice(0, 3).join(" • ")}
@@ -130,6 +159,14 @@ export function AchievementShowcase() {
           );
         })}
       </div>
-    </section>
+
+      {filteredAchievements.length === 0 && (
+        <div className="text-center py-12 space-y-2">
+          <p className="text-sm text-muted-foreground font-sans">
+            {t("Tidak ada artikel pencapaian yang sesuai dengan pencarian.", "No achievements match your search query.")}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
