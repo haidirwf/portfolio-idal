@@ -58,7 +58,7 @@ export function AchievementShowcase() {
               transition={{ duration: 0.25, delay: idx * 0.04 }}
             >
               <div className="py-6 flex flex-col md:flex-row md:items-center justify-between gap-6 group hover:bg-card/40 transition-colors px-2 rounded-lg">
-                {/* Left Side: Thumbnail Image + Title, Position Badge & Description */}
+                {/* Left Side: Thumbnail Image + Title & Description */}
                 <div className="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
                   <Link
                     href={`/achievements/${item.slug}`}
@@ -74,13 +74,6 @@ export function AchievementShowcase() {
                   </Link>
 
                   <div className="space-y-1.5 min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant="outline" className="font-mono text-[10px] bg-primary/10 text-primary border-primary/20">
-                        {t(item.positionId, item.positionEn)}
-                      </Badge>
-                      <span className="text-[11px] font-mono text-muted-foreground">{t(item.periodId, item.periodEn)}</span>
-                    </div>
-
                     <h3 className="text-base sm:text-xl font-bold font-sans tracking-tight text-foreground group-hover:text-primary transition-colors">
                       <Link href={`/achievements/${item.slug}`} className="hover:underline">
                         {t(item.titleId, item.titleEn)}
@@ -90,13 +83,23 @@ export function AchievementShowcase() {
                     <p className="text-xs sm:text-sm font-sans text-muted-foreground line-clamp-2 leading-relaxed">
                       {t(item.descriptionId, item.descriptionEn)}
                     </p>
+
+                    <div className="pt-0.5 flex items-center gap-2">
+                      <span className="text-[11px] font-mono text-primary font-semibold">
+                        {t(item.positionId, item.positionEn)}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Side: Stack Tags & Action Button */}
-                <div className="flex md:flex-col md:items-end justify-between sm:justify-start gap-2 shrink-0 text-left md:text-right">
+                {/* Right Side: Stack Tags, Period & Detail Action Link */}
+                <div className="flex md:flex-col md:items-end justify-between sm:justify-start gap-1.5 shrink-0 text-left md:text-right pt-1 md:pt-0">
                   <span className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider">
                     {item.tags.slice(0, 3).join(" • ")}
+                  </span>
+
+                  <span className="text-[10px] font-mono text-muted-foreground/70">
+                    {t(item.periodId, item.periodEn)}
                   </span>
 
                   <div className="flex items-center gap-3 pt-1">
@@ -108,16 +111,15 @@ export function AchievementShowcase() {
                         onClick={(e) => handleLinkClick(e, item.url!, item.organization)}
                         className="text-xs font-mono text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
                       >
-                        <span>Official Link</span>
                         <ExternalLink className="size-3" />
                       </a>
                     )}
 
                     <Link
                       href={`/achievements/${item.slug}`}
-                      className="text-xs font-sans font-semibold text-foreground group-hover:text-primary hover:underline flex items-center gap-1"
+                      className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
                     >
-                      <span>{t("Baca Artikel →", "Read Article →")}</span>
+                      {t("Detail →", "Detail →")}
                     </Link>
                   </div>
                 </div>
