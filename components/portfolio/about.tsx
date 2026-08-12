@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -63,10 +64,26 @@ export function About() {
           className="h-full"
         >
           <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-border transition-all duration-300">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-xs font-mono text-primary font-semibold">
-                <MapPin className="size-3.5" />
-                <span>Bekasi, Jawa Barat, Indonesia</span>
+            <div className="space-y-4">
+              {/* Photo & Location Row */}
+              <div className="flex items-center gap-3.5">
+                <div className="relative size-14 sm:size-16 rounded-xl overflow-hidden border border-border/60 bg-secondary/40 shrink-0 shadow-xs">
+                  <Image
+                    src="/experience/haidarphoto.webp"
+                    alt="Muhammad Haidar Rauf Prayogo"
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-primary font-semibold">
+                    <MapPin className="size-3.5" />
+                    <span>Bekasi, Jawa Barat</span>
+                  </div>
+                  <p className="text-xs font-sans text-muted-foreground font-medium">Indonesia</p>
+                </div>
               </div>
 
               <h3 className="text-base sm:text-lg font-bold font-sans text-foreground leading-snug">
