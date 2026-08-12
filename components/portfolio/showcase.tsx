@@ -9,6 +9,7 @@ import { Project } from "@/lib/projects";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language-provider";
+import { cn } from "@/lib/utils";
 
 export function Showcase({ projects }: { projects: Project[] }) {
   const { t } = useLanguage();
@@ -16,12 +17,18 @@ export function Showcase({ projects }: { projects: Project[] }) {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
 
+  const [activeIndex, setActiveIndex] = React.useState(0);
+
   const checkScroll = React.useCallback(() => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-  }, []);
+
+    const cardWidth = scrollRef.current.firstElementChild?.clientWidth || clientWidth;
+    const newIndex = Math.round(scrollLeft / (cardWidth + 24));
+    setActiveIndex(Math.min(Math.max(newIndex, 0), projects.length - 1));
+  }, [projects.length]);
 
   React.useEffect(() => {
     checkScroll();
@@ -29,11 +36,12 @@ export function Showcase({ projects }: { projects: Project[] }) {
     return () => window.removeEventListener("resize", checkScroll);
   }, [checkScroll]);
 
-  const handleScroll = (direction: "left" | "right") => {
+  const scrollToProject = (index: number) => {
     if (!scrollRef.current) return;
-    const cardWidth = scrollRef.current.clientWidth;
-    const scrollAmount = direction === "left" ? -cardWidth : cardWidth;
-    scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    const firstCard = scrollRef.current.firstElementChild as HTMLElement;
+    if (!firstCard) return;
+    const cardWidth = firstCard.clientWidth + 24; // Card width + gap
+    scrollRef.current.scrollTo({ left: index * cardWidth, behavior: "smooth" });
   };
 
   return (
@@ -145,6 +153,23 @@ export function Showcase({ projects }: { projects: Project[] }) {
               </Card>
             </motion.div>
           </div>
+        ))}
+      </div>
+
+      {/* Pagination Indicator Dots */}
+      <div className="flex items-center justify-center gap-2 pt-1">
+        {projects.map((project, idx) => (
+          <button
+            key={project.slug}
+            onClick={() => scrollToProject(idx)}
+            className={cn(
+              "h-2 rounded-full transition-all duration-300 focus:outline-none",
+              activeIndex === idx
+                ? "w-6 bg-primary"
+                : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+            )}
+            aria-label={`Go to project ${idx + 1}`}
+          />
         ))}
       </div>
     </section>
