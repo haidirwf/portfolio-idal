@@ -17,7 +17,8 @@ export function Showcase({ projects }: { projects: Project[] }) {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
 
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [pageCount, setPageCount] = React.useState(1);
+  const [activePage, setActivePage] = React.useState(0);
 
   const checkScroll = React.useCallback(() => {
     if (!scrollRef.current) return;
@@ -25,10 +26,20 @@ export function Showcase({ projects }: { projects: Project[] }) {
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
 
-    const cardWidth = scrollRef.current.firstElementChild?.clientWidth || clientWidth;
-    const newIndex = Math.round(scrollLeft / (cardWidth + 24));
-    setActiveIndex(Math.min(Math.max(newIndex, 0), projects.length - 1));
-  }, [projects.length]);
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) {
+      setPageCount(1);
+      setActivePage(0);
+      return;
+    }
+
+    // Number of pages is total scrollable distance / page scroll distance + 1
+    const pages = Math.ceil(maxScroll / clientWidth) + 1;
+    setPageCount(pages);
+
+    const currentPage = Math.round((scrollLeft / maxScroll) * (pages - 1));
+    setActivePage(Math.min(Math.max(currentPage, 0), pages - 1));
+  }, []);
 
   React.useEffect(() => {
     checkScroll();
@@ -36,12 +47,37 @@ export function Showcase({ projects }: { projects: Project[] }) {
     return () => window.removeEventListener("resize", checkScroll);
   }, [checkScroll]);
 
-  const scrollToProject = (index: number) => {
+  const scrollToPage = (pageIndex: number) => {
     if (!scrollRef.current) return;
-    const firstCard = scrollRef.current.firstElementChild as HTMLElement;
-    if (!firstCard) return;
-    const cardWidth = firstCard.clientWidth + 24; // Card width + gap
-    scrollRef.current.scrollTo({ left: index * cardWidth, behavior: "smooth" });
+    const { scrollWidth, clientWidth } = scrollRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (pageCount <= 1 || maxScroll <= 0) return;
+
+    const targetScroll = (pageIndex / (pageCount - 1)) * maxScroll;
+    scrollRef.current.scrollTo({ left: targetScroll, behavior: "smooth" });
+  };
+
+  const [isMouseDown, setIsMouseDown] = React.useState(false);
+  const [startX, setStartX] = React.useState(0);
+  const [scrollLeftPos, setScrollLeftPos] = React.useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    setIsMouseDown(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeftPos(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeaveOrUp = () => {
+    setIsMouseDown(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDown || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Drag speed multiplier
+    scrollRef.current.scrollLeft = scrollLeftPos - walk;
   };
 
   return (
@@ -67,11 +103,18 @@ export function Showcase({ projects }: { projects: Project[] }) {
         </div>
       </div>
 
-      {/* Horizontal Carousel: Shows 3 cards on desktop, scrollable */}
+      {/* Horizontal Carousel: Shows 3 cards on desktop, scrollable & drag-scrollable */}
       <div
         ref={scrollRef}
         onScroll={checkScroll}
-        className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth pb-4 pt-1 snap-x snap-mandatory"
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeaveOrUp}
+        onMouseUp={handleMouseLeaveOrUp}
+        onMouseMove={handleMouseMove}
+        className={cn(
+          "flex gap-6 overflow-x-auto scrollbar-none pb-4 pt-1 select-none transition-cursor",
+          isMouseDown ? "cursor-grabbing scroll-auto" : "cursor-grab scroll-smooth snap-x snap-mandatory"
+        )}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {projects.map((project, idx) => (
@@ -157,21 +200,23 @@ export function Showcase({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Pagination Indicator Dots */}
-      <div className="flex items-center justify-center gap-2 pt-1">
-        {projects.map((project, idx) => (
-          <button
-            key={project.slug}
-            onClick={() => scrollToProject(idx)}
-            className={cn(
-              "h-2 rounded-full transition-all duration-300 focus:outline-none",
-              activeIndex === idx
-                ? "w-6 bg-primary"
-                : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-            )}
-            aria-label={`Go to project ${idx + 1}`}
-          />
-        ))}
-      </div>
+      {pageCount > 1 && (
+        <div className="flex items-center justify-center gap-2 pt-1">
+          {Array.from({ length: pageCount }).map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => scrollToPage(idx)}
+              className={cn(
+                "h-2 rounded-full transition-all duration-300 focus:outline-none cursor-pointer",
+                activePage === idx
+                  ? "w-6 bg-primary"
+                  : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+              )}
+              aria-label={`Go to page ${idx + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
