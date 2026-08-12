@@ -390,6 +390,7 @@ ip access-list standard FILTER-SERVER-ACCESS
     architectureEn: "Local LAN (PC0: 192.168.10.10, PC1: 192.168.10.20) -> Router-NAT (Gig0/1 Inside: 192.168.10.1, Gig0/0 Outside: 1.1.1.1/30) -> Router-ISP (Gig0/0: 1.1.1.2/30, Gig0/1: 192.168.20.1) -> Server-INTERNET (192.168.20.0/24).",
     resultId: "Seluruh pengguna lokal di subnet 192.168.10.0/24 (PC0 & PC1) berhasil mengakses Server-INTERNET melalui translasi PAT IP publik 1.1.1.1.",
     resultEn: "All local hosts in 192.168.10.0/24 subnet (PC0 & PC1) successfully access Server-INTERNET via public IP 1.1.1.1 PAT translation.",
+    downloadPkt: "/downloads/natoverload_topology.pkt",
     rawConfig: `! ==========================================
 ! ROUTER-NAT (Edge Gateway - NAT Overload / PAT)
 ! ==========================================
@@ -441,9 +442,9 @@ ip route 1.1.1.0 255.255.255.252 1.1.1.1`
     problemEn: "Physical redundant switch links caused Layer 2 loops and broadcast storms that completely paralyzed the network infrastructure.",
     solutionId: "Mengatur Spanning-Tree Mode PVST+, mengonfigurasi Root Bridge Primary & Secondary secara deterministik, serta mengaktifkan PortFast & BPDU Guard pada port akses.",
     solutionEn: "Configured PVST+ Spanning Tree mode, designated primary/secondary Root Bridges deterministically, and enabled PortFast & BPDU Guard on access ports.",
-    cover: "/projects/pulse-monitoring.svg",
+    cover: "/projects/stp.webp",
     gallery: [
-      "/projects/pulse-monitoring.svg"
+      "/projects/stp.webp"
     ],
     year: "2024",
     stack: ["Cisco Packet Tracer", "STP", "PVST+", "BPDU Guard", "Switching"],
@@ -454,6 +455,7 @@ ip route 1.1.1.0 255.255.255.252 1.1.1.1`
     architectureEn: "Switch1 (Root Bridge, Priority 4096, Fa0/1 & Fa0/2 Designated) <-> Switch2 (Backup Root, Priority 8192, Fa0/1 Root, Fa0/2 Designated) <-> Switch3 (Non-Root, Priority 32768, Fa0/1 Root, Fa0/2 Alternate/Blocking).",
     resultId: "Topologi segitiga 3 switch 100% bebas dari Layer 2 loop/broadcast storm dengan 1 port otomatis diblokir (Blocking state) & failover sub-detik jika link terputus.",
     resultEn: "3-switch triangle topology 100% free from Layer 2 loops/broadcast storms with 1 port automatically blocked and sub-second failover on link failure.",
+    downloadPkt: "/downloads/stp_topology.pkt",
     rawConfig: `! ==========================================
 ! SWITCH 1 (Root Bridge Primary)
 ! ==========================================
