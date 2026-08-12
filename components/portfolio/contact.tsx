@@ -84,8 +84,8 @@ export function Contact() {
           {/* Background grid pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
 
-          {/* Floating Subtle Network Icons */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          {/* Floating Subtle Network Icons (Hidden on mobile to keep card clean) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none hidden sm:block">
             {FLOATING_ICONS.map((item, idx) => {
               const IconComponent = item.Icon;
               return (

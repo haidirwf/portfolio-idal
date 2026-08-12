@@ -53,7 +53,7 @@ export function Hero() {
           {/* Background grid pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-35 pointer-events-none" />
 
-          {/* Floating Subtle Network Icons (Inspired by shadcn.io landing background) */}
+          {/* Floating Subtle Network Icons (Shown cleanly on desktop, hidden/minimal on mobile to prevent clutter) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
             {FLOATING_ICONS.map((item, idx) => {
               const IconComponent = item.Icon;
@@ -62,7 +62,7 @@ export function Hero() {
                   key={idx}
                   style={{ top: item.top, left: item.left, right: item.right }}
                   className={cn(
-                    "absolute text-muted-foreground/20 dark:text-muted-foreground/25 transition-all duration-700 pointer-events-none select-none",
+                    "absolute text-muted-foreground/15 dark:text-muted-foreground/20 transition-all duration-700 pointer-events-none select-none hidden sm:block",
                     item.size
                   )}
                 >
