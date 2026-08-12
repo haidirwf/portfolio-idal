@@ -450,20 +450,55 @@ ip route 1.1.1.0 255.255.255.252 1.1.1.1`
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
     tags: ["STP", "Switching", "L2 Infrastructure"],
-    architectureId: "Core Switch 1 (Root Primary) <-> Core Switch 2 (Root Backup) <-> Access Switches (PortFast & BPDU Guard).",
-    architectureEn: "Core Switch 1 (Root Primary) <-> Core Switch 2 (Root Backup) <-> Access Switches (PortFast & BPDU Guard).",
-    resultId: "Perlindungan anti-looping 100% aktif dengan failover jalur redundan otomatis saat link utama terputus.",
-    resultEn: "100% active anti-loop protection with seamless automated link failover during primary trunk failures.",
-    rawConfig: `! PVST+ Spanning-Tree Priority & BPDU Guard Config
-spanning-tree mode pvst
-spanning-tree vlan 1,10,20 root primary
-spanning-tree vlan 30,40 root secondary
+    architectureId: "Switch1 (Root Bridge, Priority 4096, Fa0/1 & Fa0/2 Designated) <-> Switch2 (Backup Root, Priority 8192, Fa0/1 Root, Fa0/2 Designated) <-> Switch3 (Non-Root, Priority 32768, Fa0/1 Root, Fa0/2 Alternate/Blocking).",
+    architectureEn: "Switch1 (Root Bridge, Priority 4096, Fa0/1 & Fa0/2 Designated) <-> Switch2 (Backup Root, Priority 8192, Fa0/1 Root, Fa0/2 Designated) <-> Switch3 (Non-Root, Priority 32768, Fa0/1 Root, Fa0/2 Alternate/Blocking).",
+    resultId: "Topologi segitiga 3 switch 100% bebas dari Layer 2 loop/broadcast storm dengan 1 port otomatis diblokir (Blocking state) & failover sub-detik jika link terputus.",
+    resultEn: "3-switch triangle topology 100% free from Layer 2 loops/broadcast storms with 1 port automatically blocked and sub-second failover on link failure.",
+    rawConfig: `! ==========================================
+! SWITCH 1 (Root Bridge Primary)
+! ==========================================
+hostname Switch1
 !
-interface FastEthernet0/10
- switchport mode access
- switchport access vlan 10
- spanning-tree portfast
- spanning-tree bpduguard enable`
+spanning-tree mode pvst
+spanning-tree vlan 1 priority 4096
+!
+interface FastEthernet0/1
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport mode trunk
+
+! ==========================================
+! SWITCH 2 (Secondary / Backup Root Bridge)
+! ==========================================
+hostname Switch2
+!
+spanning-tree mode pvst
+spanning-tree vlan 1 priority 8192
+!
+interface FastEthernet0/1
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport mode trunk
+
+! ==========================================
+! SWITCH 3 (Standard Access Switch - Non-Root)
+! ==========================================
+hostname Switch3
+!
+spanning-tree mode pvst
+spanning-tree vlan 1 priority 32768
+!
+interface FastEthernet0/1
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport mode trunk
+!
+! Catatan Operasional STP:
+! Port Fa0/2 pada Switch3 otomatis berstatus Alternate/Blocking (BLK)
+! untuk mencegah Layer 2 Loop / Broadcast Storm.`
   }
 ];
 
