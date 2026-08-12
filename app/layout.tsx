@@ -9,7 +9,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://haidar-rauf.dev"),
+  metadataBase: new URL("https://haidarwf.vercel.app"),
   title: {
     default: "Haidar Portfolio",
     template: "%s | Haidar Portfolio",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://haidar-rauf.dev",
+    url: "https://haidarwf.vercel.app",
     title: "Muhammad Haidar Rauf Prayogo — Network Engineer",
     description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
     siteName: "Haidar Rauf Portfolio",
@@ -47,7 +47,7 @@ export default function RootLayout({
     "@type": "Person",
     name: "Muhammad Haidar Rauf Prayogo",
     jobTitle: "Network Engineer",
-    url: "https://haidar-rauf.dev",
+    url: "https://haidarwf.vercel.app",
     sameAs: [
       "https://github.com/haidirwf",
       "https://www.linkedin.com/in/haidar-rauf/",

@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://haidar-rauf.dev/sitemap.xml',
+    sitemap: 'https://haidarwf.vercel.app/sitemap.xml',
   };
 }
