@@ -62,7 +62,7 @@ export function Hero() {
                   key={idx}
                   style={{ top: item.top, left: item.left, right: item.right }}
                   className={cn(
-                    "absolute text-muted-foreground/25 dark:text-muted-foreground/20 transition-all duration-700 hidden sm:block",
+                    "absolute text-muted-foreground/20 dark:text-muted-foreground/25 transition-all duration-700 pointer-events-none select-none",
                     item.size
                   )}
                 >
