@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
-import { MapPin, Award, GraduationCap, ShieldCheck } from "lucide-react";
+import { Award, GraduationCap, ShieldCheck } from "lucide-react";
 
 export function About() {
   const { t } = useLanguage();
@@ -66,20 +66,13 @@ export function About() {
         >
           <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-primary/40 hover:bg-card/90 hover:shadow-md transition-all duration-300">
             <div className="space-y-4">
-              {/* Photo & Location Row */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* Photo Row */}
+              <div>
                 <img
                   src="/experience/haidarphoto.webp"
                   alt="Muhammad Haidar Rauf Prayogo"
                   className="w-auto h-28 sm:h-36 object-contain shrink-0"
                 />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-mono text-primary font-semibold">
-                    <MapPin className="size-3.5" />
-                    <span>Bekasi, Jawa Barat</span>
-                  </div>
-                  <p className="text-xs font-sans text-muted-foreground font-medium">Indonesia</p>
-                </div>
               </div>
 
               <h3 className="text-base sm:text-lg font-bold font-sans text-foreground leading-snug">
