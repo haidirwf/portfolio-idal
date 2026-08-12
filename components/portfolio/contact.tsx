@@ -29,6 +29,7 @@ export function Contact() {
   };
 
   const socialLinks = [
+    { name: "GitHub", href: "https://github.com/haidirwf", icon: GitBranch },
     { name: "LinkedIn", href: "https://www.linkedin.com/in/haidar-rauf/", icon: Link2 },
     { name: "Instagram", href: "https://instagram.com/haidarwf", icon: Share2 }
   ];
