@@ -21,14 +21,14 @@ interface TechItem {
 
 const TECH_STACK: TechItem[] = [
   { name: "MikroTik RouterOS", category: "Routing & Switching", icon: Server },
-  { name: "MTCNA & MTCRE", category: "Certification", icon: ShieldCheck },
   { name: "Cisco Packet Tracer", category: "Network Simulation", icon: Cpu },
+  { name: "PNETLab", category: "Network Emulation", icon: Cpu },
+  { name: "MTCNA & MTCRE", category: "Certification", icon: ShieldCheck },
   { name: "GNS3", category: "Network Emulation", icon: Cpu },
   { name: "OSPF & EIGRP", category: "Routing Protocols", icon: Workflow },
   { name: "BGP Inter-Domain", category: "Routing Protocols", icon: Globe },
   { name: "VLAN & Subnetting", category: "Switching & L2/L3", icon: Layers },
   { name: "Firewall & NAT", category: "Security Hardening", icon: ShieldCheck },
-  { name: "IPSec VPN", category: "Tunneling & Encryption", icon: ShieldCheck },
   { name: "Linux Server", category: "OS & Infrastructure", icon: Terminal }
 ];
 
