@@ -38,25 +38,25 @@ export function Showcase({ projects }: { projects: Project[] }) {
 
   return (
     <section id="projects" className="py-12 px-4 sm:px-6 space-y-6">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 max-w-6xl mx-auto">
-        <div className="space-y-1 text-center sm:text-left">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-            {t("Topologi & Proyek Jaringan", "Network Topologies & Works")}
-          </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground font-sans">
-            {t(
-              "Arsitektur jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik.",
-              "Enterprise network architecture, Cisco Packet Tracer simulations, and MikroTik edge management."
-            )}
-          </p>
-        </div>
+      <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
+          {t("Topologi & Proyek Jaringan", "Network Topologies & Works")}
+        </h2>
+        <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
+          {t(
+            "Arsitektur jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik.",
+            "Enterprise network architecture, Cisco Packet Tracer simulations, and MikroTik edge management."
+          )}
+        </p>
 
-        <Link
-          href="/projects"
-          className="text-xs font-mono font-medium text-foreground hover:underline shrink-0 bg-muted/50 hover:bg-muted px-3 py-1.5 rounded-lg border border-border/50 transition-colors"
-        >
-          {t("Lihat Semua Proyek →", "See All Projects →")}
-        </Link>
+        <div className="pt-1">
+          <Link
+            href="/projects"
+            className="inline-flex items-center text-xs font-mono font-medium text-foreground hover:underline bg-muted/50 hover:bg-muted px-3.5 py-1.5 rounded-lg border border-border/50 transition-colors"
+          >
+            {t("Lihat Semua Proyek →", "See All Projects →")}
+          </Link>
+        </div>
       </div>
 
       {/* Horizontal Carousel: Shows 3 cards on desktop, scrollable */}
