@@ -84,7 +84,7 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
           src={item.cover}
           alt={t(item.titleId, item.titleEn)}
           fill
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
           className="object-contain p-2"
           priority
         />

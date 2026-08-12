@@ -159,7 +159,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
               src={project.cover}
               alt={project.title}
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
               className="object-contain select-none"
               quality={100}
               priority
