@@ -102,37 +102,47 @@ export function About() {
           transition={{ duration: 0.3 }}
           className="h-full"
         >
-          <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-primary/40 hover:bg-card/90 hover:shadow-md transition-all duration-300">
-            <div className="space-y-4">
-              {/* Photo Row */}
-              <div>
-                <img
-                  src="/experience/haidarphoto.webp"
-                  alt="Muhammad Haidar Rauf Prayogo"
-                  className="w-auto h-28 sm:h-36 object-contain shrink-0"
-                />
-              </div>
+          <a
+            href="https://www.linkedin.com/in/haidar-rauf/"
+            target="_blank"
+            rel="noreferrer"
+            onMouseMove={(e) => handleMouseMove(e, "LinkedIn Profile")}
+            onMouseLeave={handleMouseLeave}
+            className="group block h-full cursor-pointer"
+          >
+            <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-primary/50 hover:bg-card/90 hover:shadow-md transition-all duration-300 relative">
+              <div className="space-y-4">
+                {/* Photo Row */}
+                <div className="flex items-start justify-between">
+                  <img
+                    src="/experience/haidarphoto.webp"
+                    alt="Muhammad Haidar Rauf Prayogo"
+                    className="w-auto h-28 sm:h-36 object-contain shrink-0"
+                  />
+                  <ExternalLink className="size-4 text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0" />
+                </div>
 
-              <div className="space-y-1">
-                <h3 className="text-lg sm:text-xl font-bold font-sans text-foreground">
-                  Haidar Rauf
-                </h3>
-                <p className="text-xs sm:text-sm font-sans font-medium text-muted-foreground">
+                <div className="space-y-1">
+                  <h3 className="text-lg sm:text-xl font-bold font-sans text-foreground group-hover:text-primary transition-colors flex items-center gap-1.5">
+                    <span>Haidar Rauf</span>
+                  </h3>
+                  <p className="text-xs sm:text-sm font-sans font-medium text-muted-foreground">
+                    {t(
+                      "Network Engineer yang berfokus pada infrastruktur jaringan enterprise yang aman, andal, dan skalabel.",
+                      "Network Engineer focused on secure, reliable, and scalable enterprise network infrastructure."
+                    )}
+                  </p>
+                </div>
+
+                <p className="text-xs font-sans text-muted-foreground leading-relaxed">
                   {t(
-                    "Network Engineer yang berfokus pada infrastruktur jaringan enterprise yang aman, andal, dan skalabel.",
-                    "Network Engineer focused on secure, reliable, and scalable enterprise network infrastructure."
+                    "Spesialisasi mencakup perancangan topologi jaringan komputer, otomatisasi protokol routing dinamis MikroTik & Cisco, pengerasan sistem keamanan firewall, serta implementasi VPN tunnel.",
+                    "Specializing in computer network topology design, MikroTik & Cisco dynamic routing protocol automation, firewall security hardening, and VPN tunnel implementations."
                   )}
                 </p>
               </div>
-
-              <p className="text-xs font-sans text-muted-foreground leading-relaxed">
-                {t(
-                  "Spesialisasi mencakup perancangan topologi jaringan komputer, otomatisasi protokol routing dinamis MikroTik & Cisco, pengerasan sistem keamanan firewall, serta implementasi VPN tunnel.",
-                  "Specializing in computer network topology design, MikroTik & Cisco dynamic routing protocol automation, firewall security hardening, and VPN tunnel implementations."
-                )}
-              </p>
-            </div>
-          </Card>
+            </Card>
+          </a>
         </motion.div>
 
         {/* Certifications & Education Stack (Kanan) */}
