@@ -39,13 +39,14 @@ export function FloatingSectionTracker() {
 
   React.useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+      const viewportHeight = window.innerHeight;
+      const scrollPosition = window.scrollY + viewportHeight * 0.35; // Accurate 35% viewport threshold for precise section tracking
 
       for (let i = SECTIONS.length - 1; i >= 0; i--) {
         const section = document.getElementById(SECTIONS[i].id);
         if (section) {
           const top = section.offsetTop;
-          if (scrollPosition >= top) {
+          if (scrollPosition >= top - 20) {
             setActiveSection(SECTIONS[i].id);
             break;
           }
@@ -72,7 +73,12 @@ export function FloatingSectionTracker() {
     }
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      const navOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - navOffset,
+        behavior: "smooth"
+      });
     }
   };
 
