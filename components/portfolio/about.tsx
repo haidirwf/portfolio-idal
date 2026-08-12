@@ -6,10 +6,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
-import { Award, GraduationCap, ShieldCheck, ExternalLink } from "lucide-react";
+import { ExternalLink, Award, GraduationCap, ShieldCheck } from "lucide-react";
+import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
 
 export function About() {
   const { t } = useLanguage();
+  const { openConfirmation } = useExternalLinkConfirm();
   const [tooltip, setTooltip] = React.useState<{ show: boolean; x: number; y: number; text: string }>({
     show: false,
     x: 0,
@@ -47,18 +49,11 @@ export function About() {
     setTooltip((prev) => ({ ...prev, show: false }));
   };
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string, title: string) => {
     // Only intercept on non-desktop / touch / small screens
     if (window.innerWidth < 1024) {
-      const confirmOpen = window.confirm(
-        t(
-          `Buka halaman ${title}?`,
-          `Open ${title} page?`
-        )
-      );
-      if (!confirmOpen) {
-        e.preventDefault();
-      }
+      e.preventDefault();
+      openConfirmation(url, title);
     }
   };
 
@@ -123,7 +118,7 @@ export function About() {
             href="https://www.linkedin.com/in/haidar-rauf/"
             target="_blank"
             rel="noreferrer"
-            onClick={(e) => handleLinkClick(e, "LinkedIn Profile")}
+            onClick={(e) => handleLinkClick(e, "https://www.linkedin.com/in/haidar-rauf/", "LinkedIn Profile")}
             onMouseMove={(e) => handleMouseMove(e, "LinkedIn Profile")}
             onMouseLeave={handleMouseLeave}
             className="group block h-full cursor-pointer"
@@ -188,7 +183,7 @@ export function About() {
                     href={cert.url}
                     target="_blank"
                     rel="noreferrer"
-                    onClick={(e) => handleLinkClick(e, cert.code)}
+                    onClick={(e) => handleLinkClick(e, cert.url, cert.code)}
                     onMouseMove={(e) => handleMouseMove(e, cert.code)}
                     onMouseLeave={handleMouseLeave}
                     className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
@@ -223,7 +218,7 @@ export function About() {
                     href={edu.url}
                     target="_blank"
                     rel="noreferrer"
-                    onClick={(e) => handleLinkClick(e, edu.school)}
+                    onClick={(e) => handleLinkClick(e, edu.url, edu.school)}
                     onMouseMove={(e) => handleMouseMove(e, edu.school)}
                     onMouseLeave={handleMouseLeave}
                     className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
