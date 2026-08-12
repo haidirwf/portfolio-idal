@@ -167,7 +167,7 @@ export function About() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-extrabold font-sans text-foreground group-hover:text-primary transition-colors flex items-center gap-1">
                         <span>{cert.code}</span>
-                        <ExternalLink className="size-3 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                        <ExternalLink className="size-3 text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity" />
                       </span>
                       <span className="text-[10px] font-mono text-muted-foreground">{cert.period}</span>
                     </div>
