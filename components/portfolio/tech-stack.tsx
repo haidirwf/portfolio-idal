@@ -57,15 +57,16 @@ export function TechStack() {
               key={item.name}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
+              whileHover={{ y: -5, scale: 1.03 }}
               viewport={{ once: true }}
               transition={{ duration: 0.2, delay: idx * 0.03 }}
             >
-              <Card className="p-4 border-border/80 bg-card/60 rounded-lg hover:bg-card hover:border-border transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group">
-                <Icon className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
-                <span className="text-xs font-sans font-semibold text-foreground">
+              <Card className="p-4 border-border/80 bg-card/60 rounded-xl hover:bg-card/90 hover:border-primary/60 hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group cursor-default">
+                <Icon className="size-6 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+                <span className="text-xs font-sans font-bold text-foreground group-hover:text-primary transition-colors">
                   {item.name}
                 </span>
-                <span className="text-[10px] font-sans text-muted-foreground">
+                <span className="text-[10px] font-sans text-muted-foreground font-medium">
                   {item.category}
                 </span>
               </Card>
