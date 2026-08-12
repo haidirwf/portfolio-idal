@@ -377,33 +377,58 @@ ip access-list standard FILTER-SERVER-ACCESS
     problemEn: "Limited public IPv4 address availability from the ISP prevented hundreds of internal LAN devices from connecting to the internet.",
     solutionId: "Membuat IP NAT Inside/Outside interfaces, mendefinisikan Standard ACL untuk IP privat LAN, dan mengaktifkan 'ip nat inside source list overload'.",
     solutionEn: "Configured NAT Inside/Outside interfaces, defined Standard ACL for private LAN ranges, and activated 'ip nat inside source list overload'.",
-    cover: "/projects/hyperscale.svg",
+    cover: "/projects/natoverload.webp",
     gallery: [
-      "/projects/hyperscale.svg"
+      "/projects/natoverload.webp"
     ],
     year: "2028",
     stack: ["Cisco Packet Tracer", "NAT Overload", "PAT", "Cisco IOS", "Edge Security"],
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
     tags: ["NAT", "PAT", "Networking"],
-    architectureId: "Internal LAN (192.168.0.0/16) -> Edge Router NAT Engine (PAT) -> ISP Gateway (Public IP 203.0.113.1).",
-    architectureEn: "Internal LAN (192.168.0.0/16) -> Edge Router NAT Engine (PAT) -> ISP Gateway (Public IP 203.0.113.1).",
-    resultId: "Seluruh pengguna lokal (200+ host) berhasil terhubung ke internet menggunakan 1 IP publik tunggal tanpa kendala port exhaustion.",
-    resultEn: "200+ internal hosts successfully sharing 1 single public IP address for internet access without port exhaustion.",
-    rawConfig: `! NAT Overload (PAT) Edge Router Configuration
-interface GigabitEthernet0/0/0
- description LAN-Internal
+    architectureId: "Local LAN (PC0: 192.168.10.10, PC1: 192.168.10.20) -> Router-NAT (Gig0/1 Inside: 192.168.10.1, Gig0/0 Outside: 1.1.1.1/30) -> Router-ISP (Gig0/0: 1.1.1.2/30, Gig0/1: 192.168.20.1) -> Server-INTERNET (192.168.20.0/24).",
+    architectureEn: "Local LAN (PC0: 192.168.10.10, PC1: 192.168.10.20) -> Router-NAT (Gig0/1 Inside: 192.168.10.1, Gig0/0 Outside: 1.1.1.1/30) -> Router-ISP (Gig0/0: 1.1.1.2/30, Gig0/1: 192.168.20.1) -> Server-INTERNET (192.168.20.0/24).",
+    resultId: "Seluruh pengguna lokal di subnet 192.168.10.0/24 (PC0 & PC1) berhasil mengakses Server-INTERNET melalui translasi PAT IP publik 1.1.1.1.",
+    resultEn: "All local hosts in 192.168.10.0/24 subnet (PC0 & PC1) successfully access Server-INTERNET via public IP 1.1.1.1 PAT translation.",
+    rawConfig: `! ==========================================
+! ROUTER-NAT (Edge Gateway - NAT Overload / PAT)
+! ==========================================
+hostname Router-NAT
+!
+interface GigabitEthernet0/1
  ip address 192.168.10.1 255.255.255.0
  ip nat inside
+ no shutdown
 !
-interface GigabitEthernet0/0/1
- description WAN-ISP
- ip address 203.0.113.2 255.255.255.252
+interface GigabitEthernet0/0
+ ip address 1.1.1.1 255.255.255.252
  ip nat outside
+ no shutdown
 !
-access-list 10 permit 192.168.10.0 0.0.0.255
-ip nat inside source list 10 interface GigabitEthernet0/0/1 overload
-ip route 0.0.0.0 0.0.0.0 203.0.113.1`
+! Standard ACL for Local Network Subnet
+access-list 1 permit 192.168.10.0 0.0.0.255
+!
+! NAT Overload (PAT) binding list 1 to Outside Interface
+ip nat inside source list 1 interface GigabitEthernet0/0 overload
+!
+! Default Route towards ISP
+ip route 0.0.0.0 0.0.0.0 1.1.1.2
+
+! ==========================================
+! ROUTER-ISP (Internet Service Provider Core)
+! ==========================================
+hostname Router-ISP
+!
+interface GigabitEthernet0/0
+ ip address 1.1.1.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ ip address 192.168.20.1 255.255.255.0
+ no shutdown
+!
+! Static route back to Router-NAT public IP / subnet
+ip route 1.1.1.0 255.255.255.252 1.1.1.1`
   },
   {
     title: "Spanning Tree Protocol (STP & PVST+) Loop Prevention",
