@@ -49,13 +49,13 @@ export function About() {
 
   const education = [
     {
-      school: "IDN Boarding School Solo",
-      field: t("SMK — TKJ (Teknik Komputer Jaringan)", "High School — Computer Network Engineering"),
+      school: "IDN Boarding School",
+      field: t("Teknik Komputer dan Jaringan (TKJ)", "Computer & Network Engineering"),
       period: "2025 – 2028",
       url: "https://www.instagram.com/idnboardingschoolsolo/"
     },
     {
-      school: "IDN Boarding School Pusat",
+      school: "IDN Boarding School",
       field: t("SMP / Middle School", "Middle School"),
       period: "2022 – 2025",
       url: "https://www.instagram.com/idnboardingschool/"
