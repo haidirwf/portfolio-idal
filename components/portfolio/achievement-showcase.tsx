@@ -23,30 +23,26 @@ export function AchievementShowcase() {
 
   return (
     <section id="achievements" className="py-12 px-4 sm:px-6 space-y-8 relative">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border/40 pb-4">
-        <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-primary/10 text-primary border border-primary/20 font-semibold">
-            <Trophy className="size-3.5" />
-            <span>{t("Pencapaian & Kegiatan", "Achievements & Activities")}</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-            {t("Rekam Jejak & Artikel Kegiatan", "Track Record & Activity Articles")}
-          </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground font-sans max-w-xl">
-            {t(
-              "Pengalaman mengikuti lomba jaringan, posisi kepemimpinan, dan ulasan artikel kegiatan.",
-              "Networking competition experience, leadership roles, and activity article reviews."
-            )}
-          </p>
-        </div>
+      {/* Section Header (Centered layout matching Project Showcase) */}
+      <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
+          {t("Pencapaian & Kegiatan", "Achievements & Activities")}
+        </h2>
+        <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
+          {t(
+            "Pengalaman mengikuti lomba jaringan, posisi kepemimpinan, dan ulasan artikel kegiatan.",
+            "Networking competition experience, leadership roles, and activity article reviews."
+          )}
+        </p>
 
-        <Link
-          href="/achievements"
-          className="inline-flex items-center text-xs font-mono font-medium text-foreground hover:underline bg-muted/50 hover:bg-muted px-3.5 py-1.5 rounded-lg border border-border/50 transition-colors gap-1.5 shrink-0 self-start sm:self-auto"
-        >
-          <span>{t("Lihat Semua Artikel →", "See All Articles →")}</span>
-        </Link>
+        <div className="pt-1">
+          <Link
+            href="/achievements"
+            className="inline-flex items-center text-xs font-mono font-medium text-foreground hover:underline bg-muted/50 hover:bg-muted px-3.5 py-1.5 rounded-lg border border-border/50 transition-colors"
+          >
+            {t("Lihat Semua Artikel →", "See All Articles →")}
+          </Link>
+        </div>
       </div>
 
       {/* Clean Minimal Horizontal List (Exact Format from Reference Image) */}
