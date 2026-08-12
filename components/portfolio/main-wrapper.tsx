@@ -16,7 +16,7 @@ export function MainWrapper({
   projects?: Project[];
 }) {
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x-2 border-dashed border-border max-w-6xl mx-auto relative">
+    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background font-sans antialiased border-x border-dashed border-border/60 max-w-6xl mx-auto relative">
       <FloatingSectionTracker />
       <TopAnnouncementBanner />
       <Navbar />
