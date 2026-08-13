@@ -25,8 +25,8 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
 
   const navLinks = [
     { name: t("Proyek", "Projects"), href: "/projects" },
+    { name: t("Pencapaian", "Achievements"), href: "/achievements" },
     { name: t("Tentang", "About"), href: "/#about" },
-    { name: t("Pengalaman", "Experience"), href: "/#experience" },
     { name: t("Kontak", "Contact"), href: "/#contact" },
   ];
 
