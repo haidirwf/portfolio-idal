@@ -4,7 +4,6 @@ import { Hero } from "@/components/portfolio/hero";
 import { Showcase } from "@/components/portfolio/showcase";
 import { AchievementShowcase } from "@/components/portfolio/achievement-showcase";
 import { About } from "@/components/portfolio/about";
-import { Experience } from "@/components/portfolio/experience";
 import { TechStack } from "@/components/portfolio/tech-stack";
 import { Contact } from "@/components/portfolio/contact";
 import { Footer } from "@/components/portfolio/footer";
@@ -19,7 +18,6 @@ export default function Home() {
       <Showcase projects={projects} />
       <AchievementShowcase />
       <About />
-      <Experience />
       <TechStack />
       <Contact />
     </MainWrapper>
