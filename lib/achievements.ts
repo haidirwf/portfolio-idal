@@ -82,63 +82,6 @@ export const ACHIEVEMENTS: Achievement[] = [
     cover: "/experience/hackaton.webp",
     tags: ["ExplorAItion", "Hackathon", "Yogyakarta", "Team Project", "App Development"],
     featured: true
-  },
-  {
-    id: "lks-network-administrator",
-    slug: "lks-network-administrator",
-    titleId: "Lomba Kompetensi Siswa (LKS) — Network Administrator",
-    titleEn: "Student Competency Competition (LKS) — Network Administrator",
-    organization: "Dinas Pendidikan & Komunitas IT Jaringan",
-    category: "competition",
-    categoryLabelId: "Kompetisi & Lomba",
-    categoryLabelEn: "Competition & Contest",
-    positionId: "Peserta Finalis & Juara Harapan",
-    positionEn: "Finalist & Honorable Mention",
-    periodId: "2025 – 2026",
-    periodEn: "2025 – 2026",
-    locationId: "Jawa Tengah, Indonesia",
-    locationEn: "Central Java, Indonesia",
-    descriptionId: "Kompetisi administrasi jaringan enterprise tingkat siswa yang menguji kemampuan konfigurasi routing dinamis, firewall MikroTik, VLAN trunking, dan pemecahan masalah jaringan skala besar.",
-    descriptionEn: "High-stakes enterprise network administration contest evaluating dynamic routing design, MikroTik firewall configurations, VLAN trunking, and complex network troubleshooting.",
-    articleContentId: `
-      ### Pengalaman Mengikuti LKS Network Administrator
-
-      Kompetisi LKS Network Administrator merupakan salah satu momen penting dalam perjalanan saya di bidang teknik jaringan komputer. Dalam ajang kompetisi ini, peserta dituntut untuk merancang dan mendesain topologi jaringan enterprise terintegrasi dalam waktu yang terbatas.
-
-      #### Ringkasan Tantangan & Konfigurasi:
-      1. **Routing Multi-Domain**: Mengonfigurasi redistribusi rute dinamis antara protokol OSPF 100 dan EIGRP 10 di switch multilayer Cisco.
-      2. **Keamanan & Filtering**: Menerapkan Standard dan Extended Access Control Lists (ACL) untuk mengisolasi traffic ke server sensitif dan memperbolehkan layanan tertentu.
-      3. **Tunnelling & VLAN**: Membangun GRE Tunnel 100.100.100.0/30 untuk menghubungkan dua cabang lokasi terpisah serta Inter-VLAN Subinterfaces 802.1Q.
-
-      #### Pembelajaran Utama:
-      Melalui kompetisi ini, saya mengasah kemampuan pemecahan masalah di bawah tekanan waktu, ketelitian perintah CLI pada perangkat Cisco IOS dan MikroTik RouterOS, serta pemahaman mendalam mengenai arsitektur jaringan yang andal (*high availability*).
-    `,
-    articleContentEn: `
-      ### Experience in LKS Network Administrator Competition
-
-      The LKS Network Administrator competition was a defining milestone in my computer networking journey. During this contest, participants were required to architect and deploy integrated enterprise topologies under strict time limits.
-
-      #### Key Challenges & Technical Implementations:
-      1. **Multi-Domain Routing**: Configured mutual route redistribution between OSPF 100 and EIGRP 10 on Cisco multilayer switches.
-      2. **Security & Traffic Filtering**: Implemented Standard and Extended ACLs to secure sensitive server subnets while maintaining required service access.
-      3. **Tunnelling & Inter-VLAN**: Built encrypted GRE Tunnel 100.100.100.0/30 connecting remote branches alongside 802.1Q Inter-VLAN Subinterfaces.
-
-      #### Key Takeaways:
-      This competition sharpened my troubleshooting speed under high-pressure scenarios, CLI precision across Cisco IOS and MikroTik RouterOS devices, and practical understanding of resilient enterprise network architecture.
-    `,
-    highlightsId: [
-      "Mengonfigurasi OSPF/EIGRP redistribution pada Multilayer Switch Cisco",
-      "Membuat kebijakan lalu lintas jaringan dengan Standard & Extended ACL",
-      "Troubleshooting jaringan inter-VLAN dan GRE Tunnel secara akurat"
-    ],
-    highlightsEn: [
-      "Configured Cisco Multilayer Switch OSPF/EIGRP redistribution",
-      "Enforced granular traffic policies using Standard & Extended ACLs",
-      "Accurately troubleshot inter-VLAN topologies and GRE Tunnels"
-    ],
-    cover: "/projects/enterprise.webp",
-    tags: ["LKS", "Network Administrator", "Cisco IOS", "MikroTik", "OSPF"],
-    featured: true
   }
 ];
 
