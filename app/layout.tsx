@@ -30,11 +30,20 @@ export const metadata: Metadata = {
     title: "Muhammad Haidar Rauf Prayogo — Network Engineer",
     description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
     siteName: "Haidar Rauf Portfolio",
+    images: [
+      {
+        url: "/experience/haidarphoto.webp",
+        width: 1200,
+        height: 630,
+        alt: "Muhammad Haidar Rauf Prayogo — Network Engineer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Muhammad Haidar Rauf Prayogo — Network Engineer",
     description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
+    images: ["/experience/haidarphoto.webp"],
   },
   robots: {
     index: true,

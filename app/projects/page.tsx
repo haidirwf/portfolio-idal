@@ -3,8 +3,8 @@ import { MainWrapper } from "@/components/portfolio/main-wrapper";
 import { AllProjectsContent } from "@/components/portfolio/all-projects-content";
 
 export const metadata: Metadata = {
-  title: "Semua Proyek Jaringan — Network Topologies Showcase",
-  description: "Daftar lengkap topologi jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik oleh Muhammad Haidar Rauf Prayogo.",
+  title: "All Network Projects — Topologies & Labs",
+  description: "Comprehensive portfolio of enterprise network topologies, Cisco Packet Tracer simulations, and MikroTik edge management by Muhammad Haidar Rauf Prayogo.",
 };
 
 export default function AllProjectsPage() {

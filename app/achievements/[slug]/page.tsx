@@ -15,13 +15,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const item = getAchievementBySlug(slug);
   if (!item) {
     return {
-      title: "Artikel Tidak Ditemukan",
+      title: "Article Not Found",
     };
   }
 
   return {
-    title: `${item.titleEn} — Artikel & Pencapaian`,
+    title: `${item.titleEn} — Achievements & Activities`,
     description: item.descriptionEn,
+    openGraph: {
+      title: `${item.titleEn} — Muhammad Haidar Rauf Prayogo`,
+      description: item.descriptionEn,
+      type: "article",
+      url: `https://haidarwf.vercel.app/achievements/${item.slug}`,
+      images: [
+        {
+          url: item.cover,
+          alt: item.titleEn,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.titleEn} — Muhammad Haidar Rauf Prayogo`,
+      description: item.descriptionEn,
+      images: [item.cover],
+    },
   };
 }
 

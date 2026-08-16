@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getProjects } from "@/lib/projects";
 import { MainWrapper } from "@/components/portfolio/main-wrapper";
@@ -8,14 +9,32 @@ export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-  if (!project) return {};
+  if (!project) return { title: "Project Not Found" };
 
   return {
-    title: `${project.title} — Topologi Showcase`,
+    title: `${project.title} — Network Topology`,
     description: project.descriptionEn,
+    openGraph: {
+      title: `${project.title} — Network Topology Showcase`,
+      description: project.descriptionEn,
+      type: "article",
+      url: `https://haidarwf.vercel.app/projects/${project.slug}`,
+      images: [
+        {
+          url: project.cover,
+          alt: project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} — Network Topology Showcase`,
+      description: project.descriptionEn,
+      images: [project.cover],
+    },
   };
 }
 
