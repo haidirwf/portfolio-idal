@@ -17,7 +17,29 @@ const LanguageContext = React.createContext<LanguageContextType>({
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = React.useState<Language>("EN");
+  const [lang, setLangState] = React.useState<Language>("EN");
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem("app_lang") as Language | null;
+    if (saved === "ID" || saved === "EN") {
+      setLangState(saved);
+    } else if (typeof navigator !== "undefined") {
+      // Auto-detect browser language: if user uses Indonesian (id / id-ID), default to ID
+      const userLang = navigator.language || (navigator as { userLanguage?: string }).userLanguage || "";
+      if (userLang.toLowerCase().startsWith("id")) {
+        setLangState("ID");
+      }
+    }
+  }, []);
+
+  const setLang = React.useCallback((newLang: Language) => {
+    setLangState(newLang);
+    try {
+      localStorage.setItem("app_lang", newLang);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const t = React.useCallback(
     (idText: string, enText: string) => {
