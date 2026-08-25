@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://haidarwf.vercel.app"),
+  applicationName: "Haidar Portfolio",
   title: {
-    default: "Haidar Portfolio",
+    default: "Muhammad Haidar Rauf Prayogo — Network Engineer Portfolio",
     template: "%s | Haidar Portfolio",
   },
   description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     url: "https://haidarwf.vercel.app",
     title: "Muhammad Haidar Rauf Prayogo — Network Engineer",
     description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
-    siteName: "Haidar Rauf Portfolio",
+    siteName: "Haidar Portfolio",
     images: [
       {
         url: "/experience/haidarphoto.webp",
@@ -61,25 +62,37 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Muhammad Haidar Rauf Prayogo",
-    jobTitle: "Network Engineer",
-    url: "https://haidarwf.vercel.app",
-    sameAs: [
-      "https://github.com/haidirwf",
-      "https://www.linkedin.com/in/haidar-rauf/",
-    ],
-    knowsAbout: [
-      "MikroTik",
-      "MTCNA",
-      "MTCRE",
-      "Cisco Packet Tracer",
-      "OSPF",
-      "EIGRP",
-      "BGP",
-      "VLAN",
-      "IPSec VPN",
-      "Linux",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://haidarwf.vercel.app/#website",
+        url: "https://haidarwf.vercel.app",
+        name: "Haidar Portfolio",
+        alternateName: ["Haidar Rauf Portfolio", "Muhammad Haidar Rauf Prayogo"],
+      },
+      {
+        "@type": "Person",
+        "@id": "https://haidarwf.vercel.app/#person",
+        name: "Muhammad Haidar Rauf Prayogo",
+        jobTitle: "Network Engineer",
+        url: "https://haidarwf.vercel.app",
+        sameAs: [
+          "https://github.com/haidirwf",
+          "https://www.linkedin.com/in/haidar-rauf/",
+        ],
+        knowsAbout: [
+          "MikroTik",
+          "MTCNA",
+          "MTCRE",
+          "Cisco Packet Tracer",
+          "OSPF",
+          "EIGRP",
+          "BGP",
+          "VLAN",
+          "IPSec VPN",
+          "Linux",
+        ],
+      },
     ],
   };
 
