@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ const SECTIONS: NavSection[] = [
 ];
 
 export function FloatingSectionTracker() {
+  const pathname = usePathname();
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = React.useState("hero");
   const [isHovered, setIsHovered] = React.useState(false);
@@ -38,6 +40,7 @@ export function FloatingSectionTracker() {
   }, []);
 
   React.useEffect(() => {
+    if (pathname !== "/") return;
     const handleScroll = () => {
       const viewportHeight = window.innerHeight;
       const scrollPosition = window.scrollY + viewportHeight * 0.35; // Accurate 35% viewport threshold for precise section tracking
@@ -81,6 +84,10 @@ export function FloatingSectionTracker() {
       });
     }
   };
+
+  if (pathname !== "/") {
+    return null;
+  }
 
   return (
     <aside
