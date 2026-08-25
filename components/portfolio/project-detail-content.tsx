@@ -271,16 +271,38 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                         const trimmed = part.trim();
                         if (!trimmed) return null;
 
-                        // Render CLI Code Block
+                        // Render CLI Code Block (Clean DiaryConfig / IPCisco Documentation Style)
                         if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
                           const codeLines = trimmed.slice(3, -3).replace(/^[a-z]+\n/, "").trim();
                           return (
-                            <pre
+                            <div
                               key={pIdx}
-                              className="my-3 p-3.5 rounded-lg overflow-x-auto border border-border/40 bg-black/90 text-emerald-400 font-mono text-[11px] sm:text-xs leading-relaxed shadow-xs"
+                              className="my-3 rounded-lg overflow-x-auto border border-border/70 bg-muted/40 dark:bg-secondary/40 p-3 sm:p-4 text-xs sm:text-[13px] font-mono leading-relaxed"
                             >
-                              <code>{codeLines}</code>
-                            </pre>
+                              <pre className="text-foreground">
+                                <code>
+                                  {codeLines.split("\n").map((line, lIdx) => {
+                                    const trimmedLine = line.trim();
+                                    const isComment = trimmedLine.startsWith("!");
+                                    const isPrompt = /^[A-Za-z0-9_-]+[>#(]/.test(trimmedLine);
+
+                                    return (
+                                      <div
+                                        key={lIdx}
+                                        className={cn(
+                                          "min-h-[1.35rem]",
+                                          isComment && "text-muted-foreground/70 italic",
+                                          isPrompt && "text-foreground font-semibold",
+                                          !isComment && !isPrompt && "text-foreground/90 font-mono"
+                                        )}
+                                      >
+                                        {line}
+                                      </div>
+                                    );
+                                  })}
+                                </code>
+                              </pre>
+                            </div>
                           );
                         }
 
@@ -452,9 +474,29 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             onWheel={(e) => {
               e.stopPropagation();
             }}
-            className="p-3.5 rounded-lg bg-black/80 text-emerald-400 font-mono text-[11px] max-h-56 overflow-y-auto overscroll-contain border border-border/40 leading-relaxed touch-pan-y"
+            className="p-4 rounded-lg bg-muted/40 dark:bg-secondary/40 text-foreground font-mono text-xs sm:text-[13px] max-h-72 overflow-y-auto overscroll-contain border border-border/70 leading-relaxed touch-pan-y"
           >
-            <code>{project.rawConfig}</code>
+            <code>
+              {project.rawConfig.split("\n").map((line, rIdx) => {
+                const trimmedLine = line.trim();
+                const isComment = trimmedLine.startsWith("!");
+                const isPrompt = /^[A-Za-z0-9_-]+[>#(]/.test(trimmedLine);
+
+                return (
+                  <div
+                    key={rIdx}
+                    className={cn(
+                      "min-h-[1.35rem]",
+                      isComment && "text-muted-foreground/70 italic",
+                      isPrompt && "text-foreground font-semibold",
+                      !isComment && !isPrompt && "text-foreground/90 font-mono"
+                    )}
+                  >
+                    {line}
+                  </div>
+                );
+              })}
+            </code>
           </pre>
         </Card>
       )}
