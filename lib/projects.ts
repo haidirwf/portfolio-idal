@@ -207,7 +207,377 @@ interface GigabitEthernet0/1.30
  ip access-group BLOCK-WEB-ONLY in
 !
 interface GigabitEthernet0/1.40
- ip access-group BLOCK-PING-ONLY in`
+ ip access-group BLOCK-PING-ONLY in`,
+    articleContentId: `
+### 1. Pendahuluan & Konsep Arsitektur Enterprise Hybrid
+
+Topologi **Enterprise Multi-Segment & Hybrid Routing** ini menggabungkan beberapa teknologi fundamental dalam satu infrastruktur terintegrasi:
+* **VLAN & Router-on-a-Stick (802.1Q)**: Memisahkan traffic broadcast departemen ke dalam VLAN 10, 20, 21, 30, dan 40 dengan prefix efisien \`/28\` (14 host per subnet).
+* **DHCP Service**: Alokasi IP dinamis otomatis via DHCP Server lokal (\`192.168.10.2\`) dengan \`ip helper-address\` serta DHCP Pool onboard pada Router.
+* **Hybrid Dynamic Routing**: Menghubungkan domain routing **OSPF 100** dan **EIGRP 10** melalui **Mutual Route Redistribution** pada Core Multilayer Switch 3560.
+* **Site-to-Site GRE Tunnel**: Menghubungkan jaringan cabang privat melalui antarmuka virtual Tunnel (\`100.100.100.0/30\`).
+* **Extended ACL Security Policy**: Mengontrol akses spesifik (membedakan izin traffic Web HTTP port 80 dan PING ICMP ke Server Pusat).
+
+---
+
+### 2. Skenario & Tabel Pengalamatan IP (Addressing Table)
+
+| Perangkat | Interface / VLAN | IP Address | Subnet Mask | Default Gateway | Fungsi / Keterangan |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Branch-Left** | Gig0/0.10 | 192.168.10.1 | 255.255.255.240 (/28) | - | Gateway VLAN 10 (DHCP Server LAN) |
+| **Branch-Left** | Gig0/0.20 | 192.168.20.1 | 255.255.255.240 (/28) | - | Gateway VLAN 20 (Staff LAN) |
+| **Branch-Left** | Gig0/0.21 | 192.168.21.1 | 255.255.255.240 (/28) | - | Gateway VLAN 21 (Management LAN) |
+| **Branch-Left** | Gig0/1 | 10.10.10.2 | 255.255.255.248 (/29) | - | Uplink ke Core MLS (OSPF 100) |
+| **Core-MLS 3560**| Gig1/0/1 | 10.10.10.1 | 255.255.255.248 (/29) | - | Link ke Branch-Left (OSPF 100) |
+| **Core-MLS 3560**| Gig1/0/2 | 11.11.11.1 | 255.255.255.248 (/29) | - | Link ke Transit Router (OSPF 100) |
+| **Core-MLS 3560**| Gig1/0/3 | 21.21.21.1 | 255.255.255.248 (/29) | - | Link ke Branch-Right Link 2 (EIGRP 10) |
+| **Core-MLS 3560**| Gig1/0/4 | 20.20.20.1 | 255.255.255.248 (/29) | - | Link ke Branch-Right Link 1 (EIGRP 10) |
+| **Core-MLS 3560**| Gig1/0/5 | 8.8.8.1 | 255.255.255.240 (/28) | - | Central Google/Web Server Gateway |
+| **Branch-Right**| Gig0/0 | 20.20.20.2 | 255.255.255.248 (/29) | - | Uplink ke Core MLS (EIGRP 10) |
+| **Branch-Right**| Gig0/1.30 | 192.168.30.1 | 255.255.255.240 (/28) | - | Gateway VLAN 30 (Block Web Only) |
+| **Branch-Right**| Gig0/1.40 | 192.168.40.1 | 255.255.255.240 (/28) | - | Gateway VLAN 40 (Block Ping Only) |
+| **Central Server**| FastEthernet0 | 8.8.8.8 | 255.255.255.240 (/28) | 8.8.8.1 | Central HTTP & DNS Server |
+
+---
+
+### 3. Langkah-Langkah Konfigurasi (Step-by-Step Configuration)
+
+#### Langkah 1: Subinterfaces Router-on-a-Stick & DHCP Relay pada Branch-Router-Left
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Branch-Router-Left
+
+! Subinterface VLAN 10
+Branch-Router-Left(config)# interface GigabitEthernet0/0.10
+Branch-Router-Left(config-subif)# encapsulation dot1Q 10
+Branch-Router-Left(config-subif)# ip address 192.168.10.1 255.255.255.240
+Branch-Router-Left(config-subif)# ip helper-address 192.168.10.2
+Branch-Router-Left(config-subif)# exit
+
+! Subinterface VLAN 20
+Branch-Router-Left(config)# interface GigabitEthernet0/0.20
+Branch-Router-Left(config-subif)# encapsulation dot1Q 20
+Branch-Router-Left(config-subif)# ip address 192.168.20.1 255.255.255.240
+Branch-Router-Left(config-subif)# ip helper-address 192.168.10.2
+Branch-Router-Left(config-subif)# exit
+
+! Subinterface VLAN 21
+Branch-Router-Left(config)# interface GigabitEthernet0/0.21
+Branch-Router-Left(config-subif)# encapsulation dot1Q 21
+Branch-Router-Left(config-subif)# ip address 192.168.21.1 255.255.255.240
+Branch-Router-Left(config-subif)# ip helper-address 192.168.10.2
+Branch-Router-Left(config-subif)# exit
+
+! Aktifkan Interface Fisik
+Branch-Router-Left(config)# interface GigabitEthernet0/0
+Branch-Router-Left(config-if)# no shutdown
+Branch-Router-Left(config-if)# exit
+
+! Uplink & OSPF Routing
+Branch-Router-Left(config)# interface GigabitEthernet0/1
+Branch-Router-Left(config-if)# ip address 10.10.10.2 255.255.255.248
+Branch-Router-Left(config-if)# no shutdown
+Branch-Router-Left(config-if)# exit
+
+Branch-Router-Left(config)# router ospf 100
+Branch-Router-Left(config-router)# router-id 2.2.2.2
+Branch-Router-Left(config-router)# network 10.10.10.0 0.0.0.7 area 0
+Branch-Router-Left(config-router)# network 192.168.10.0 0.0.0.15 area 0
+Branch-Router-Left(config-router)# network 192.168.20.0 0.0.0.15 area 0
+Branch-Router-Left(config-router)# network 192.168.21.0 0.0.0.15 area 0
+Branch-Router-Left(config-router)# exit
+\`\`\`
+
+#### Langkah 2: Konfigurasi Core Multilayer Switch 3560 (Redistribution OSPF & EIGRP)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Core-MultilayerSwitch
+Switch(config)# ip routing
+
+! Konfigurasi Port Routed (no switchport)
+Switch(config)# interface GigabitEthernet1/0/1
+Switch(config-if)# no switchport
+Switch(config-if)# ip address 10.10.10.1 255.255.255.248
+Switch(config-if)# exit
+
+Switch(config)# interface GigabitEthernet1/0/4
+Switch(config-if)# no switchport
+Switch(config-if)# ip address 20.20.20.1 255.255.255.248
+Switch(config-if)# exit
+
+Switch(config)# interface GigabitEthernet1/0/5
+Switch(config-if)# no switchport
+Switch(config-if)# ip address 8.8.8.1 255.255.255.240
+Switch(config-if)# exit
+
+! OSPF 100 dengan Redistribusi EIGRP
+Switch(config)# router ospf 100
+Switch(config-router)# router-id 1.1.1.1
+Switch(config-router)# network 10.10.10.0 0.0.0.7 area 0
+Switch(config-router)# network 8.8.8.0 0.0.0.15 area 0
+Switch(config-router)# redistribute eigrp 10 subnets
+Switch(config-router)# exit
+
+! EIGRP 10 dengan Redistribusi OSPF
+Switch(config)# router eigrp 10
+Switch(config-router)# network 20.20.20.0 0.0.0.7
+Switch(config-router)# redistribute ospf 100 metric 10000 100 255 1 1500
+Switch(config-router)# exit
+\`\`\`
+
+#### Langkah 3: Konfigurasi Branch-Router-Right (DHCP Onboard & Extended ACL)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Branch-Router-Right
+
+! DHCP Pool Onboard
+Branch-Router-Right(config)# ip dhcp pool VLAN30_RIGHT
+Branch-Router-Right(dhcp-config)# network 192.168.30.0 255.255.255.240
+Branch-Router-Right(dhcp-config)# default-router 192.168.30.1
+Branch-Router-Right(dhcp-config)# exit
+
+Branch-Router-Right(config)# ip dhcp pool VLAN40_RIGHT
+Branch-Router-Right(dhcp-config)# network 192.168.40.0 255.255.255.240
+Branch-Router-Right(dhcp-config)# default-router 192.168.40.1
+Branch-Router-Right(dhcp-config)# exit
+
+! Extended ACL Policies
+Branch-Router-Right(config)# ip access-list extended BLOCK-WEB-ONLY
+Branch-Router-Right(config-ext-nacl)# permit icmp any host 8.8.8.8
+Branch-Router-Right(config-ext-nacl)# deny tcp any host 8.8.8.8 eq 80
+Branch-Router-Right(config-ext-nacl)# permit ip any any
+Branch-Router-Right(config-ext-nacl)# exit
+
+Branch-Router-Right(config)# ip access-list extended BLOCK-PING-ONLY
+Branch-Router-Right(config-ext-nacl)# permit tcp any host 8.8.8.8 eq 80
+Branch-Router-Right(config-ext-nacl)# deny icmp any host 8.8.8.8
+Branch-Router-Right(config-ext-nacl)# permit ip any any
+Branch-Router-Right(config-ext-nacl)# exit
+
+! Penerapan ke Subinterface
+Branch-Router-Right(config)# interface GigabitEthernet0/1.30
+Branch-Router-Right(config-subif)# encapsulation dot1Q 30
+Branch-Router-Right(config-subif)# ip address 192.168.30.1 255.255.255.240
+Branch-Router-Right(config-subif)# ip access-group BLOCK-WEB-ONLY in
+Branch-Router-Right(config-subif)# exit
+
+Branch-Router-Right(config)# interface GigabitEthernet0/1.40
+Branch-Router-Right(config-subif)# encapsulation dot1Q 40
+Branch-Router-Right(config-subif)# ip address 192.168.40.1 255.255.255.240
+Branch-Router-Right(config-subif)# ip access-group BLOCK-PING-ONLY in
+Branch-Router-Right(config-subif)# exit
+\`\`\`
+
+---
+
+### 4. Pengujian & Verifikasi (Testing & Verification)
+
+#### A. Verifikasi Tabel Routing OSPF & EIGRP pada Core-MLS
+\`\`\`bash
+Core-MultilayerSwitch# show ip route
+Gateway of last resort is not set
+
+      8.0.0.0/28 is subnetted, 1 subnets
+C        8.8.8.0 is directly connected, GigabitEthernet1/0/5
+      10.0.0.0/29 is subnetted, 1 subnets
+C        10.10.10.0 is directly connected, GigabitEthernet1/0/1
+      20.0.0.0/29 is subnetted, 1 subnets
+C        20.20.20.0 is directly connected, GigabitEthernet1/0/4
+O     192.168.10.0/28 [110/2] via 10.10.10.2, GigabitEthernet1/0/1
+O     192.168.20.0/28 [110/2] via 10.10.10.2, GigabitEthernet1/0/1
+D EX  192.168.30.0/28 [170/2560512] via 20.20.20.2, GigabitEthernet1/0/4
+D EX  192.168.40.0/28 [170/2560512] via 20.20.20.2, GigabitEthernet1/0/4
+\`\`\`
+*(Rute dari OSPF masuk sebagai \`O\` dan rute dari EIGRP masuk sebagai \`D EX\` External).*
+
+#### B. Pengujian Policy ACL pada VLAN 30 & VLAN 40
+1. **Host di VLAN 30 (\`BLOCK-WEB-ONLY\`)**:
+   - PING ke \`8.8.8.8\` -> **SUCCESS (Reply received)**
+   - Akses Web Browser HTTP \`http://8.8.8.8\` -> **BLOCKED (Request Timeout)**
+2. **Host di VLAN 40 (\`BLOCK-PING-ONLY\`)**:
+   - PING ke \`8.8.8.8\` -> **BLOCKED (Destination host unreachable)**
+   - Akses Web Browser HTTP \`http://8.8.8.8\` -> **SUCCESS (Webpage Loaded)**
+
+---
+
+### 5. Analisis Teknis & Kesimpulan
+
+1. **Efisiensi Prefix /28**: Penggunaan subnet mask \`255.255.255.240\` menghemat 87.5% alamat IP dibanding menggunakan \`/24\` konvensional di setiap segmen departemen.
+2. **Mutual Route Redistribution**: Penggunaan seed metric yang presisi pada EIGRP (\`bandwidth delay reliability load mtu\`) mencegah inkonsistensi routing table antar protokol.
+`,
+    articleContentEn: `
+### 1. Enterprise Multi-Segment & Hybrid Architecture Fundamentals
+
+This **Enterprise Hybrid Routing & Multi-Segment Topology** consolidates enterprise-grade networking paradigms into one cohesive environment:
+* **VLAN & Router-on-a-Stick (802.1Q)**: Segregates broadcast domains into VLANs 10, 20, 21, 30, and 40 using compact \`/28\` prefix addressing (14 usable host addresses per segment).
+* **Automated DHCP Distribution**: Implements local DHCP relay via \`ip helper-address\` on subinterfaces and native router-based DHCP pools.
+* **Hybrid Routing Redistribution**: Bridges **OSPF 100** and **EIGRP 10** routing domains through **Mutual Route Redistribution** on Core Multilayer Switch 3560.
+* **Private GRE Tunnel**: Transports private branch traffic across an isolated virtual tunnel link (\`100.100.100.0/30\`).
+* **Extended ACL Security Policies**: Enforces distinct application-layer rules (differentiating HTTP port 80 and ICMP PING toward central servers).
+
+---
+
+### 2. IP Addressing & Subnet Table
+
+| Device | Interface / VLAN | IP Address | Subnet Mask | Default Gateway | Function / Description |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Branch-Left** | Gig0/0.10 | 192.168.10.1 | 255.255.255.240 (/28) | - | VLAN 10 Gateway (DHCP Server LAN) |
+| **Branch-Left** | Gig0/0.20 | 192.168.20.1 | 255.255.255.240 (/28) | - | VLAN 20 Gateway (Staff LAN) |
+| **Branch-Left** | Gig0/0.21 | 192.168.21.1 | 255.255.255.240 (/28) | - | VLAN 21 Gateway (Management LAN) |
+| **Branch-Left** | Gig0/1 | 10.10.10.2 | 255.255.255.248 (/29) | - | Uplink to Core MLS (OSPF 100) |
+| **Core-MLS 3560**| Gig1/0/1 | 10.10.10.1 | 255.255.255.248 (/29) | - | Link to Branch-Left (OSPF 100) |
+| **Core-MLS 3560**| Gig1/0/2 | 11.11.11.1 | 255.255.255.248 (/29) | - | Transit Router Link (OSPF 100) |
+| **Core-MLS 3560**| Gig1/0/3 | 21.21.21.1 | 255.255.255.248 (/29) | - | Branch-Right Link 2 (EIGRP 10) |
+| **Core-MLS 3560**| Gig1/0/4 | 20.20.20.1 | 255.255.255.248 (/29) | - | Branch-Right Link 1 (EIGRP 10) |
+| **Core-MLS 3560**| Gig1/0/5 | 8.8.8.1 | 255.255.255.240 (/28) | - | Central Google/Web Server Gateway |
+| **Branch-Right**| Gig0/0 | 20.20.20.2 | 255.255.255.248 (/29) | - | Uplink to Core MLS (EIGRP 10) |
+| **Branch-Right**| Gig0/1.30 | 192.168.30.1 | 255.255.255.240 (/28) | - | VLAN 30 Gateway (Block Web Only) |
+| **Branch-Right**| Gig0/1.40 | 192.168.40.1 | 255.255.255.240 (/28) | - | VLAN 40 Gateway (Block Ping Only) |
+| **Central Server**| FastEthernet0 | 8.8.8.8 | 255.255.255.240 (/28) | 8.8.8.1 | Central HTTP & DNS Server |
+
+---
+
+### 3. Step-by-Step CLI Configuration
+
+#### Step 1: Subinterfaces Router-on-a-Stick & DHCP Relay on Branch-Router-Left
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Branch-Router-Left
+
+! VLAN 10 Subinterface
+Branch-Router-Left(config)# interface GigabitEthernet0/0.10
+Branch-Router-Left(config-subif)# encapsulation dot1Q 10
+Branch-Router-Left(config-subif)# ip address 192.168.10.1 255.255.255.240
+Branch-Router-Left(config-subif)# ip helper-address 192.168.10.2
+Branch-Router-Left(config-subif)# exit
+
+! VLAN 20 Subinterface
+Branch-Router-Left(config)# interface GigabitEthernet0/0.20
+Branch-Router-Left(config-subif)# encapsulation dot1Q 20
+Branch-Router-Left(config-subif)# ip address 192.168.20.1 255.255.255.240
+Branch-Router-Left(config-subif)# ip helper-address 192.168.10.2
+Branch-Router-Left(config-subif)# exit
+
+! Enable Physical Interface
+Branch-Router-Left(config)# interface GigabitEthernet0/0
+Branch-Router-Left(config-if)# no shutdown
+Branch-Router-Left(config-if)# exit
+
+! Uplink & OSPF Routing
+Branch-Router-Left(config)# interface GigabitEthernet0/1
+Branch-Router-Left(config-if)# ip address 10.10.10.2 255.255.255.248
+Branch-Router-Left(config-if)# no shutdown
+Branch-Router-Left(config-if)# exit
+
+Branch-Router-Left(config)# router ospf 100
+Branch-Router-Left(config-router)# router-id 2.2.2.2
+Branch-Router-Left(config-router)# network 10.10.10.0 0.0.0.7 area 0
+Branch-Router-Left(config-router)# network 192.168.10.0 0.0.0.15 area 0
+Branch-Router-Left(config-router)# network 192.168.20.0 0.0.0.15 area 0
+Branch-Router-Left(config-router)# network 192.168.21.0 0.0.0.15 area 0
+\`\`\`
+
+#### Step 2: Core Multilayer Switch 3560 (OSPF & EIGRP Route Redistribution)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Core-MultilayerSwitch
+Switch(config)# ip routing
+
+! Routed Port Setup (no switchport)
+Switch(config)# interface GigabitEthernet1/0/1
+Switch(config-if)# no switchport
+Switch(config-if)# ip address 10.10.10.1 255.255.255.248
+Switch(config-if)# exit
+
+Switch(config)# interface GigabitEthernet1/0/4
+Switch(config-if)# no switchport
+Switch(config-if)# ip address 20.20.20.1 255.255.255.248
+Switch(config-if)# exit
+
+Switch(config)# interface GigabitEthernet1/0/5
+Switch(config-if)# no switchport
+Switch(config-if)# ip address 8.8.8.1 255.255.255.240
+Switch(config-if)# exit
+
+! OSPF 100 Redistribution with EIGRP
+Switch(config)# router ospf 100
+Switch(config-router)# router-id 1.1.1.1
+Switch(config-router)# network 10.10.10.0 0.0.0.7 area 0
+Switch(config-router)# network 8.8.8.0 0.0.0.15 area 0
+Switch(config-router)# redistribute eigrp 10 subnets
+Switch(config-router)# exit
+
+! EIGRP 10 Redistribution with OSPF
+Switch(config)# router eigrp 10
+Switch(config-router)# network 20.20.20.0 0.0.0.7
+Switch(config-router)# redistribute ospf 100 metric 10000 100 255 1 1500
+Switch(config-router)# exit
+\`\`\`
+
+#### Step 3: Branch-Router-Right (DHCP Pools & Extended ACL Policies)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Branch-Router-Right
+
+! Onboard DHCP Pools
+Branch-Router-Right(config)# ip dhcp pool VLAN30_RIGHT
+Branch-Router-Right(dhcp-config)# network 192.168.30.0 255.255.255.240
+Branch-Router-Right(dhcp-config)# default-router 192.168.30.1
+Branch-Router-Right(dhcp-config)# exit
+
+Branch-Router-Right(config)# ip dhcp pool VLAN40_RIGHT
+Branch-Router-Right(dhcp-config)# network 192.168.40.0 255.255.255.240
+Branch-Router-Right(dhcp-config)# default-router 192.168.40.1
+Branch-Router-Right(dhcp-config)# exit
+
+! Extended ACL Policies
+Branch-Router-Right(config)# ip access-list extended BLOCK-WEB-ONLY
+Branch-Router-Right(config-ext-nacl)# permit icmp any host 8.8.8.8
+Branch-Router-Right(config-ext-nacl)# deny tcp any host 8.8.8.8 eq 80
+Branch-Router-Right(config-ext-nacl)# permit ip any any
+Branch-Router-Right(config-ext-nacl)# exit
+
+Branch-Router-Right(config)# ip access-list extended BLOCK-PING-ONLY
+Branch-Router-Right(config-ext-nacl)# permit tcp any host 8.8.8.8 eq 80
+Branch-Router-Right(config-ext-nacl)# deny icmp any host 8.8.8.8
+Branch-Router-Right(config-ext-nacl)# permit ip any any
+Branch-Router-Right(config-ext-nacl)# exit
+
+! Attach to Subinterfaces
+Branch-Router-Right(config)# interface GigabitEthernet0/1.30
+Branch-Router-Right(config-subif)# encapsulation dot1Q 30
+Branch-Router-Right(config-subif)# ip address 192.168.30.1 255.255.255.240
+Branch-Router-Right(config-subif)# ip access-group BLOCK-WEB-ONLY in
+Branch-Router-Right(config-subif)# exit
+
+Branch-Router-Right(config)# interface GigabitEthernet0/1.40
+Branch-Router-Right(config-subif)# encapsulation dot1Q 40
+Branch-Router-Right(config-subif)# ip address 192.168.40.1 255.255.255.240
+Branch-Router-Right(config-subif)# ip access-group BLOCK-PING-ONLY in
+Branch-Router-Right(config-subif)# exit
+\`\`\`
+
+---
+
+### 4. Verification & Testing
+
+#### A. Routing Table Validation on Core MLS
+\`\`\`bash
+Core-MultilayerSwitch# show ip route
+O     192.168.10.0/28 [110/2] via 10.10.10.2, GigabitEthernet1/0/1
+D EX  192.168.30.0/28 [170/2560512] via 20.20.20.2, GigabitEthernet1/0/4
+\`\`\`
+
+#### B. ACL Policy Testing
+* **VLAN 30 Host**: PING 8.8.8.8 **PERMITTED**, HTTP Web Port 80 **BLOCKED**.
+* **VLAN 40 Host**: HTTP Web Port 80 **PERMITTED**, PING 8.8.8.8 **BLOCKED**.
+`
   },
   {
     title: "OSPF & RIPv2 Dynamic Route Redistribution",
@@ -304,7 +674,325 @@ router rip
  no auto-summary
  network 10.0.0.0
  network 192.168.30.0
- passive-interface GigabitEthernet0/1`
+ passive-interface GigabitEthernet0/1`,
+    articleContentId: `
+### 1. Pendahuluan & Konsep Dasar Route Redistribution
+
+**Route Redistribution** adalah proses mentranslasikan dan menginjeksi rute yang dipelajari dari satu protokol routing (seperti **RIPv2**) ke dalam protokol routing lain (seperti **OSPF**) dan sebaliknya.
+
+Tantangan utama dalam redistribusi routing adalah **ketidakcocokan metrik (Metric Mismatch)**:
+* **OSPF Metric (Cost)**: Dihitung berbasis bandwidth (\`10^8 / Bandwidth in bps\`).
+* **RIPv2 Metric (Hop Count)**: Dihitung berbasis jumlah lompatan router (maksimal 15 hop, 16 = unreachable).
+* **Seed Metric (Default Metric)**: Saat rute diinjeksi ke protokol baru, metrik aslinya hilang dan harus diberikan nilai awal (*seed metric*). Rute OSPF yang masuk ke RIP wajib diberi metrik manual (\`metric 1–15\`), sedangkan rute RIP yang masuk ke OSPF secara default diberi metric cost 20 (Type 2 / E2).
+* **Autonomous System Boundary Router (ASBR)**: Router yang menjalankan kedua protokol sekaligus dan bertindak sebagai jembatan redistribusi.
+
+---
+
+### 2. Skenario & Tabel Pengalamatan IP (Addressing Table)
+
+| Perangkat | Interface | IP Address | Subnet Mask | Default Gateway | Domain Protokol |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Router0** | Gig0/0 | 10.10.10.1 | 255.255.255.252 (/30) | - | OSPF Area 0 (Link ke ASBR) |
+| **Router0** | Gig0/1 | 192.168.10.1 | 255.255.255.0 (/24) | - | OSPF Area 0 (LAN PC0) |
+| **Router1 (ASBR)** | Gig0/0 | 10.10.10.2 | 255.255.255.252 (/30) | - | OSPF Area 0 (Link ke Router0) |
+| **Router1 (ASBR)** | Gig0/1 | 10.10.20.1 | 255.255.255.252 (/30) | - | RIPv2 (Link ke Router2) |
+| **Router1 (ASBR)** | Gig0/2 | 192.168.20.1 | 255.255.255.0 (/24) | - | Gateway LAN PC1 (Shared) |
+| **Router2** | Gig0/0 | 10.10.20.2 | 255.255.255.252 (/30) | - | RIPv2 (Link ke ASBR) |
+| **Router2** | Gig0/1 | 192.168.30.1 | 255.255.255.0 (/24) | - | RIPv2 (LAN PC2) |
+| **PC0** | FastEthernet0 | 192.168.10.10 | 255.255.255.0 (/24) | 192.168.10.1 | Client Domain OSPF |
+| **PC2** | FastEthernet0 | 192.168.30.10 | 255.255.255.0 (/24) | 192.168.30.1 | Client Domain RIPv2 |
+
+---
+
+### 3. Langkah-Langkah Konfigurasi (Step-by-Step Configuration)
+
+#### Langkah 1: Konfigurasi Router0 (OSPF Area 0)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router0
+
+Router0(config)# interface GigabitEthernet0/0
+Router0(config-if)# ip address 10.10.10.1 255.255.255.252
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+Router0(config)# interface GigabitEthernet0/1
+Router0(config-if)# ip address 192.168.10.1 255.255.255.0
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+! Konfigurasi Routing OSPF Area 0
+Router0(config)# router ospf 1
+Router0(config-router)# router-id 1.1.1.1
+Router0(config-router)# network 10.10.10.0 0.0.0.3 area 0
+Router0(config-router)# network 192.168.10.0 0.0.0.255 area 0
+Router0(config-router)# passive-interface GigabitEthernet0/1
+Router0(config-router)# exit
+\`\`\`
+
+#### Langkah 2: Konfigurasi Router1 (ASBR - Gateway Redistribusi Dua Arah)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router1
+
+Router1(config)# interface GigabitEthernet0/0
+Router1(config-if)# ip address 10.10.10.2 255.255.255.252
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+Router1(config)# interface GigabitEthernet0/1
+Router1(config-if)# ip address 10.10.20.1 255.255.255.252
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+Router1(config)# interface GigabitEthernet0/2
+Router1(config-if)# ip address 192.168.20.1 255.255.255.0
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+! 1. Konfigurasi OSPF & Redistribusikan RIP ke OSPF
+Router1(config)# router ospf 1
+Router1(config-router)# router-id 2.2.2.2
+Router1(config-router)# network 10.10.10.0 0.0.0.3 area 0
+Router1(config-router)# network 192.168.20.0 0.0.0.255 area 0
+Router1(config-router)# passive-interface GigabitEthernet0/2
+Router1(config-router)# redistribute rip subnets metric-type 2 metric 20
+Router1(config-router)# exit
+
+! 2. Konfigurasi RIPv2 & Redistribusikan OSPF ke RIP (Seed Metric = 5)
+Router1(config)# router rip
+Router1(config-router)# version 2
+Router1(config-router)# no auto-summary
+Router1(config-router)# network 10.0.0.0
+Router1(config-router)# passive-interface GigabitEthernet0/0
+Router1(config-router)# redistribute ospf 1 metric 5
+Router1(config-router)# exit
+\`\`\`
+
+#### Langkah 3: Konfigurasi Router2 (RIPv2 Domain)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router2
+
+Router2(config)# interface GigabitEthernet0/0
+Router2(config-if)# ip address 10.10.20.2 255.255.255.252
+Router2(config-if)# no shutdown
+Router2(config-if)# exit
+
+Router2(config)# interface GigabitEthernet0/1
+Router2(config-if)# ip address 192.168.30.1 255.255.255.0
+Router2(config-if)# no shutdown
+Router2(config-if)# exit
+
+! Konfigurasi RIPv2
+Router2(config)# router rip
+Router2(config-router)# version 2
+Router2(config-router)# no auto-summary
+Router2(config-router)# network 10.0.0.0
+Router2(config-router)# network 192.168.30.0
+Router2(config-router)# passive-interface GigabitEthernet0/1
+Router2(config-router)# exit
+\`\`\`
+
+---
+
+### 4. Pengujian & Verifikasi (Testing & Verification)
+
+#### A. Verifikasi Tabel Routing pada Router0 (OSPF)
+\`\`\`bash
+Router0# show ip route
+Gateway of last resort is not set
+
+      10.0.0.0/30 is subnetted, 1 subnets
+C        10.10.10.0 is directly connected, GigabitEthernet0/0
+O     10.10.20.0/30 [110/20] via 10.10.10.2, GigabitEthernet0/0
+C     192.168.10.0/24 is directly connected, GigabitEthernet0/1
+O     192.168.20.0/24 [110/2] via 10.10.10.2, GigabitEthernet0/0
+O E2  192.168.30.0/24 [110/20] via 10.10.10.2, GigabitEthernet0/0
+\`\`\`
+*(Rute network RIP \`192.168.30.0/24\` berhasil dipelajari oleh OSPF dengan kode \`O E2\` - OSPF External Type 2).*
+
+#### B. Verifikasi Tabel Routing pada Router2 (RIP)
+\`\`\`bash
+Router2# show ip route
+Gateway of last resort is not set
+
+R     10.10.10.0/30 [120/5] via 10.10.20.1, GigabitEthernet0/0
+C     10.10.20.0/30 is directly connected, GigabitEthernet0/0
+R     192.168.10.0/24 [120/5] via 10.10.20.1, GigabitEthernet0/0
+R     192.168.20.0/24 [120/1] via 10.10.20.1, GigabitEthernet0/0
+C     192.168.30.0/24 is directly connected, GigabitEthernet0/1
+\`\`\`
+*(Rute network OSPF \`192.168.10.0/24\` berhasil dipelajari oleh RIP dengan metrik \`5\`).*
+
+#### C. Uji Ping End-to-End (PC0 ke PC2)
+\`\`\`bash
+PC0> ping 192.168.30.10
+
+Pinging 192.168.30.10 with 32 bytes of data:
+Reply from 192.168.30.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.30.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.30.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.30.10: bytes=32 time<1ms TTL=126
+
+Ping statistics for 192.168.30.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+\`\`\`
+*(Hasil: **100% SUKSES**)*
+
+---
+
+### 5. Analisis Teknis & Kesimpulan
+
+1. **Pentingnya Keyword \`subnets\`**: Pada Cisco IOS, perintah \`redistribute rip subnets\` wajib menyertakan kata \`subnets\`. Tanpa kata ini, OSPF hanya akan mendistribusikan rute classful (Class A/B/C standar) dan membuang subnet ber-prefix variable (VLSM).
+2. **Penetapan Seed Metric**: Karena RIPv2 tidak dapat membaca cost bandwidth OSPF, jika kita lupa menyetel \`metric\` saat redistribusi ke RIP, RIP akan menganggap metrik bernilai infinity (16) dan rute tidak akan pernah masuk ke tabel routing.
+`,
+    articleContentEn: `
+### 1. Introduction & Route Redistribution Fundamentals
+
+**Route Redistribution** is the process of translating and injecting routing information learned from one dynamic routing protocol (e.g. **RIPv2**) into another (e.g. **OSPF**) and vice versa.
+
+The core engineering challenge in multi-protocol routing is **Metric Incompatibility**:
+* **OSPF Metric (Cost)**: Bandwidth-derived calculation (\`10^8 / Bandwidth in bps\`).
+* **RIPv2 Metric (Hop Count)**: Distance-vector hop tally (maximum 15 hops; 16 represents infinity/unreachable).
+* **Seed Metric**: When injecting foreign routes, native metrics are stripped and must be assigned an initial seed metric. OSPF routes redistributed into RIP require manual metric assignment (\`metric 1–15\`), whereas RIP routes into OSPF default to Cost 20 (External Type 2 / E2).
+* **Autonomous System Boundary Router (ASBR)**: The dual-stack router running both routing processes simultaneously.
+
+---
+
+### 2. IP Addressing & Subnet Table
+
+| Device | Interface | IP Address | Subnet Mask | Default Gateway | Routing Domain |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Router0** | Gig0/0 | 10.10.10.1 | 255.255.255.252 (/30) | - | OSPF Area 0 (Link to ASBR) |
+| **Router0** | Gig0/1 | 192.168.10.1 | 255.255.255.0 (/24) | - | OSPF Area 0 (PC0 LAN) |
+| **Router1 (ASBR)** | Gig0/0 | 10.10.10.2 | 255.255.255.252 (/30) | - | OSPF Area 0 (Link to Router0) |
+| **Router1 (ASBR)** | Gig0/1 | 10.10.20.1 | 255.255.255.252 (/30) | - | RIPv2 (Link to Router2) |
+| **Router1 (ASBR)** | Gig0/2 | 192.168.20.1 | 255.255.255.0 (/24) | - | Gateway PC1 LAN (Shared) |
+| **Router2** | Gig0/0 | 10.10.20.2 | 255.255.255.252 (/30) | - | RIPv2 (Link to ASBR) |
+| **Router2** | Gig0/1 | 192.168.30.1 | 255.255.255.0 (/24) | - | RIPv2 (PC2 LAN) |
+| **PC0** | FastEthernet0 | 192.168.10.10 | 255.255.255.0 (/24) | 192.168.10.1 | OSPF Client Host |
+| **PC2** | FastEthernet0 | 192.168.30.10 | 255.255.255.0 (/24) | 192.168.30.1 | RIPv2 Client Host |
+
+---
+
+### 3. Step-by-Step CLI Configuration
+
+#### Step 1: Configure Router0 (OSPF Area 0)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router0
+
+Router0(config)# interface GigabitEthernet0/0
+Router0(config-if)# ip address 10.10.10.1 255.255.255.252
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+Router0(config)# interface GigabitEthernet0/1
+Router0(config-if)# ip address 192.168.10.1 255.255.255.0
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+Router0(config)# router ospf 1
+Router0(config-router)# router-id 1.1.1.1
+Router0(config-router)# network 10.10.10.0 0.0.0.3 area 0
+Router0(config-router)# network 192.168.10.0 0.0.0.255 area 0
+Router0(config-router)# passive-interface GigabitEthernet0/1
+\`\`\`
+
+#### Step 2: Configure Router1 (Dual-Protocol ASBR Gateway)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router1
+
+Router1(config)# interface GigabitEthernet0/0
+Router1(config-if)# ip address 10.10.10.2 255.255.255.252
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+Router1(config)# interface GigabitEthernet0/1
+Router1(config-if)# ip address 10.10.20.1 255.255.255.252
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+Router1(config)# interface GigabitEthernet0/2
+Router1(config-if)# ip address 192.168.20.1 255.255.255.0
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+! 1. OSPF Process & RIP Redistribution
+Router1(config)# router ospf 1
+Router1(config-router)# router-id 2.2.2.2
+Router1(config-router)# network 10.10.10.0 0.0.0.3 area 0
+Router1(config-router)# network 192.168.20.0 0.0.0.255 area 0
+Router1(config-router)# passive-interface GigabitEthernet0/2
+Router1(config-router)# redistribute rip subnets metric-type 2 metric 20
+Router1(config-router)# exit
+
+! 2. RIPv2 Process & OSPF Redistribution (Seed Metric = 5)
+Router1(config)# router rip
+Router1(config-router)# version 2
+Router1(config-router)# no auto-summary
+Router1(config-router)# network 10.0.0.0
+Router1(config-router)# passive-interface GigabitEthernet0/0
+Router1(config-router)# redistribute ospf 1 metric 5
+Router1(config-router)# exit
+\`\`\`
+
+#### Step 3: Configure Router2 (RIPv2 Domain)
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router2
+
+Router2(config)# interface GigabitEthernet0/0
+Router2(config-if)# ip address 10.10.20.2 255.255.255.252
+Router2(config-if)# no shutdown
+Router2(config-if)# exit
+
+Router2(config)# interface GigabitEthernet0/1
+Router2(config-if)# ip address 192.168.30.1 255.255.255.0
+Router2(config-if)# no shutdown
+Router2(config-if)# exit
+
+Router2(config)# router rip
+Router2(config-router)# version 2
+Router2(config-router)# no auto-summary
+Router2(config-router)# network 10.0.0.0
+Router2(config-router)# network 192.168.30.0
+Router2(config-router)# passive-interface GigabitEthernet0/1
+\`\`\`
+
+---
+
+### 4. Verification & Testing
+
+#### A. OSPF Routing Table Check on Router0
+\`\`\`bash
+Router0# show ip route
+O E2  192.168.30.0/24 [110/20] via 10.10.10.2, GigabitEthernet0/0
+\`\`\`
+*(RIP network is properly imported with code \`O E2\` and metric 20).*
+
+#### B. RIP Routing Table Check on Router2
+\`\`\`bash
+Router2# show ip route
+R     192.168.10.0/24 [120/5] via 10.10.20.1, GigabitEthernet0/0
+\`\`\`
+*(OSPF network is properly imported with hop count 5).*
+
+#### C. End-to-End Ping Test (PC0 to PC2)
+\`\`\`bash
+PC0> ping 192.168.30.10
+Reply from 192.168.30.10: bytes=32 time<1ms TTL=126
+\`\`\`
+*(Result: **100% SUCCESS**)*
+`
   },
   {
     title: "Standard ACL for Granular Network Access Control",
@@ -729,11 +1417,221 @@ interface GigabitEthernet0/0
  no shutdown
 !
 interface GigabitEthernet0/1
- ip address 192.168.20.1 255.255.255.0
- no shutdown
-!
-! Static route back to Router-NAT public IP / subnet
-ip route 1.1.1.0 255.255.255.252 1.1.1.1`
+ ip address 192.168.20.1 255.255.2! Static route back to Router-NAT public IP / subnet
+ip route 1.1.1.0 255.255.255.252 1.1.1.1`,
+    articleContentId: `
+### 1. Pendahuluan & Konsep Dasar NAT Overload (PAT)
+
+**Network Address Translation (NAT)** adalah teknologi yang mentranslasikan alamat IP privat (RFC 1918) di jaringan internal menjadi alamat IP publik yang dapat dirutekan di internet global.
+
+**NAT Overload (Port Address Translation / PAT)**:
+* **Mekanisme Translasi**: Memetakan banyak IP privat ke **satu IP publik tunggal** dengan memanfaatkan nomor port Layer 4 unik (TCP/UDP source port).
+* **Efisiensi Alamat**: Satu alamat IP publik dapat menangani hingga lebih dari 60.000 koneksi simultan.
+* **Komponen Konfigurasi Cisco**:
+  1. Menentukan interface \`ip nat inside\` (menghadap LAN) dan \`ip nat outside\` (menghadap ISP/Internet).
+  2. Mendefinisikan **Standard ACL** untuk menentukan subnet LAN yang diizinkan ditranslasikan.
+  3. Mengaktifkan binding NAT dengan perintah \`ip nat inside source list <ACL> interface <OUTSIDE_INT> overload\`.
+
+---
+
+### 2. Skenario & Tabel Pengalamatan IP (Addressing Table)
+
+| Perangkat | Interface | IP Address | Subnet Mask | Default Gateway | Peran / Deskripsi |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Router-NAT** | Gig0/1 (Inside) | 192.168.10.1 | 255.255.255.0 (/24) | - | Gateway LAN Privat |
+| **Router-NAT** | Gig0/0 (Outside) | 1.1.1.1 | 255.255.255.252 (/30) | - | IP Publik Edge (NAT Pool) |
+| **Router-ISP** | Gig0/0 | 1.1.1.2 | 255.255.255.252 (/30) | - | Gateway ISP Provider |
+| **Router-ISP** | Gig0/1 | 192.168.20.1 | 255.255.255.0 (/24) | - | Gateway Server Internet |
+| **PC0** | FastEthernet0 | 192.168.10.10 | 255.255.255.0 (/24) | 192.168.10.1 | Klien LAN Lokal |
+| **PC1** | FastEthernet0 | 192.168.10.20 | 255.255.255.0 (/24) | 192.168.10.1 | Klien LAN Lokal |
+| **Server-WEB** | FastEthernet0 | 192.168.20.10 | 255.255.255.0 (/24) | 192.168.20.1 | Web/DNS Server Internet |
+
+---
+
+### 3. Langkah-Langkah Konfigurasi (Step-by-Step Configuration)
+
+#### Langkah 1: Konfigurasi Interface Inside & Outside pada Router-NAT
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router-NAT
+
+! 1. Konfigurasi Interface LAN Privat (Inside)
+Router-NAT(config)# interface GigabitEthernet0/1
+Router-NAT(config-if)# ip address 192.168.10.1 255.255.255.0
+Router-NAT(config-if)# ip nat inside
+Router-NAT(config-if)# no shutdown
+Router-NAT(config-if)# exit
+
+! 2. Konfigurasi Interface WAN Publik (Outside)
+Router-NAT(config)# interface GigabitEthernet0/0
+Router-NAT(config-if)# ip address 1.1.1.1 255.255.255.252
+Router-NAT(config-if)# ip nat outside
+Router-NAT(config-if)# no shutdown
+Router-NAT(config-if)# exit
+\`\`\`
+
+#### Langkah 2: Konfigurasi ACL & Perintah NAT Overload (PAT)
+\`\`\`bash
+! Membuat Standard ACL untuk Subnet LAN 192.168.10.0/24
+Router-NAT(config)# access-list 1 permit 192.168.10.0 0.0.0.255
+
+! Mengaktifkan PAT Overload ke antarmuka Gig0/0
+Router-NAT(config)# ip nat inside source list 1 interface GigabitEthernet0/0 overload
+
+! Default Route ke ISP
+Router-NAT(config)# ip route 0.0.0.0 0.0.0.0 1.1.1.2
+Router-NAT(config)# exit
+Router-NAT# write memory
+\`\`\`
+
+#### Langkah 3: Konfigurasi Router-ISP
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router-ISP
+
+Router-ISP(config)# interface GigabitEthernet0/0
+Router-ISP(config-if)# ip address 1.1.1.2 255.255.255.252
+Router-ISP(config-if)# no shutdown
+Router-ISP(config-if)# exit
+
+Router-ISP(config)# interface GigabitEthernet0/1
+Router-ISP(config-if)# ip address 192.168.20.1 255.255.255.0
+Router-ISP(config-if)# no shutdown
+Router-ISP(config-if)# exit
+
+! Routing statik balik ke IP publik Router-NAT
+Router-ISP(config)# ip route 1.1.1.0 255.255.255.252 1.1.1.1
+Router-ISP(config)# exit
+\`\`\`
+
+---
+
+### 4. Pengujian & Verifikasi (Testing & Verification)
+
+#### A. Verifikasi Tabel Translasi NAT (\`show ip nat translations\`)
+Jalankan ping atau buka web dari PC0/PC1 ke Server Internet, lalu periksa tabel translasi:
+\`\`\`bash
+Router-NAT# show ip nat translations
+Pro Inside global      Inside local       Outside local      Outside global
+icmp 1.1.1.1:1         192.168.10.10:1    192.168.20.10:1    192.168.20.10:1
+icmp 1.1.1.1:2         192.168.10.20:2    192.168.20.10:2    192.168.20.10:2
+tcp  1.1.1.1:1025      192.168.10.10:1025 192.168.20.10:80   192.168.20.10:80
+\`\`\`
+*(Perhatikan bahwa kedua IP privat \`192.168.10.10\` dan \`192.168.10.20\` berhasil ditranslasikan ke alamat publik yang sama \`1.1.1.1\` dengan nomor port berbeda).*
+
+#### B. Pengujian Akses Internet dari PC Klien
+\`\`\`bash
+PC0> ping 192.168.20.10
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+\`\`\`
+*(Hasil: **100% SUKSES**)*
+
+---
+
+### 5. Analisis Teknis & Kesimpulan
+
+1. **Efisiensi IPv4 Publik**: Ratusan perangkat dalam kantor cabang dapat berbagi 1 alamat IPv4 publik tanpa perlu membeli blok IP tambahan dari penyedia ISP.
+2. **Keamanan Alami (Security Obscurity)**: Alamat IP internal tidak terekspos ke internet luar karena router membuang koneksi inbound yang tidak diinisiasi oleh host internal.
+`,
+    articleContentEn: `
+### 1. Introduction & NAT Overload (PAT) Fundamentals
+
+**Network Address Translation (NAT)** translates private IP address spaces (RFC 1918) within internal local area networks into globally routable public IP addresses.
+
+**NAT Overload (Port Address Translation / PAT)**:
+* **Mechanism**: Maps multiple internal private IPs to a **single public IP address** by tracking distinct Layer 4 source port numbers (TCP/UDP).
+* **Address Scalability**: A single public IPv4 address comfortably multiplexes tens of thousands of concurrent connections.
+* **Key Configuration Steps**:
+  1. Define \`ip nat inside\` (LAN side) and \`ip nat outside\` (WAN/ISP side).
+  2. Create a Standard ACL matching the permitted internal subnet.
+  3. Bind the ACL to the egress interface with \`ip nat inside source list <ACL> interface <INT> overload\`.
+
+---
+
+### 2. IP Addressing & Subnet Table
+
+| Device | Interface | IP Address | Subnet Mask | Default Gateway | Function / Role |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Router-NAT** | Gig0/1 (Inside) | 192.168.10.1 | 255.255.255.0 (/24) | - | Private LAN Gateway |
+| **Router-NAT** | Gig0/0 (Outside) | 1.1.1.1 | 255.255.255.252 (/30) | - | Public WAN Edge IP |
+| **Router-ISP** | Gig0/0 | 1.1.1.2 | 255.255.255.252 (/30) | - | ISP Gateway Interface |
+| **Router-ISP** | Gig0/1 | 192.168.20.1 | 255.255.255.0 (/24) | - | Internet Server Gateway |
+| **PC0** | FastEthernet0 | 192.168.10.10 | 255.255.255.0 (/24) | 192.168.10.1 | Internal LAN Client |
+| **PC1** | FastEthernet0 | 192.168.10.20 | 255.255.255.0 (/24) | 192.168.10.1 | Internal LAN Client |
+| **Server-WEB** | FastEthernet0 | 192.168.20.10 | 255.255.255.0 (/24) | 192.168.20.1 | Public Target Server |
+
+---
+
+### 3. Step-by-Step CLI Configuration
+
+#### Step 1: Configure Inside & Outside Interfaces on Router-NAT
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router-NAT
+
+Router-NAT(config)# interface GigabitEthernet0/1
+Router-NAT(config-if)# ip address 192.168.10.1 255.255.255.0
+Router-NAT(config-if)# ip nat inside
+Router-NAT(config-if)# no shutdown
+Router-NAT(config-if)# exit
+
+Router-NAT(config)# interface GigabitEthernet0/0
+Router-NAT(config-if)# ip address 1.1.1.1 255.255.255.252
+Router-NAT(config-if)# ip nat outside
+Router-NAT(config-if)# no shutdown
+Router-NAT(config-if)# exit
+\`\`\`
+
+#### Step 2: Configure Access-List and Enable PAT Overload
+\`\`\`bash
+Router-NAT(config)# access-list 1 permit 192.168.10.0 0.0.0.255
+Router-NAT(config)# ip nat inside source list 1 interface GigabitEthernet0/0 overload
+Router-NAT(config)# ip route 0.0.0.0 0.0.0.0 1.1.1.2
+Router-NAT(config)# exit
+Router-NAT# write memory
+\`\`\`
+
+#### Step 3: Configure Router-ISP
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router-ISP
+
+Router-ISP(config)# interface GigabitEthernet0/0
+Router-ISP(config-if)# ip address 1.1.1.2 255.255.255.252
+Router-ISP(config-if)# no shutdown
+Router-ISP(config-if)# exit
+
+Router-ISP(config)# interface GigabitEthernet0/1
+Router-ISP(config-if)# ip address 192.168.20.1 255.255.255.0
+Router-ISP(config-if)# no shutdown
+Router-ISP(config-if)# exit
+
+Router-ISP(config)# ip route 1.1.1.0 255.255.255.252 1.1.1.1
+\`\`\`
+
+---
+
+### 4. Verification & Testing
+
+#### A. Validate Active NAT Translations
+\`\`\`bash
+Router-NAT# show ip nat translations
+Pro Inside global      Inside local       Outside local      Outside global
+icmp 1.1.1.1:1         192.168.10.10:1    192.168.20.10:1    192.168.20.10:1
+tcp  1.1.1.1:1025      192.168.10.10:1025 192.168.20.10:80   192.168.20.10:80
+\`\`\`
+
+#### B. Ping Test from Client PC
+\`\`\`bash
+PC0> ping 192.168.20.10
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+\`\`\`
+*(Result: **100% SUCCESS**)*
+`
   },
   {
     title: "Spanning Tree Protocol (STP & PVST+) Loop Prevention",
@@ -804,7 +1702,235 @@ interface FastEthernet0/2
 !
 ! Catatan Operasional STP:
 ! Port Fa0/2 pada Switch3 otomatis berstatus Alternate/Blocking (BLK)
-! untuk mencegah Layer 2 Loop / Broadcast Storm.`
+! untuk mencegah Layer 2 Loop / Broadcast Storm.`,
+    articleContentId: `
+### 1. Pendahuluan & Konsep Dasar Spanning Tree Protocol (STP)
+
+**Spanning Tree Protocol (IEEE 802.1D / PVST+)** adalah protokol manajemen Layer 2 yang dirancang khusus untuk menciptakan topologi bebas loop (*loop-free switching topology*) pada jaringan ethernet redundan.
+
+**Masalah Ketiadaan STP pada Jalur Redundan**:
+1. **Broadcast Storm**: Frame broadcast berputar tanpa henti (*infinite loop*) karena frame Ethernet tidak memiliki mekanisme TTL (Time-to-Live) seperti paket IP Layer 3.
+2. **Multiple Frame Transmission**: Salinan frame yang sama diterima oleh host berkali-kali.
+3. **MAC Database Instability**: Switch terus-menerus mengubah tabel MAC address karena frame yang sama tiba dari port berbeda secara bersamaan.
+
+**Mekanisme Pemilihan Root Bridge & Port States**:
+* **Bridge ID (BID)**: Gabungan antara \`Bridge Priority\` (kelipatan 4096) dan \`MAC Address\` switch. Switch dengan BID terendah terpilih sebagai **Root Bridge**.
+* **Root Port (RP)**: Port pada non-root switch dengan path cost terendah menuju Root Bridge.
+* **Designated Port (DP)**: Port yang aktif meneruskan traffic pada setiap segmen link.
+* **Alternate / Blocking Port (BLK)**: Port yang dinonaktifkan sementara dari transmisi data untuk memutus rantai loop.
+
+---
+
+### 2. Skenario & Tabel Konfigurasi Switch
+
+Dalam lab segitiga 3 switch (*Switch1 - Switch2 - Switch3*):
+* **Switch1**: Ditunjuk sebagai **Primary Root Bridge** (Priority \`4096\`).
+* **Switch2**: Ditunjuk sebagai **Secondary/Backup Root Bridge** (Priority \`8192\`).
+* **Switch3**: Berperan sebagai **Non-Root Access Switch** (Priority default \`32768\`).
+
+| Switch | Peran STP | Spanning-Tree Priority | Interface Fa0/1 Role & State | Interface Fa0/2 Role & State |
+| :--- | :--- | :--- | :--- | :--- |
+| **Switch1** | Primary Root Bridge | 4096 | Designated (FWD) | Designated (FWD) |
+| **Switch2** | Backup Root Bridge | 8192 | Root Port (FWD) | Designated (FWD) |
+| **Switch3** | Non-Root Switch | 32768 (Default) | Root Port (FWD) | Alternate (BLK - Blocking) |
+
+---
+
+### 3. Langkah-Langkah Konfigurasi (Step-by-Step Configuration)
+
+#### Langkah 1: Konfigurasi Switch1 (Primary Root Bridge)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Switch1
+
+! Mengatur mode Per-VLAN Spanning Tree Plus (PVST+)
+Switch1(config)# spanning-tree mode pvst
+
+! Menyetel priority terendah agar menjadi Root Bridge pasti
+Switch1(config)# spanning-tree vlan 1 priority 4096
+
+! Konfigurasi Trunking pada link antar switch
+Switch1(config)# interface range FastEthernet0/1 - 2
+Switch1(config-if-range)# switchport mode trunk
+Switch1(config-if-range)# exit
+Switch1(config)# exit
+Switch1# write memory
+\`\`\`
+
+#### Langkah 2: Konfigurasi Switch2 (Secondary / Backup Root Bridge)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Switch2
+
+Switch2(config)# spanning-tree mode pvst
+Switch2(config)# spanning-tree vlan 1 priority 8192
+
+Switch2(config)# interface range FastEthernet0/1 - 2
+Switch2(config-if-range)# switchport mode trunk
+Switch2(config-if-range)# exit
+Switch2(config)# exit
+Switch2# write memory
+\`\`\`
+
+#### Langkah 3: Konfigurasi Switch3 (Non-Root Access Switch)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Switch3
+
+Switch3(config)# spanning-tree mode pvst
+Switch3(config)# spanning-tree vlan 1 priority 32768
+
+Switch3(config)# interface range FastEthernet0/1 - 2
+Switch3(config-if-range)# switchport mode trunk
+Switch3(config-if-range)# exit
+Switch3(config)# exit
+Switch3# write memory
+\`\`\`
+
+---
+
+### 4. Pengujian & Verifikasi (Testing & Verification)
+
+#### A. Verifikasi Status Root Bridge pada Switch1
+\`\`\`bash
+Switch1# show spanning-tree vlan 1
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    4097
+             Address     0001.42A1.1111
+             This bridge is the root
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    4097  (priority 4096 sys-id-ext 1)
+             Address     0001.42A1.1111
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/1            Desg FWD 19        128.1    P2p 
+Fa0/2            Desg FWD 19        128.2    P2p 
+\`\`\`
+*(Perhatikan keterangan **This bridge is the root**, seluruh port berstatus \`Desg FWD\` - Designated Forwarding).*
+
+#### B. Verifikasi Blocking Port pada Switch3
+\`\`\`bash
+Switch3# show spanning-tree vlan 1
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    4097
+             Address     0001.42A1.1111
+             Cost        19
+             Port        1 (FastEthernet0/1)
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/1            Root FWD 19        128.1    P2p 
+Fa0/2            Altn BLK 19        128.2    P2p 
+\`\`\`
+*(Port \`Fa0/2\` secara otomatis berada dalam status **Altn BLK (Alternate Blocking)**, memutus siklus loop fisik).*
+
+---
+
+### 5. Analisis Teknis & Kesimpulan
+
+1. **Loop Prevention Sukses**: Topologi segitiga berhasil terlindungi dari broadcast storm yang berpotensi melumpuhkan switch CPU.
+2. **Failover Otomatis**: Jika link utama \`Fa0/1\` pada Switch3 terputus, STP akan otomatis mentransisikan port \`Fa0/2\` dari \`BLK\` -> \`Listening\` -> \`Learning\` -> \`Forwarding (FWD)\` dalam ~30-50 detik (atau sub-detik jika menggunakan Rapid-PVST / RSTP 802.1w).
+`,
+    articleContentEn: `
+### 1. Introduction & Spanning Tree Protocol (STP) Fundamentals
+
+**Spanning Tree Protocol (IEEE 802.1D / PVST+)** is a foundational Layer 2 control protocol engineered to guarantee a **loop-free active switching topology** across physically redundant Ethernet links.
+
+**Hazards of Switching Loops**:
+1. **Broadcast Storms**: Loops circulate broadcast frames indefinitely due to the absence of a Time-to-Live (TTL) field in Layer 2 Ethernet headers.
+2. **MAC Table Thrashing**: Rapid frame re-arrival across alternate ports causes switch CAM tables to constantly overwrite MAC-to-port bindings.
+3. **Multiple Frame Copies**: Duplicate unicast frames arrive at recipient workstations simultaneously.
+
+**STP Decision Sequence & Port Roles**:
+* **Root Bridge Selection**: Deterministically elects the switch with the lowest **Bridge ID (Priority + MAC)**.
+* **Root Port (RP)**: The single lowest path-cost port toward the Root Bridge on non-root switches.
+* **Designated Port (DP)**: Active forwarding port per segment link.
+* **Alternate / Blocking Port (BLK)**: Logically disabled from data forwarding to break the loop circuit.
+
+---
+
+### 2. Switch Topology & Addressing Table
+
+| Switch | STP Role | Configured Priority | Interface Fa0/1 | Interface Fa0/2 |
+| :--- | :--- | :--- | :--- | :--- |
+| **Switch1** | Primary Root Bridge | 4096 | Designated (FWD) | Designated (FWD) |
+| **Switch2** | Backup Root Bridge | 8192 | Root Port (FWD) | Designated (FWD) |
+| **Switch3** | Access Switch (Non-Root) | 32768 (Default) | Root Port (FWD) | Alternate (BLK - Blocking) |
+
+---
+
+### 3. Step-by-Step CLI Configuration
+
+#### Step 1: Configure Switch1 (Primary Root Bridge)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Switch1
+
+Switch1(config)# spanning-tree mode pvst
+Switch1(config)# spanning-tree vlan 1 priority 4096
+Switch1(config)# interface range FastEthernet0/1 - 2
+Switch1(config-if-range)# switchport mode trunk
+Switch1(config-if-range)# exit
+Switch1(config)# exit
+Switch1# write memory
+\`\`\`
+
+#### Step 2: Configure Switch2 (Backup Root Bridge)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Switch2
+
+Switch2(config)# spanning-tree mode pvst
+Switch2(config)# spanning-tree vlan 1 priority 8192
+Switch2(config)# interface range FastEthernet0/1 - 2
+Switch2(config-if-range)# switchport mode trunk
+Switch2(config-if-range)# exit
+\`\`\`
+
+#### Step 3: Configure Switch3 (Non-Root Switch)
+\`\`\`bash
+Switch> enable
+Switch# configure terminal
+Switch(config)# hostname Switch3
+
+Switch3(config)# spanning-tree mode pvst
+Switch3(config)# spanning-tree vlan 1 priority 32768
+Switch3(config)# interface range FastEthernet0/1 - 2
+Switch3(config-if-range)# switchport mode trunk
+Switch3(config-if-range)# exit
+\`\`\`
+
+---
+
+### 4. Verification & Testing
+
+#### A. Verify Root Status on Switch1
+\`\`\`bash
+Switch1# show spanning-tree vlan 1
+This bridge is the root
+Fa0/1            Desg FWD
+Fa0/2            Desg FWD
+\`\`\`
+
+#### B. Verify Alternate Blocking Port on Switch3
+\`\`\`bash
+Switch3# show spanning-tree vlan 1
+Fa0/1            Root FWD
+Fa0/2            Altn BLK
+\`\`\`
+*(Port Fa0/2 is placed in **Altn BLK** state, successfully preventing network loops).*
+`
   }
 ];
 
