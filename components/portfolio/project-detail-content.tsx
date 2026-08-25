@@ -333,30 +333,64 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                           }
                         }
 
+                        // Helper to render bold (**text**), inline code (`code`), and italics (*text*)
+                        const renderFormattedText = (str: string) => {
+                          const tokens = str.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+                          return tokens.map((token, tIdx) => {
+                            if (token.startsWith("**") && token.endsWith("**") && token.length >= 4) {
+                              return (
+                                <strong key={tIdx} className="font-semibold text-foreground">
+                                  {token.slice(2, -2)}
+                                </strong>
+                              );
+                            }
+                            if (token.startsWith("`") && token.endsWith("`") && token.length >= 2) {
+                              return (
+                                <code
+                                  key={tIdx}
+                                  className="px-1.5 py-0.5 rounded-sm bg-muted/80 text-foreground font-mono text-[11px] border border-border/50"
+                                >
+                                  {token.slice(1, -1)}
+                                </code>
+                              );
+                            }
+                            if (token.startsWith("*") && token.endsWith("*") && token.length >= 2) {
+                              return (
+                                <em key={tIdx} className="italic text-foreground/90">
+                                  {token.slice(1, -1)}
+                                </em>
+                              );
+                            }
+                            return <React.Fragment key={tIdx}>{token}</React.Fragment>;
+                          });
+                        };
+
                         // Render Normal Text, Subheadings, & Lists
                         return (
-                          <div key={pIdx} className="space-y-2 whitespace-pre-line text-xs sm:text-sm text-muted-foreground">
+                          <div key={pIdx} className="space-y-2.5 text-xs sm:text-sm text-muted-foreground">
                             {trimmed.split("\n").map((line, lIdx) => {
                               const cleanLine = line.trim();
+                              if (!cleanLine) return null;
+
                               if (cleanLine.startsWith("#### ")) {
                                 return (
-                                  <h4 key={lIdx} className="text-xs sm:text-sm font-bold font-sans text-foreground pt-2">
-                                    {cleanLine.replace("#### ", "")}
+                                  <h4 key={lIdx} className="text-xs sm:text-sm font-bold font-sans text-foreground pt-3">
+                                    {renderFormattedText(cleanLine.replace("#### ", ""))}
                                   </h4>
                                 );
                               }
                               if (cleanLine.startsWith("> ")) {
                                 return (
                                   <div key={lIdx} className="p-3 my-2 rounded-lg bg-primary/5 border-l-2 border-primary text-xs font-sans text-foreground">
-                                    {cleanLine.replace("> ", "")}
+                                    {renderFormattedText(cleanLine.replace("> ", ""))}
                                   </div>
                                 );
                               }
                               if (cleanLine.startsWith("* ") || cleanLine.startsWith("- ")) {
                                 return (
                                   <div key={lIdx} className="flex items-start gap-2 pl-2">
-                                    <span className="text-primary mt-0.5">•</span>
-                                    <span>{cleanLine.slice(2)}</span>
+                                    <span className="text-primary mt-0.5 font-bold">•</span>
+                                    <span className="leading-relaxed">{renderFormattedText(cleanLine.slice(2))}</span>
                                   </div>
                                 );
                               }
@@ -364,13 +398,13 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                                 return (
                                   <div key={lIdx} className="flex items-start gap-2 pl-2">
                                     <span className="font-mono text-primary font-bold">{cleanLine.match(/^\d+\./)?.[0]}</span>
-                                    <span>{cleanLine.replace(/^\d+\.\s+/, "")}</span>
+                                    <span className="leading-relaxed">{renderFormattedText(cleanLine.replace(/^\d+\.\s+/, ""))}</span>
                                   </div>
                                 );
                               }
                               return (
                                 <p key={lIdx} className="leading-relaxed">
-                                  {cleanLine}
+                                  {renderFormattedText(cleanLine)}
                                 </p>
                               );
                             })}
