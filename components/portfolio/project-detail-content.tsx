@@ -231,13 +231,168 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </Card>
       )}
 
+      {/* Step-by-Step Lab & Configuration Guide (DiaryConfig / IPCisco Tutorial Style) */}
+      {(project.articleContentId || project.articleContentEn) && (
+        <Card className="p-6 sm:p-8 border-border/80 bg-card/60 rounded-xl space-y-6">
+          <div className="flex items-center gap-2 pb-3 border-b border-border/40">
+            <Terminal className="size-4 text-primary" />
+            <h2 className="text-base sm:text-lg font-bold font-sans tracking-tight text-foreground">
+              {t("Panduan Konfigurasi & Lab Step-by-Step", "Step-by-Step Lab & Configuration Tutorial")}
+            </h2>
+          </div>
+
+          <div className="text-muted-foreground font-sans text-sm leading-relaxed space-y-5">
+            {(() => {
+              const content = (t(project.articleContentId || "", project.articleContentEn || "")).trim();
+              const sections = content.split(/\n(?=### )/);
+
+              return sections.map((sec, idx) => {
+                const lines = sec.trim().split("\n");
+                const headingLine = lines[0].replace(/^###\s+/, "");
+                const bodyLines = lines.slice(1);
+
+                return (
+                  <div key={idx} className="space-y-3 pt-2">
+                    <h3 className="text-sm sm:text-base font-bold font-sans text-foreground flex items-center gap-2">
+                      <span className="size-1.5 rounded-full bg-primary inline-block" />
+                      {headingLine}
+                    </h3>
+
+                    {/* Parse content elements: code blocks, tables, lists, text */}
+                    {(() => {
+                      const textBlock = bodyLines.join("\n");
+                      const parts = textBlock.split(/(```[\s\S]*?```|\|[\s\S]*?\|\n\n|\|[\s\S]*?\|$)/g);
+
+                      return parts.map((part, pIdx) => {
+                        const trimmed = part.trim();
+                        if (!trimmed) return null;
+
+                        // Render CLI Code Block
+                        if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
+                          const codeLines = trimmed.slice(3, -3).replace(/^[a-z]+\n/, "").trim();
+                          return (
+                            <div key={pIdx} className="my-3 rounded-lg overflow-hidden border border-border/40 bg-black/90 shadow-xs">
+                              <div className="px-3.5 py-1.5 bg-muted/20 border-b border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+                                <span className="flex items-center gap-1.5">
+                                  <span className="size-2 rounded-full bg-emerald-500/80 inline-block" />
+                                  Cisco IOS CLI
+                                </span>
+                              </div>
+                              <pre className="p-3.5 text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto leading-relaxed">
+                                <code>{codeLines}</code>
+                              </pre>
+                            </div>
+                          );
+                        }
+
+                        // Render Markdown Table
+                        if (trimmed.startsWith("|") && trimmed.includes("\n|")) {
+                          const tableRows = trimmed
+                            .split("\n")
+                            .map((r) => r.trim())
+                            .filter((r) => r.startsWith("|") && !r.includes("---"));
+
+                          if (tableRows.length > 0) {
+                            const headers = tableRows[0]
+                              .split("|")
+                              .slice(1, -1)
+                              .map((c) => c.trim());
+                            const rows = tableRows.slice(1).map((r) =>
+                              r
+                                .split("|")
+                                .slice(1, -1)
+                                .map((c) => c.trim())
+                            );
+
+                            return (
+                              <div key={pIdx} className="my-3 overflow-x-auto rounded-lg border border-border/50 bg-background/50">
+                                <table className="w-full text-left text-xs font-sans">
+                                  <thead className="bg-muted/50 border-b border-border/50 text-foreground font-semibold font-mono text-[11px]">
+                                    <tr>
+                                      {headers.map((h, hIdx) => (
+                                        <th key={hIdx} className="p-2.5 sm:px-3 sm:py-2">
+                                          {h.replace(/\*\*/g, "")}
+                                        </th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-border/30 font-mono text-[11px]">
+                                    {rows.map((row, rIdx) => (
+                                      <tr key={rIdx} className="hover:bg-muted/20 transition-colors">
+                                        {row.map((cell, cIdx) => (
+                                          <td key={cIdx} className="p-2.5 sm:px-3 sm:py-2 text-muted-foreground">
+                                            {cell.replace(/\*\*/g, "")}
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            );
+                          }
+                        }
+
+                        // Render Normal Text, Subheadings, & Lists
+                        return (
+                          <div key={pIdx} className="space-y-2 whitespace-pre-line text-xs sm:text-sm text-muted-foreground">
+                            {trimmed.split("\n").map((line, lIdx) => {
+                              const cleanLine = line.trim();
+                              if (cleanLine.startsWith("#### ")) {
+                                return (
+                                  <h4 key={lIdx} className="text-xs sm:text-sm font-bold font-sans text-foreground pt-2">
+                                    {cleanLine.replace("#### ", "")}
+                                  </h4>
+                                );
+                              }
+                              if (cleanLine.startsWith("> ")) {
+                                return (
+                                  <div key={lIdx} className="p-3 my-2 rounded-lg bg-primary/5 border-l-2 border-primary text-xs font-sans text-foreground">
+                                    {cleanLine.replace("> ", "")}
+                                  </div>
+                                );
+                              }
+                              if (cleanLine.startsWith("* ") || cleanLine.startsWith("- ")) {
+                                return (
+                                  <div key={lIdx} className="flex items-start gap-2 pl-2">
+                                    <span className="text-primary mt-0.5">•</span>
+                                    <span>{cleanLine.slice(2)}</span>
+                                  </div>
+                                );
+                              }
+                              if (/^\d+\.\s/.test(cleanLine)) {
+                                return (
+                                  <div key={lIdx} className="flex items-start gap-2 pl-2">
+                                    <span className="font-mono text-primary font-bold">{cleanLine.match(/^\d+\./)?.[0]}</span>
+                                    <span>{cleanLine.replace(/^\d+\.\s+/, "")}</span>
+                                  </div>
+                                );
+                              }
+                              return (
+                                <p key={lIdx} className="leading-relaxed">
+                                  {cleanLine}
+                                </p>
+                              );
+                            })}
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                );
+              });
+            })()}
+          </div>
+        </Card>
+      )}
+
       {/* Collapsible/Compact Script Config Block */}
       {project.rawConfig && (
         <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-3">
           <div className="flex items-center justify-between border-b border-border/40 pb-2.5">
             <div className="flex items-center gap-2 text-xs font-mono text-foreground font-semibold">
               <Terminal className="size-3.5 text-primary" />
-              <span>{t("Skrip Konfigurasi (Device Script)", "Device Script / Raw Config")}</span>
+              <span>{t("Skrip Konfigurasi Lengkap (Full Device Script)", "Full Device Script / Raw Config")}</span>
             </div>
 
             <Button

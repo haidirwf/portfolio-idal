@@ -24,6 +24,8 @@ export interface Project {
   downloadPkt?: string;
   downloadGns3?: string;
   rawConfig?: string;
+  articleContentId?: string;
+  articleContentEn?: string;
 }
 
 export const PROJECTS: Project[] = [
@@ -364,7 +366,309 @@ ip route 192.168.10.0 255.255.255.0 10.10.10.1
 ! Deny PC1 (192.168.10.20) & Permit PC0 (192.168.10.10 / any)
 ip access-list standard FILTER-SERVER-ACCESS
  deny host 192.168.10.20
- permit any`
+ permit any`,
+    articleContentId: `
+### 1. Pendahuluan & Konsep Dasar Standard ACL
+
+**Access Control List (ACL)** adalah kumpulan aturan (*rule filtering*) sekuensial yang diterapkan pada antarmuka router untuk mengontrol paket data yang masuk (*inbound*) maupun keluar (*outbound*). 
+
+Pada arsitektur jaringan Cisco IOS, **Standard ACL** beroperasi pada **Layer 3 (Network Layer)** dengan karakteristik utama:
+* **Hanya memeriksa IP Address Sumber (Source IP Address)** dari paket yang melintas.
+* **Rentang Nomor ACL**: Berada di rentang standar \`1 – 99\` atau rentang diperluas \`1300 – 1999\`, serta mendukung **Named Standard ACL** (\`ip access-list standard <NAME>\`).
+* **Prinsip Penempatan (Golden Rule)**: Standard ACL harus ditempatkan **sedekat mungkin dengan tujuan (closest to the destination)**. Jika ditempatkan di dekat sumber, ia berisiko memblokir akses host tersebut ke seluruh tujuan lain yang sah.
+* **Implicit Deny Any**: Secara default di baris paling akhir setiap ACL selalu terdapat aturan tersembunyi \`deny any\`. Jika tidak ada \`permit\`, semua paket lainnya akan terbuang (*dropped*).
+
+---
+
+### 2. Skenario & Tabel Pengalamatan IP (Addressing Table)
+
+Dalam lab simulasi ini, kita ingin mengamankan akses ke **Server0 (192.168.20.10)** yang berada di belakang **Router1**:
+1. **PC0 (192.168.10.10)**: Diizinkan mengakses Server0 (**PERMIT / DITERIMA**).
+2. **PC1 (192.168.10.20)**: Diblokir total dari Server0 (**DENY / DITOLAK**).
+
+| Perangkat | Antarmuka / Interface | IP Address | Subnet Mask | Default Gateway | Keterangan |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Router0** | Gig0/1 | 192.168.10.1 | 255.255.255.0 (/24) | - | Gateway Segmen LAN Klien |
+| **Router0** | Gig0/0 | 10.10.10.1 | 255.255.255.252 (/30) | - | Inter-Router Link (ke Router1) |
+| **Router1** | Gig0/0 | 10.10.10.2 | 255.255.255.252 (/30) | - | Inter-Router Link (ke Router0) |
+| **Router1** | Gig0/1 | 192.168.20.1 | 255.255.255.0 (/24) | - | Gateway Segmen Server (Filter ACL) |
+| **PC0** | FastEthernet0 | 192.168.10.10 | 255.255.255.0 (/24) | 192.168.10.1 | Klien Diizinkan (*Permitted*) |
+| **PC1** | FastEthernet0 | 192.168.10.20 | 255.255.255.0 (/24) | 192.168.10.1 | Klien Diblokir (*Denied*) |
+| **Server0** | FastEthernet0 | 192.168.20.10 | 255.255.255.0 (/24) | 192.168.20.1 | Target Resource Terproteksi |
+
+---
+
+### 3. Langkah-Langkah Konfigurasi (Step-by-Step Configuration)
+
+#### Langkah 1: Konfigurasi Interface & Routing Static pada Router0
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router0
+
+! Konfigurasi link penghubung antar-router
+Router0(config)# interface GigabitEthernet0/0
+Router0(config-if)# ip address 10.10.10.1 255.255.255.252
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+! Konfigurasi gateway LAN klien (PC0 & PC1)
+Router0(config)# interface GigabitEthernet0/1
+Router0(config-if)# ip address 192.168.10.1 255.255.255.0
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+! Routing statik menuju network server di Router1
+Router0(config)# ip route 192.168.20.0 255.255.255.0 10.10.10.2
+Router0(config)# exit
+Router0# write memory
+\`\`\`
+
+#### Langkah 2: Konfigurasi Interface & Routing Static pada Router1
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router1
+
+! Konfigurasi link penghubung antar-router
+Router1(config)# interface GigabitEthernet0/0
+Router1(config-if)# ip address 10.10.10.2 255.255.255.252
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+! Konfigurasi gateway segmen Server
+Router1(config)# interface GigabitEthernet0/1
+Router1(config-if)# ip address 192.168.20.1 255.255.255.0
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+! Routing statik balik menuju network klien di Router0
+Router1(config)# ip route 192.168.10.0 255.255.255.0 10.10.10.1
+\`\`\`
+
+#### Langkah 3: Membuat & Menerapkan Named Standard ACL pada Router1
+Kita membuat ACL bernama \`FILTER-SERVER-ACCESS\` yang secara eksplisit menolak IP PC1 (\`192.168.10.20\`) dan mengizinkan traffic lainnya (\`permit any\`).
+
+\`\`\`bash
+! Membuat Named Standard ACL
+Router1(config)# ip access-list standard FILTER-SERVER-ACCESS
+Router1(config-std-nacl)# deny host 192.168.10.20
+Router1(config-std-nacl)# permit any
+Router1(config-std-nacl)# exit
+
+! Menerapkan ACL pada interface Gig0/1 arah OUTBOUND (menuju Server0)
+Router1(config)# interface GigabitEthernet0/1
+Router1(config-if)# ip access-group FILTER-SERVER-ACCESS out
+Router1(config-if)# exit
+Router1(config)# exit
+Router1# write memory
+\`\`\`
+
+> **Catatan Teknis**: Kita menggunakan arah \`out\` pada \`GigabitEthernet0/1\` karena paket yang datang dari Router0 (\`Gig0/0\`) menuju Server0 keluar melewati antarmuka \`Gig0/1\`.
+
+---
+
+### 4. Pengujian & Verifikasi (Testing & Verification)
+
+#### A. Verifikasi Status ACL & Counter Paket pada Router1
+Jalankan perintah \`show access-lists\` untuk melihat kecocokan (*matches*) paket pada aturan:
+\`\`\`bash
+Router1# show access-lists
+Standard IP access list FILTER-SERVER-ACCESS
+    10 deny 192.168.10.20 (4 matches)
+    20 permit any (8 matches)
+\`\`\`
+
+#### B. Pengujian Konektivitas dari PC0 (192.168.10.10)
+Buka Terminal / Command Prompt pada **PC0** lalu jalankan ping ke Server:
+\`\`\`bash
+PC0> ping 192.168.20.10
+
+Pinging 192.168.20.10 with 32 bytes of data:
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+
+Ping statistics for 192.168.20.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+\`\`\`
+*(Hasil: **SUCCESS / DITERIMA**)*
+
+#### C. Pengujian Pemblokiran dari PC1 (192.168.10.20)
+Buka Terminal / Command Prompt pada **PC1** lalu jalankan ping ke Server:
+\`\`\`bash
+PC1> ping 192.168.20.10
+
+Pinging 192.168.20.10 with 32 bytes of data:
+Reply from 10.10.10.2: Destination host unreachable.
+Reply from 10.10.10.2: Destination host unreachable.
+Reply from 10.10.10.2: Destination host unreachable.
+Reply from 10.10.10.2: Destination host unreachable.
+
+Ping statistics for 192.168.20.10:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
+\`\`\`
+*(Hasil: **DENIED / DITOLAK** - Router1 merespons dengan *Destination host unreachable*).*
+
+---
+
+### 5. Analisis & Kesimpulan Teknis
+
+1. **Efektivitas Filtering**: Standard ACL berhasil membedakan hak akses berdasarkan Source IP Address tanpa membebani overhead CPU router secara signifikan.
+2. **Kelemahan Standard ACL**: Standard ACL tidak dapat memfilter berdasarkan jenis protokol (misalnya mengizinkan Web HTTP port 80 tetapi memblokir PING ICMP). Untuk kebutuhan filtrasi berbasis port & protokol Layer 4, solusi yang tepat adalah mengimplementasikan **Extended ACL (100–199)**.
+3. **Best Practice Urutan Rule**: Aturan spesifik (\`deny host 192.168.10.20\`) wajib ditempatkan sebelum aturan umum (\`permit any\`), karena evaluasi ACL berjalan dari atas ke bawah (*top-to-bottom*) dan berhenti pada kecocokan pertama.
+`,
+    articleContentEn: `
+### 1. Introduction & Standard ACL Fundamentals
+
+An **Access Control List (ACL)** is an ordered series of filtering rules applied to router interfaces to inspect and manage inbound or outbound network traffic.
+
+Within the Cisco IOS environment, **Standard Access Control Lists** operate at **Layer 3 (Network Layer)** with specific key behaviors:
+* **Source IP Address Filtering Only**: Inspects exclusively the source IPv4 address of incoming/outgoing packets.
+* **Numbered & Named Ranges**: Uses standard numbered ranges \`1 – 99\` (expanded \`1300 – 1999\`) or human-readable **Named Standard ACLs** (\`ip access-list standard <NAME>\`).
+* **Golden Placement Rule**: Standard ACLs must always be positioned **closest to the destination**. Placing standard ACLs near the source risks inadvertently blocking that host from accessing other valid destinations.
+* **Implicit Deny Any**: An invisible \`deny any\` rule is automatically appended at the bottom of every ACL. Any traffic not explicitly permitted will be dropped.
+
+---
+
+### 2. Topology Scenario & IP Addressing Table
+
+In this simulation lab, our objective is to secure access towards **Server0 (192.168.20.10)** hosted behind **Router1**:
+1. **PC0 (192.168.10.10)**: Granted full access to Server0 (**PERMITTED**).
+2. **PC1 (192.168.10.20)**: Strictly blocked from Server0 (**DENIED**).
+
+| Device | Interface | IP Address | Subnet Mask | Default Gateway | Function / Description |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Router0** | Gig0/1 | 192.168.10.1 | 255.255.255.0 (/24) | - | Client LAN Segment Gateway |
+| **Router0** | Gig0/0 | 10.10.10.1 | 255.255.255.252 (/30) | - | Point-to-Point Link (to Router1) |
+| **Router1** | Gig0/0 | 10.10.10.2 | 255.255.255.252 (/30) | - | Point-to-Point Link (to Router0) |
+| **Router1** | Gig0/1 | 192.168.20.1 | 255.255.255.0 (/24) | - | Server Segment Gateway (ACL Filter) |
+| **PC0** | FastEthernet0 | 192.168.10.10 | 255.255.255.0 (/24) | 192.168.10.1 | Permitted Client Host |
+| **PC1** | FastEthernet0 | 192.168.10.20 | 255.255.255.0 (/24) | 192.168.10.1 | Denied / Blocked Client Host |
+| **Server0** | FastEthernet0 | 192.168.20.10 | 255.255.255.0 (/24) | 192.168.20.1 | Protected Target Server |
+
+---
+
+### 3. Step-by-Step CLI Configuration
+
+#### Step 1: Configure Interfaces and Static Routing on Router0
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router0
+
+! Inter-router point-to-point interface
+Router0(config)# interface GigabitEthernet0/0
+Router0(config-if)# ip address 10.10.10.1 255.255.255.252
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+! Client LAN gateway interface
+Router0(config)# interface GigabitEthernet0/1
+Router0(config-if)# ip address 192.168.10.1 255.255.255.0
+Router0(config-if)# no shutdown
+Router0(config-if)# exit
+
+! Static route to target server subnet
+Router0(config)# ip route 192.168.20.0 255.255.255.0 10.10.10.2
+Router0(config)# exit
+Router0# write memory
+\`\`\`
+
+#### Step 2: Configure Interfaces and Static Routing on Router1
+\`\`\`bash
+Router> enable
+Router# configure terminal
+Router(config)# hostname Router1
+
+! Inter-router point-to-point interface
+Router1(config)# interface GigabitEthernet0/0
+Router1(config-if)# ip address 10.10.10.2 255.255.255.252
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+! Server segment gateway interface
+Router1(config)# interface GigabitEthernet0/1
+Router1(config-if)# ip address 192.168.20.1 255.255.255.0
+Router1(config-if)# no shutdown
+Router1(config-if)# exit
+
+! Static return route to client subnet
+Router1(config)# ip route 192.168.10.0 255.255.255.0 10.10.10.1
+\`\`\`
+
+#### Step 3: Define & Apply Named Standard ACL on Router1
+Create a Named Standard ACL named \`FILTER-SERVER-ACCESS\` denying PC1 (\`192.168.10.20\`) while permitting all other traffic (\`permit any\`).
+
+\`\`\`bash
+! Define Named Standard ACL
+Router1(config)# ip access-list standard FILTER-SERVER-ACCESS
+Router1(config-std-nacl)# deny host 192.168.10.20
+Router1(config-std-nacl)# permit any
+Router1(config-std-nacl)# exit
+
+! Apply ACL outbound on GigabitEthernet0/1 facing Server0
+Router1(config)# interface GigabitEthernet0/1
+Router1(config-if)# ip access-group FILTER-SERVER-ACCESS out
+Router1(config-if)# exit
+Router1(config)# exit
+Router1# write memory
+\`\`\`
+
+---
+
+### 4. Verification & Testing
+
+#### A. Inspect ACL Matches on Router1
+Run \`show access-lists\` to verify packet match counters:
+\`\`\`bash
+Router1# show access-lists
+Standard IP access list FILTER-SERVER-ACCESS
+    10 deny 192.168.10.20 (4 matches)
+    20 permit any (8 matches)
+\`\`\`
+
+#### B. Test Connectivity from Permitted Host PC0 (192.168.10.10)
+Execute ping command to Server0 from **PC0**:
+\`\`\`bash
+PC0> ping 192.168.20.10
+
+Pinging 192.168.20.10 with 32 bytes of data:
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
+
+Ping statistics for 192.168.20.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+\`\`\`
+*(Result: **SUCCESS / PERMITTED**)*
+
+#### C. Test Blocked Connectivity from Denied Host PC1 (192.168.10.20)
+Execute ping command to Server0 from **PC1**:
+\`\`\`bash
+PC1> ping 192.168.20.10
+
+Pinging 192.168.20.10 with 32 bytes of data:
+Reply from 10.10.10.2: Destination host unreachable.
+Reply from 10.10.10.2: Destination host unreachable.
+Reply from 10.10.10.2: Destination host unreachable.
+Reply from 10.10.10.2: Destination host unreachable.
+
+Ping statistics for 192.168.20.10:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
+\`\`\`
+*(Result: **BLOCKED / DENIED** - Router1 returns *Destination host unreachable*).*
+
+---
+
+### 5. Technical Takeaways & Architecture Notes
+
+1. **Granular Layer 3 Filtering**: Standard ACL successfully isolates single problematic or unauthorized endpoints based on Source IP without requiring expensive specialized firewall hardware.
+2. **Standard vs Extended Limitations**: Standard ACL cannot differentiate application protocols (e.g. allow HTTP port 80 while blocking ICMP PING). For Layer 4 protocol-aware policies, **Extended ACLs (100–199)** are recommended.
+3. **Sequential Rule Processing**: Specific rules (\`deny host 192.168.10.20\`) must precede generic rules (\`permit any\`) due to Cisco IOS top-to-bottom first-match evaluation logic.
+`
   },
   {
     title: "NAT Overload (PAT) Public IP Pool Gateway",
