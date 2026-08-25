@@ -275,17 +275,12 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                         if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
                           const codeLines = trimmed.slice(3, -3).replace(/^[a-z]+\n/, "").trim();
                           return (
-                            <div key={pIdx} className="my-3 rounded-lg overflow-hidden border border-border/40 bg-black/90 shadow-xs">
-                              <div className="px-3.5 py-1.5 bg-muted/20 border-b border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-                                <span className="flex items-center gap-1.5">
-                                  <span className="size-2 rounded-full bg-emerald-500/80 inline-block" />
-                                  Cisco IOS CLI
-                                </span>
-                              </div>
-                              <pre className="p-3.5 text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto leading-relaxed">
-                                <code>{codeLines}</code>
-                              </pre>
-                            </div>
+                            <pre
+                              key={pIdx}
+                              className="my-3 p-3.5 rounded-lg overflow-x-auto border border-border/40 bg-black/90 text-emerald-400 font-mono text-[11px] sm:text-xs leading-relaxed shadow-xs"
+                            >
+                              <code>{codeLines}</code>
+                            </pre>
                           );
                         }
 
