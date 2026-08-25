@@ -168,67 +168,71 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </div>
       )}
 
-      {/* Structured Grid: Overview, Problem, Solution */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
-            <Cpu className="size-3.5 text-primary shrink-0" />
-            <span>{t("Gambaran Umum", "Overview")}</span>
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {t(project.overviewId, project.overviewEn)}
-          </p>
-        </Card>
-
-        <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
-            <AlertTriangle className="size-3.5 text-amber-500 shrink-0" />
-            <span>{t("Masalah", "The Problem")}</span>
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {t(project.problemId, project.problemEn)}
-          </p>
-        </Card>
-
-        <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
-            <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
-            <span>{t("Solusi", "The Solution")}</span>
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {t(project.solutionId, project.solutionEn)}
-          </p>
-        </Card>
-      </div>
-
-      {/* Architecture & Result Card */}
-      {(project.architectureId || project.resultId) && (
-        <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {project.architectureId && project.architectureEn && (
-              <div className="space-y-1">
-                <h4 className="text-xs font-bold font-sans uppercase text-muted-foreground">
-                  {t("Arsitektur Jaringan", "Network Architecture")}
-                </h4>
-                <p className="text-xs font-mono text-foreground/90 bg-muted/30 p-3 rounded-lg border border-border/40 leading-relaxed">
-                  {t(project.architectureId, project.architectureEn)}
-                </p>
+      {/* Structured Grid: Overview, Problem, Solution (Only shown if project does not have a full tutorial article) */}
+      {!project.articleContentId && !project.articleContentEn && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
+                <Cpu className="size-3.5 text-primary shrink-0" />
+                <span>{t("Gambaran Umum", "Overview")}</span>
               </div>
-            )}
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t(project.overviewId, project.overviewEn)}
+              </p>
+            </Card>
 
-            {project.resultId && project.resultEn && (
-              <div className="space-y-1">
-                <h4 className="text-xs font-bold font-sans uppercase text-muted-foreground flex items-center gap-1.5">
-                  <Award className="size-3.5 text-primary" />
-                  <span>{t("Hasil Terukur", "Quantified Result")}</span>
-                </h4>
-                <p className="text-xs font-mono text-foreground/90 bg-muted/30 p-3 rounded-lg border border-border/40 leading-relaxed">
-                  {t(project.resultId, project.resultEn)}
-                </p>
+            <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
+                <AlertTriangle className="size-3.5 text-amber-500 shrink-0" />
+                <span>{t("Masalah", "The Problem")}</span>
               </div>
-            )}
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t(project.problemId, project.problemEn)}
+              </p>
+            </Card>
+
+            <Card className="p-4 sm:p-5 border-border/80 bg-card/60 rounded-xl space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold font-sans text-foreground">
+                <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
+                <span>{t("Solusi", "The Solution")}</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t(project.solutionId, project.solutionEn)}
+              </p>
+            </Card>
           </div>
-        </Card>
+
+          {/* Architecture & Result Card */}
+          {(project.architectureId || project.resultId) && (
+            <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {project.architectureId && project.architectureEn && (
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold font-sans uppercase text-muted-foreground">
+                      {t("Arsitektur Jaringan", "Network Architecture")}
+                    </h4>
+                    <p className="text-xs font-mono text-foreground/90 bg-muted/30 p-3 rounded-lg border border-border/40 leading-relaxed">
+                      {t(project.architectureId, project.architectureEn)}
+                    </p>
+                  </div>
+                )}
+
+                {project.resultId && project.resultEn && (
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold font-sans uppercase text-muted-foreground flex items-center gap-1.5">
+                      <Award className="size-3.5 text-primary" />
+                      <span>{t("Hasil Terukur", "Quantified Result")}</span>
+                    </h4>
+                    <p className="text-xs font-mono text-foreground/90 bg-muted/30 p-3 rounded-lg border border-border/40 leading-relaxed">
+                      {t(project.resultId, project.resultEn)}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </Card>
+          )}
+        </>
       )}
 
       {/* Step-by-Step Lab & Configuration Guide (DiaryConfig / IPCisco Tutorial Style) */}
