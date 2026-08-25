@@ -271,16 +271,75 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                         const trimmed = part.trim();
                         if (!trimmed) return null;
 
-                        // Render CLI Code Block
+                        // Render CLI Code Block with modern readable syntax styling and copy button
                         if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
                           const codeLines = trimmed.slice(3, -3).replace(/^[a-z]+\n/, "").trim();
+                          
                           return (
-                            <pre
+                            <div
                               key={pIdx}
-                              className="my-3 p-3.5 rounded-lg overflow-x-auto border border-border/40 bg-black/90 text-emerald-400 font-mono text-[11px] sm:text-xs leading-relaxed shadow-xs"
+                              className="my-4 rounded-xl overflow-hidden border border-border/80 bg-zinc-950/95 dark:bg-zinc-900/90 shadow-sm transition-all"
                             >
-                              <code>{codeLines}</code>
-                            </pre>
+                              <div className="px-4 py-2 bg-zinc-900/80 dark:bg-zinc-800/60 border-b border-border/40 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="size-2.5 rounded-full bg-rose-500/70 inline-block" />
+                                    <span className="size-2.5 rounded-full bg-amber-500/70 inline-block" />
+                                    <span className="size-2.5 rounded-full bg-emerald-500/70 inline-block" />
+                                  </div>
+                                  <span className="text-[11px] font-mono text-zinc-400 font-medium ml-1">
+                                    Cisco IOS CLI
+                                  </span>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(codeLines);
+                                  }}
+                                  className="text-[11px] font-mono text-zinc-400 hover:text-zinc-100 flex items-center gap-1 px-2 py-0.5 rounded-md hover:bg-zinc-800 transition-colors"
+                                >
+                                  <Copy className="size-3" />
+                                  <span>{t("Salin", "Copy")}</span>
+                                </button>
+                              </div>
+
+                              <pre className="p-4 overflow-x-auto text-[12px] sm:text-[13px] font-mono leading-relaxed text-zinc-100 selection:bg-primary/30">
+                                <code>
+                                  {codeLines.split("\n").map((line, cIdx) => {
+                                    const trimmedLine = line.trim();
+                                    const isComment = trimmedLine.startsWith("!");
+                                    const isPrompt = /^[A-Za-z0-9_-]+[>#(]/.test(trimmedLine);
+                                    const isHighlight =
+                                      trimmedLine.startsWith("ip address") ||
+                                      trimmedLine.startsWith("network") ||
+                                      trimmedLine.startsWith("deny") ||
+                                      trimmedLine.startsWith("permit") ||
+                                      trimmedLine.startsWith("redistribute") ||
+                                      trimmedLine.startsWith("encapsulation");
+
+                                    return (
+                                      <div key={cIdx} className="table-row">
+                                        <span className="table-cell select-none pr-4 text-right text-[11px] text-zinc-600 font-mono">
+                                          {cIdx + 1}
+                                        </span>
+                                        <span
+                                          className={cn(
+                                            "table-cell",
+                                            isComment && "text-zinc-500 italic",
+                                            isPrompt && "text-sky-300 font-medium",
+                                            isHighlight && "text-emerald-400 font-semibold",
+                                            !isComment && !isPrompt && !isHighlight && "text-zinc-200"
+                                          )}
+                                        >
+                                          {line}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </code>
+                              </pre>
+                            </div>
                           );
                         }
 
@@ -452,9 +511,43 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             onWheel={(e) => {
               e.stopPropagation();
             }}
-            className="p-3.5 rounded-lg bg-black/80 text-emerald-400 font-mono text-[11px] max-h-56 overflow-y-auto overscroll-contain border border-border/40 leading-relaxed touch-pan-y"
+            className="p-4 rounded-xl bg-zinc-950/95 dark:bg-zinc-900/90 text-zinc-200 font-mono text-[12px] sm:text-[13px] max-h-80 overflow-y-auto overscroll-contain border border-border/60 leading-relaxed touch-pan-y shadow-inner"
           >
-            <code>{project.rawConfig}</code>
+            <code>
+              {project.rawConfig.split("\n").map((line, rIdx) => {
+                const trimmedLine = line.trim();
+                const isComment = trimmedLine.startsWith("!");
+                const isHeading = trimmedLine.startsWith("! ===") || trimmedLine.startsWith("! ---");
+                const isPrompt = /^[A-Za-z0-9_-]+[>#(]/.test(trimmedLine);
+                const isHighlight =
+                  trimmedLine.startsWith("ip address") ||
+                  trimmedLine.startsWith("network") ||
+                  trimmedLine.startsWith("deny") ||
+                  trimmedLine.startsWith("permit") ||
+                  trimmedLine.startsWith("redistribute") ||
+                  trimmedLine.startsWith("spanning-tree");
+
+                return (
+                  <div key={rIdx} className="table-row">
+                    <span className="table-cell select-none pr-4 text-right text-[11px] text-zinc-600 font-mono">
+                      {rIdx + 1}
+                    </span>
+                    <span
+                      className={cn(
+                        "table-cell",
+                        isHeading && "text-amber-400 font-semibold",
+                        isComment && !isHeading && "text-zinc-500 italic",
+                        isPrompt && "text-sky-300 font-medium",
+                        isHighlight && "text-emerald-400 font-semibold",
+                        !isComment && !isPrompt && !isHighlight && "text-zinc-200"
+                      )}
+                    >
+                      {line}
+                    </span>
+                  </div>
+                );
+              })}
+            </code>
           </pre>
         </Card>
       )}
