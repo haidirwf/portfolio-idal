@@ -271,35 +271,71 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                         const trimmed = part.trim();
                         if (!trimmed) return null;
 
-                        // Render CLI Code Block (Clean DiaryConfig / IPCisco Documentation Style)
+                        // Render CLI Code Block (Exact DiaryConfig Tutorial Theme)
                         if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
                           const codeLines = trimmed.slice(3, -3).replace(/^[a-z]+\n/, "").trim();
+                          
+                          // Helper to parse line into prompt + command keyword + arguments
+                          const renderDiaryConfigLine = (line: string) => {
+                            const trimmedLine = line.trim();
+                            if (!trimmedLine) return <span>&nbsp;</span>;
+
+                            // Comments: convert ! to // and style in light slate gray
+                            if (trimmedLine.startsWith("!")) {
+                              const commentText = line.replace(/^\s*!\s*/, "// ");
+                              return <span className="text-slate-400 dark:text-zinc-500 font-mono text-[12.5px]">{commentText}</span>;
+                            }
+
+                            // Match Cisco prompt like "Router>", "Router#", "R1(config)#", "Router(config-if)#", etc.
+                            const promptMatch = line.match(/^(\s*[A-Za-z0-9_-]+(?:\([a-z0-9_-]+\))?[>#])(.*)$/);
+                            if (promptMatch) {
+                              const prompt = promptMatch[1];
+                              const rest = promptMatch[2]; // e.g. "interface FastEthernet0/0" or "configure terminal"
+                              const restMatch = rest.match(/^(\s*)([^\s]+)(.*)$/);
+
+                              if (restMatch) {
+                                const space = restMatch[1];
+                                const cmdKeyword = restMatch[2];
+                                const cmdArgs = restMatch[3];
+
+                                return (
+                                  <span className="font-mono text-[13px] leading-relaxed">
+                                    <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
+                                    {space}
+                                    <span className="text-red-700 dark:text-rose-400 font-medium">{cmdKeyword}</span>
+                                    <span className="text-slate-700 dark:text-slate-200">{cmdArgs}</span>
+                                  </span>
+                                );
+                              }
+
+                              return (
+                                <span className="font-mono text-[13px]">
+                                  <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
+                                  <span className="text-slate-700 dark:text-slate-200">{rest}</span>
+                                </span>
+                              );
+                            }
+
+                            // Status output lines (like "[OK]", "Building configuration...", "Reply from...", etc.)
+                            if (trimmedLine.startsWith("[OK]") || trimmedLine.startsWith("[OK") || trimmedLine.includes("OK]")) {
+                              return <span className="text-red-600 dark:text-rose-400 font-mono text-[13px]">{line}</span>;
+                            }
+
+                            return <span className="text-slate-700 dark:text-slate-300 font-mono text-[13px]">{line}</span>;
+                          };
+
                           return (
                             <div
                               key={pIdx}
-                              className="my-3 rounded-lg overflow-x-auto border border-border/70 bg-muted/40 dark:bg-secondary/40 p-3 sm:p-4 text-xs sm:text-[13px] font-mono leading-relaxed"
+                              className="my-4 rounded-md overflow-x-auto border border-zinc-200 dark:border-zinc-800 bg-[#f4f4f5] dark:bg-[#18181b] p-4 sm:p-5 shadow-xs"
                             >
-                              <pre className="text-foreground">
+                              <pre className="font-mono text-[13px] leading-[1.6]">
                                 <code>
-                                  {codeLines.split("\n").map((line, lIdx) => {
-                                    const trimmedLine = line.trim();
-                                    const isComment = trimmedLine.startsWith("!");
-                                    const isPrompt = /^[A-Za-z0-9_-]+[>#(]/.test(trimmedLine);
-
-                                    return (
-                                      <div
-                                        key={lIdx}
-                                        className={cn(
-                                          "min-h-[1.35rem]",
-                                          isComment && "text-muted-foreground/70 italic",
-                                          isPrompt && "text-foreground font-semibold",
-                                          !isComment && !isPrompt && "text-foreground/90 font-mono"
-                                        )}
-                                      >
-                                        {line}
-                                      </div>
-                                    );
-                                  })}
+                                  {codeLines.split("\n").map((line, lIdx) => (
+                                    <div key={lIdx} className="min-h-[1.4rem]">
+                                      {renderDiaryConfigLine(line)}
+                                    </div>
+                                  ))}
                                 </code>
                               </pre>
                             </div>
@@ -474,24 +510,49 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             onWheel={(e) => {
               e.stopPropagation();
             }}
-            className="p-4 rounded-lg bg-muted/40 dark:bg-secondary/40 text-foreground font-mono text-xs sm:text-[13px] max-h-72 overflow-y-auto overscroll-contain border border-border/70 leading-relaxed touch-pan-y"
+            className="p-4 rounded-md bg-[#f4f4f5] dark:bg-[#18181b] font-mono text-[13px] max-h-80 overflow-y-auto overscroll-contain border border-zinc-200 dark:border-zinc-800 leading-[1.6] touch-pan-y"
           >
             <code>
               {project.rawConfig.split("\n").map((line, rIdx) => {
                 const trimmedLine = line.trim();
-                const isComment = trimmedLine.startsWith("!");
-                const isPrompt = /^[A-Za-z0-9_-]+[>#(]/.test(trimmedLine);
+                if (!trimmedLine) return <div key={rIdx} className="min-h-[1.4rem]">&nbsp;</div>;
+
+                if (trimmedLine.startsWith("!")) {
+                  const commentText = line.replace(/^\s*!\s*/, "// ");
+                  return (
+                    <div key={rIdx} className="text-slate-400 dark:text-zinc-500 font-mono text-[12.5px] min-h-[1.4rem]">
+                      {commentText}
+                    </div>
+                  );
+                }
+
+                const promptMatch = line.match(/^(\s*[A-Za-z0-9_-]+(?:\([a-z0-9_-]+\))?[>#])(.*)$/);
+                if (promptMatch) {
+                  const prompt = promptMatch[1];
+                  const rest = promptMatch[2];
+                  const restMatch = rest.match(/^(\s*)([^\s]+)(.*)$/);
+
+                  if (restMatch) {
+                    return (
+                      <div key={rIdx} className="min-h-[1.4rem]">
+                        <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
+                        {restMatch[1]}
+                        <span className="text-red-700 dark:text-rose-400 font-medium">{restMatch[2]}</span>
+                        <span className="text-slate-700 dark:text-slate-200">{restMatch[3]}</span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={rIdx} className="min-h-[1.4rem]">
+                      <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
+                      <span className="text-slate-700 dark:text-slate-200">{rest}</span>
+                    </div>
+                  );
+                }
 
                 return (
-                  <div
-                    key={rIdx}
-                    className={cn(
-                      "min-h-[1.35rem]",
-                      isComment && "text-muted-foreground/70 italic",
-                      isPrompt && "text-foreground font-semibold",
-                      !isComment && !isPrompt && "text-foreground/90 font-mono"
-                    )}
-                  >
+                  <div key={rIdx} className="text-slate-700 dark:text-slate-300 min-h-[1.4rem]">
                     {line}
                   </div>
                 );
