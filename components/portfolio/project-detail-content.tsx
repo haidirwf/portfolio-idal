@@ -271,26 +271,26 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                         const trimmed = part.trim();
                         if (!trimmed) return null;
 
-                        // Render CLI Code Block (Exact DiaryConfig Tutorial Theme)
+                        // Render CLI Code Block (Refined & Balanced Typography UX)
                         if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
                           const codeLines = trimmed.slice(3, -3).replace(/^[a-z]+\n/, "").trim();
                           
-                          // Helper to parse line into prompt + command keyword + arguments
+                          // Helper to parse line into prompt + command keyword + arguments with smooth visual hierarchy
                           const renderDiaryConfigLine = (line: string) => {
                             const trimmedLine = line.trim();
                             if (!trimmedLine) return <span>&nbsp;</span>;
 
-                            // Comments: convert ! to // and style in light slate gray
+                            // Comments: format // in soft muted slate with slight italic
                             if (trimmedLine.startsWith("!")) {
                               const commentText = line.replace(/^\s*!\s*/, "// ");
-                              return <span className="text-slate-400 dark:text-zinc-500 font-mono text-[12.5px]">{commentText}</span>;
+                              return <span className="text-slate-400 dark:text-zinc-500 font-mono text-[12px] italic select-none">{commentText}</span>;
                             }
 
                             // Match Cisco prompt like "Router>", "Router#", "R1(config)#", "Router(config-if)#", etc.
                             const promptMatch = line.match(/^(\s*[A-Za-z0-9_-]+(?:\([a-z0-9_-]+\))?[>#])(.*)$/);
                             if (promptMatch) {
                               const prompt = promptMatch[1];
-                              const rest = promptMatch[2]; // e.g. "interface FastEthernet0/0" or "configure terminal"
+                              const rest = promptMatch[2];
                               const restMatch = rest.match(/^(\s*)([^\s]+)(.*)$/);
 
                               if (restMatch) {
@@ -299,40 +299,40 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                                 const cmdArgs = restMatch[3];
 
                                 return (
-                                  <span className="font-mono text-[13px] leading-relaxed">
-                                    <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
+                                  <span className="font-mono text-[12.5px] leading-relaxed">
+                                    <span className="text-slate-500 dark:text-zinc-400 font-normal select-none mr-0.5">{prompt}</span>
                                     {space}
-                                    <span className="text-red-700 dark:text-rose-400 font-medium">{cmdKeyword}</span>
-                                    <span className="text-slate-700 dark:text-slate-200">{cmdArgs}</span>
+                                    <span className="text-amber-700 dark:text-amber-400 font-medium">{cmdKeyword}</span>
+                                    <span className="text-slate-800 dark:text-zinc-200 font-normal">{cmdArgs}</span>
                                   </span>
                                 );
                               }
 
                               return (
-                                <span className="font-mono text-[13px]">
-                                  <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
-                                  <span className="text-slate-700 dark:text-slate-200">{rest}</span>
+                                <span className="font-mono text-[12.5px] leading-relaxed">
+                                  <span className="text-slate-500 dark:text-zinc-400 font-normal select-none mr-0.5">{prompt}</span>
+                                  <span className="text-slate-800 dark:text-zinc-200 font-normal">{rest}</span>
                                 </span>
                               );
                             }
 
                             // Status output lines (like "[OK]", "Building configuration...", "Reply from...", etc.)
                             if (trimmedLine.startsWith("[OK]") || trimmedLine.startsWith("[OK") || trimmedLine.includes("OK]")) {
-                              return <span className="text-red-600 dark:text-rose-400 font-mono text-[13px]">{line}</span>;
+                              return <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[12.5px] font-medium">{line}</span>;
                             }
 
-                            return <span className="text-slate-700 dark:text-slate-300 font-mono text-[13px]">{line}</span>;
+                            return <span className="text-slate-700 dark:text-zinc-300 font-mono text-[12.5px]">{line}</span>;
                           };
 
                           return (
                             <div
                               key={pIdx}
-                              className="my-4 rounded-md overflow-x-auto border border-zinc-200 dark:border-zinc-800 bg-[#f4f4f5] dark:bg-[#18181b] p-4 sm:p-5 shadow-xs"
+                              className="my-3 rounded-lg overflow-x-auto border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-900/50 p-3.5 sm:p-4.5"
                             >
-                              <pre className="font-mono text-[13px] leading-[1.6]">
+                              <pre className="font-mono text-[12.5px] leading-[1.55]">
                                 <code>
                                   {codeLines.split("\n").map((line, lIdx) => (
-                                    <div key={lIdx} className="min-h-[1.4rem]">
+                                    <div key={lIdx} className="min-h-[1.35rem]">
                                       {renderDiaryConfigLine(line)}
                                     </div>
                                   ))}
@@ -510,17 +510,17 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             onWheel={(e) => {
               e.stopPropagation();
             }}
-            className="p-4 rounded-md bg-[#f4f4f5] dark:bg-[#18181b] font-mono text-[13px] max-h-80 overflow-y-auto overscroll-contain border border-zinc-200 dark:border-zinc-800 leading-[1.6] touch-pan-y"
+            className="p-4 rounded-lg bg-zinc-50/80 dark:bg-zinc-900/50 font-mono text-[12.5px] max-h-80 overflow-y-auto overscroll-contain border border-zinc-200/80 dark:border-zinc-800/80 leading-[1.55] touch-pan-y"
           >
             <code>
               {project.rawConfig.split("\n").map((line, rIdx) => {
                 const trimmedLine = line.trim();
-                if (!trimmedLine) return <div key={rIdx} className="min-h-[1.4rem]">&nbsp;</div>;
+                if (!trimmedLine) return <div key={rIdx} className="min-h-[1.35rem]">&nbsp;</div>;
 
                 if (trimmedLine.startsWith("!")) {
                   const commentText = line.replace(/^\s*!\s*/, "// ");
                   return (
-                    <div key={rIdx} className="text-slate-400 dark:text-zinc-500 font-mono text-[12.5px] min-h-[1.4rem]">
+                    <div key={rIdx} className="text-slate-400 dark:text-zinc-500 font-mono text-[12px] italic select-none min-h-[1.35rem]">
                       {commentText}
                     </div>
                   );
@@ -534,25 +534,25 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
 
                   if (restMatch) {
                     return (
-                      <div key={rIdx} className="min-h-[1.4rem]">
-                        <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
+                      <div key={rIdx} className="min-h-[1.35rem]">
+                        <span className="text-slate-500 dark:text-zinc-400 font-normal select-none mr-0.5">{prompt}</span>
                         {restMatch[1]}
-                        <span className="text-red-700 dark:text-rose-400 font-medium">{restMatch[2]}</span>
-                        <span className="text-slate-700 dark:text-slate-200">{restMatch[3]}</span>
+                        <span className="text-amber-700 dark:text-amber-400 font-medium">{restMatch[2]}</span>
+                        <span className="text-slate-800 dark:text-zinc-200 font-normal">{restMatch[3]}</span>
                       </div>
                     );
                   }
 
                   return (
-                    <div key={rIdx} className="min-h-[1.4rem]">
-                      <span className="font-bold text-slate-800 dark:text-slate-100">{prompt}</span>
-                      <span className="text-slate-700 dark:text-slate-200">{rest}</span>
+                    <div key={rIdx} className="min-h-[1.35rem]">
+                      <span className="text-slate-500 dark:text-zinc-400 font-normal select-none mr-0.5">{prompt}</span>
+                      <span className="text-slate-800 dark:text-zinc-200 font-normal">{rest}</span>
                     </div>
                   );
                 }
 
                 return (
-                  <div key={rIdx} className="text-slate-700 dark:text-slate-300 min-h-[1.4rem]">
+                  <div key={rIdx} className="text-slate-700 dark:text-zinc-300 font-normal min-h-[1.35rem]">
                     {line}
                   </div>
                 );
