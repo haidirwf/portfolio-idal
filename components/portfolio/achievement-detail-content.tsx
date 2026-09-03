@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, Award, Calendar, MapPin, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Award, Calendar, MapPin } from "lucide-react";
 import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
 
 export function AchievementDetailContent({ slug }: { slug: string }) {
@@ -90,25 +90,96 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
         />
       </div>
 
-      {/* Article Highlights */}
-      <Card className="p-5 border-border/80 bg-card/60 rounded-xl space-y-3">
-        <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-foreground">
-          {t("Sorotan & Kontribusi Utama", "Key Highlights & Contributions")}
-        </h3>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {(lang === "ID" ? item.highlightsId : item.highlightsEn).map((hl, idx) => (
-            <li key={idx} className="text-xs font-sans text-muted-foreground flex items-start gap-2">
-              <CheckCircle2 className="size-3.5 text-primary shrink-0 mt-0.5" />
-              <span>{hl}</span>
-            </li>
-          ))}
-        </ul>
-      </Card>
+      {/* Main Article Body (Formatted Markdown with headings and lists) */}
+      <Card className="p-6 sm:p-8 border-border/80 bg-card/60 rounded-xl space-y-6">
+        <div className="text-muted-foreground font-sans text-sm leading-relaxed space-y-5">
+          {(() => {
+            const content = (articleText || "").trim();
+            const sections = content.split(/\n(?=### )/);
 
-      {/* Main Article Body */}
-      <div className="prose dark:prose-invert max-w-none text-muted-foreground font-sans text-sm leading-relaxed space-y-4 whitespace-pre-line pt-2">
-        {articleText}
-      </div>
+            const renderFormattedText = (raw: string) => {
+              const tokens = raw.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
+              return tokens.map((token, tIdx) => {
+                if (token.startsWith("**") && token.endsWith("**") && token.length >= 4) {
+                  return (
+                    <strong key={tIdx} className="font-semibold text-foreground">
+                      {token.slice(2, -2)}
+                    </strong>
+                  );
+                }
+                if (token.startsWith("`") && token.endsWith("`") && token.length >= 2) {
+                  return (
+                    <code key={tIdx} className="px-1.5 py-0.5 rounded-sm bg-muted text-foreground font-mono text-[11px]">
+                      {token.slice(1, -1)}
+                    </code>
+                  );
+                }
+                if (token.startsWith("*") && token.endsWith("*") && token.length >= 2) {
+                  return (
+                    <em key={tIdx} className="italic text-foreground/90">
+                      {token.slice(1, -1)}
+                    </em>
+                  );
+                }
+                return <React.Fragment key={tIdx}>{token}</React.Fragment>;
+              });
+            };
+
+            return sections.map((sec, idx) => {
+              const lines = sec.trim().split("\n");
+              const headingLine = lines[0].startsWith("### ") ? lines[0].replace(/^###\s+/, "") : null;
+              const bodyLines = headingLine ? lines.slice(1) : lines;
+
+              return (
+                <div key={idx} className="space-y-3 pt-1">
+                  {headingLine && (
+                    <h3 className="text-base sm:text-lg font-bold font-sans text-foreground flex items-center gap-2">
+                      <span className="size-1.5 rounded-full bg-primary inline-block" />
+                      {headingLine}
+                    </h3>
+                  )}
+
+                  <div className="space-y-2.5 text-xs sm:text-sm text-muted-foreground">
+                    {bodyLines.map((line, lIdx) => {
+                      const cleanLine = line.trim();
+                      if (!cleanLine) return null;
+
+                      if (cleanLine.startsWith("#### ")) {
+                        return (
+                          <h4 key={lIdx} className="text-xs sm:text-sm font-bold font-sans text-foreground pt-3">
+                            {renderFormattedText(cleanLine.replace("#### ", ""))}
+                          </h4>
+                        );
+                      }
+                      if (cleanLine.startsWith("* ") || cleanLine.startsWith("- ")) {
+                        return (
+                          <div key={lIdx} className="flex items-start gap-2 pl-2">
+                            <span className="text-primary mt-0.5 font-bold">•</span>
+                            <span className="leading-relaxed">{renderFormattedText(cleanLine.slice(2))}</span>
+                          </div>
+                        );
+                      }
+                      if (/^\d+\.\s/.test(cleanLine)) {
+                        return (
+                          <div key={lIdx} className="flex items-start gap-2 pl-2">
+                            <span className="font-mono text-primary font-bold">{cleanLine.match(/^\d+\./)?.[0]}</span>
+                            <span className="leading-relaxed">{renderFormattedText(cleanLine.replace(/^\d+\.\s+/, ""))}</span>
+                          </div>
+                        );
+                      }
+                      return (
+                        <p key={lIdx} className="leading-relaxed">
+                          {renderFormattedText(cleanLine)}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            });
+          })()}
+        </div>
+      </Card>
 
       {/* External Link Action */}
       {item.url && (
