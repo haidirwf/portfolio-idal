@@ -1,19 +1,17 @@
-import { getProjects } from "@/lib/projects";
-import { Navbar } from "@/components/portfolio/navbar";
+import { getProjectSummaries } from "@/lib/projects";
 import { Hero } from "@/components/portfolio/hero";
 import { Showcase } from "@/components/portfolio/showcase";
 import { AchievementShowcase } from "@/components/portfolio/achievement-showcase";
 import { About } from "@/components/portfolio/about";
 import { TechStack } from "@/components/portfolio/tech-stack";
 import { Contact } from "@/components/portfolio/contact";
-import { Footer } from "@/components/portfolio/footer";
 import { MainWrapper } from "@/components/portfolio/main-wrapper";
 
 export default function Home() {
-  const projects = getProjects();
+  const projects = getProjectSummaries();
 
   return (
-    <MainWrapper projects={projects}>
+    <MainWrapper>
       <Hero />
       <Showcase projects={projects} />
       <AchievementShowcase />

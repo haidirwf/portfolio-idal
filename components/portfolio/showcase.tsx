@@ -5,13 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { GitBranch, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
-import { Project } from "@/lib/projects";
+import { ProjectSummary } from "@/lib/projects";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
 
-export function Showcase({ projects }: { projects: Project[] }) {
+export function Showcase({ projects }: { projects: ProjectSummary[] }) {
   const { t } = useLanguage();
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);

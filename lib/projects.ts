@@ -1,22 +1,25 @@
-export interface Project {
+export interface ProjectSummary {
   title: string;
   slug: string;
   descriptionId: string;
   descriptionEn: string;
-  overviewId: string;
-  overviewEn: string;
-  problemId: string;
-  problemEn: string;
-  solutionId: string;
-  solutionEn: string;
   cover: string;
-  gallery: string[];
   year: string;
   stack: string[];
   github: string;
   demo?: string;
   featured: boolean;
   tags: string[];
+}
+
+export interface Project extends ProjectSummary {
+  overviewId: string;
+  overviewEn: string;
+  problemId: string;
+  problemEn: string;
+  solutionId: string;
+  solutionEn: string;
+  gallery: string[];
   architectureId?: string;
   architectureEn?: string;
   resultId?: string;
@@ -1936,6 +1939,22 @@ Fa0/2            Altn BLK
 
 export function getProjects(): Project[] {
   return PROJECTS;
+}
+
+export function getProjectSummaries(): ProjectSummary[] {
+  return PROJECTS.map((p) => ({
+    title: p.title,
+    slug: p.slug,
+    descriptionId: p.descriptionId,
+    descriptionEn: p.descriptionEn,
+    cover: p.cover,
+    year: p.year,
+    stack: p.stack,
+    github: p.github,
+    demo: p.demo,
+    featured: p.featured,
+    tags: p.tags,
+  }));
 }
 
 export function getProjectBySlug(slug: string): Project | undefined {

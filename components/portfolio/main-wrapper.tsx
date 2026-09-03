@@ -4,17 +4,14 @@ import * as React from "react";
 import { Navbar } from "@/components/portfolio/navbar";
 import { TopAnnouncementBanner } from "@/components/portfolio/top-announcement-banner";
 import { Footer } from "@/components/portfolio/footer";
-import { Project } from "@/lib/projects";
 import { ExternalLinkConfirmProvider } from "@/components/portfolio/external-link-modal";
 
 import { FloatingSectionTracker } from "@/components/portfolio/floating-section-tracker";
 
 export function MainWrapper({
-  children,
-  projects
+  children
 }: {
   children: React.ReactNode;
-  projects?: Project[];
 }) {
   return (
     <ExternalLinkConfirmProvider>
