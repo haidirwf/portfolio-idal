@@ -52,7 +52,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
   };
 
   return (
-    <div className="py-12 max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
+    <div className="py-8 sm:py-12 max-w-5xl mx-auto px-3 sm:px-6 space-y-8">
       {/* Navigation back */}
       <div>
         <Link
@@ -235,9 +235,9 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         </>
       )}
 
-      {/* Step-by-Step Lab & Configuration Guide (DiaryConfig / IPCisco Tutorial Style) */}
+      {/* Step-by-Step Lab & Configuration Guide (Roadmap Style - Frameless on mobile, spacious card on desktop) */}
       {(project.articleContentId || project.articleContentEn) && (
-        <Card className="p-6 sm:p-8 border-border/80 bg-card/60 rounded-xl space-y-6">
+        <Card className="border-0 bg-transparent shadow-none p-0 sm:border sm:border-border/80 sm:bg-card/60 sm:p-8 sm:rounded-xl space-y-6 sm:shadow-xs">
           <div className="flex items-center gap-2 pb-3 border-b border-border/40">
             <Terminal className="size-4 text-primary" />
             <h2 className="text-base sm:text-lg font-bold font-sans tracking-tight text-foreground">
