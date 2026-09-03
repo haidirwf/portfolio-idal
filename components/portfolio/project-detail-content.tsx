@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { getProjectBySlug } from "@/lib/projects";
@@ -148,24 +149,26 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         />
       </div>
 
-      {/* Pure Full Screen Image Overlay (No black box card, no close button, no text) */}
-      {isExpanded && (
+      {/* Pure Full Screen Image Overlay (Rendered into document.body to ensure 100% viewport coverage with zero un-dimmed gaps) */}
+      {isExpanded && typeof document !== "undefined" && createPortal(
         <div
           onClick={() => setIsExpanded(false)}
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-2 sm:p-6 cursor-zoom-out animate-in fade-in duration-200"
+          className="fixed inset-0 w-screen h-screen z-[9999] bg-black/90 backdrop-blur-xs flex items-center justify-center p-2 sm:p-6 cursor-zoom-out animate-in fade-in duration-200"
+          style={{ margin: 0, top: 0, left: 0, right: 0, bottom: 0 }}
         >
           <div className="relative w-full h-full max-w-7xl max-h-[95vh] flex items-center justify-center">
             <Image
               src={project.cover}
               alt={project.title}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
+              sizes="100vw"
               className="object-contain select-none"
               quality={100}
               priority
             />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Structured Grid: Overview, Problem, Solution (Only shown if project does not have a full tutorial article) */}
