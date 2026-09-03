@@ -22,7 +22,7 @@ export function AchievementShowcase() {
   };
 
   return (
-    <section id="achievements" className="py-12 px-4 sm:px-6 space-y-8 relative">
+    <section id="achievements" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
       {/* Section Header (Centered layout matching Project Showcase) */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">

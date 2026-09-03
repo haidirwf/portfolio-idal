@@ -71,7 +71,7 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-12 px-4 sm:px-6 space-y-8 relative">
+    <section id="about" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
       {/* Floating Mouse Tooltip for Desktop */}
       <AnimatePresence>
         {tooltip.show && (

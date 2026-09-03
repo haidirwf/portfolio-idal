@@ -81,7 +81,7 @@ export function Showcase({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <section id="projects" className="py-12 px-6 sm:px-10 space-y-6">
+    <section id="projects" className="py-12 px-6 sm:px-10 space-y-6 scroll-mt-20">
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
           {t("Topologi & Proyek Jaringan", "Network Topologies & Works")}
