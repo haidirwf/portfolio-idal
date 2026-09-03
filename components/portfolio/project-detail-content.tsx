@@ -249,18 +249,45 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
             {(() => {
               const content = (t(project.articleContentId || "", project.articleContentEn || "")).trim();
               const sections = content.split(/\n(?=### )/);
+              let stepCounter = 0;
 
-              return sections.map((sec, idx) => {
-                const lines = sec.trim().split("\n");
-                const headingLine = lines[0].replace(/^###\s+/, "");
-                const bodyLines = lines.slice(1);
+              return (
+                <div className="relative space-y-0">
+                  {sections.map((sec, idx) => {
+                    const lines = sec.trim().split("\n");
+                    const rawHeading = lines[0].replace(/^###\s+/, "");
+                    const bodyLines = lines.slice(1);
 
-                return (
-                  <div key={idx} className="space-y-3 pt-2">
-                    <h3 className="text-sm sm:text-base font-bold font-sans text-foreground flex items-center gap-2">
-                      <span className="size-1.5 rounded-full bg-primary inline-block" />
-                      {headingLine}
-                    </h3>
+                    // Check if this is a step section or introduction/verification section
+                    const isStep = /^(?:Langkah|Step|\d+\.)/i.test(rawHeading) || /^(?:\d+\.\s+)?(?:Langkah|Step)/i.test(rawHeading);
+                    if (isStep) {
+                      stepCounter++;
+                    }
+
+                    const isLast = idx === sections.length - 1;
+
+                    return (
+                      <div key={idx} className="relative flex gap-4 sm:gap-6 group">
+                        {/* Left Timeline Rail (Dashed line + Numbered Circle Node) */}
+                        <div className="flex flex-col items-center shrink-0 pt-0.5">
+                          {/* Numbered / Icon Node matching reference image */}
+                          <div className={cn(
+                            "size-6 sm:size-7 rounded-full border border-foreground/60 dark:border-zinc-400 flex items-center justify-center font-sans text-xs font-semibold z-10 transition-colors bg-background text-foreground shrink-0 shadow-xs"
+                          )}>
+                            {idx + 1}
+                          </div>
+
+                          {/* Vertical Dashed Connecting Line (Only if not the last item) */}
+                          {!isLast && (
+                            <div className="w-[1px] flex-1 border-l-2 border-dashed border-zinc-300 dark:border-zinc-700 my-1.5 min-h-[36px]" />
+                          )}
+                        </div>
+
+                        {/* Right Content Column */}
+                        <div className={cn("flex-1 space-y-3 min-w-0", !isLast ? "pb-8 sm:pb-10" : "pb-2")}>
+                          <h3 className="text-sm sm:text-base font-bold font-sans text-foreground pt-0.5 leading-snug">
+                            {rawHeading}
+                          </h3>
 
                     {/* Parse content elements: code blocks, tables, lists, text */}
                     {(() => {
@@ -470,12 +497,15 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                       });
                     })()}
                   </div>
-                );
-              });
-            })()}
+                </div>
+              );
+            })}
           </div>
-        </Card>
-      )}
+        );
+      })()}
+    </div>
+  </Card>
+)}
     </div>
   );
 }
