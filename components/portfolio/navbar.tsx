@@ -16,10 +16,19 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
 
   React.useEffect(() => {
     setMounted(true);
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -43,7 +52,14 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
           href="/"
           className="flex items-center gap-2.5 font-mono text-xs sm:text-sm font-semibold tracking-tight hover:opacity-80 transition-opacity"
         >
-          <img src="/icon.png" alt="wf logo" className="size-5 rounded-xs object-cover" />
+          <img
+            src="/icon.png"
+            alt="wf logo"
+            width={20}
+            height={20}
+            decoding="async"
+            className="size-5 rounded-xs object-cover"
+          />
           <span>haidar portfolio</span>
         </Link>
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
@@ -67,25 +67,6 @@ const EXPERIENCES: ExperienceItem[] = [
 export function Experience() {
   const { t } = useLanguage();
   const { openConfirmation } = useExternalLinkConfirm();
-  const [tooltip, setTooltip] = React.useState<{ show: boolean; x: number; y: number; text: string }>({
-    show: false,
-    x: 0,
-    y: 0,
-    text: "",
-  });
-
-  const handleMouseMove = (e: React.MouseEvent, company: string) => {
-    setTooltip({
-      show: true,
-      x: e.clientX + 12,
-      y: e.clientY + 12,
-      text: `${company} — Open in new tab ↗`,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTooltip((prev) => ({ ...prev, show: false }));
-  };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string, title: string) => {
     if (window.innerWidth < 1024) {
@@ -96,22 +77,6 @@ export function Experience() {
 
   return (
     <section id="experience" className="py-12 px-4 sm:px-6 space-y-8 relative">
-      {/* Floating Mouse Tooltip for Desktop */}
-      <AnimatePresence>
-        {tooltip.show && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
-            style={{ left: tooltip.x, top: tooltip.y }}
-            className="fixed z-50 pointer-events-none hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground text-background font-mono text-[11px] font-semibold shadow-lg border border-background/20"
-          >
-            <span>{tooltip.text}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Section Header */}
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
@@ -142,8 +107,7 @@ export function Experience() {
               target="_blank"
               rel="noreferrer"
               onClick={(e) => handleLinkClick(e, exp.url, exp.company)}
-              onMouseMove={(e) => handleMouseMove(e, exp.company)}
-              onMouseLeave={handleMouseLeave}
+              title={`${exp.company} — Open in new tab ↗`}
               className="group block h-full cursor-pointer"
             >
               <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-primary/50 hover:bg-card/90 hover:shadow-md transition-all duration-300 relative">

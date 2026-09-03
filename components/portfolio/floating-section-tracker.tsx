@@ -41,9 +41,11 @@ export function FloatingSectionTracker() {
 
   React.useEffect(() => {
     if (pathname !== "/") return;
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateActiveSection = () => {
       const viewportHeight = window.innerHeight;
-      const scrollPosition = window.scrollY + viewportHeight * 0.35; // Accurate 35% viewport threshold for precise section tracking
+      const scrollPosition = window.scrollY + viewportHeight * 0.35;
 
       for (let i = SECTIONS.length - 1; i >= 0; i--) {
         const section = document.getElementById(SECTIONS[i].id);
@@ -57,16 +59,24 @@ export function FloatingSectionTracker() {
       }
 
       resetTimer();
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActiveSection);
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    updateActiveSection(); // Initial check
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [resetTimer]);
+  }, [pathname, resetTimer]);
 
   const scrollToSection = (id: string) => {
     resetTimer();

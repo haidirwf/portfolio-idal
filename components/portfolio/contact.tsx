@@ -89,27 +89,17 @@ export function Contact() {
             {FLOATING_ICONS.map((item, idx) => {
               const IconComponent = item.Icon;
               return (
-                <motion.div
+                <div
                   key={idx}
-                  className="absolute text-foreground/20 dark:text-foreground/15"
+                  className="absolute text-foreground/15 dark:text-foreground/10 pointer-events-none select-none transition-transform duration-700"
                   style={{
                     top: item.top,
                     left: item.left,
                     right: item.right
                   }}
-                  animate={{
-                    y: [0, -8, 0],
-                    rotate: [0, 5, -5, 0]
-                  }}
-                  transition={{
-                    duration: 4 + (idx % 3),
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: idx * 0.2
-                  }}
                 >
                   <IconComponent className={item.size} />
-                </motion.div>
+                </div>
               );
             })}
           </div>

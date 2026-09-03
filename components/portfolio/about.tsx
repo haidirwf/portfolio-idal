@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
@@ -12,12 +12,6 @@ import { useExternalLinkConfirm } from "@/components/portfolio/external-link-mod
 export function About() {
   const { t } = useLanguage();
   const { openConfirmation } = useExternalLinkConfirm();
-  const [tooltip, setTooltip] = React.useState<{ show: boolean; x: number; y: number; text: string }>({
-    show: false,
-    x: 0,
-    y: 0,
-    text: "",
-  });
 
   const certifications = [
     {
@@ -35,19 +29,6 @@ export function About() {
       url: "https://mikrotik.com/training/certificates/c699976c6108324c354d"
     }
   ];
-
-  const handleMouseMove = (e: React.MouseEvent, certCode: string) => {
-    setTooltip({
-      show: true,
-      x: e.clientX + 12,
-      y: e.clientY + 12,
-      text: `${certCode} — Open in new tab ↗`,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTooltip((prev) => ({ ...prev, show: false }));
-  };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string, title: string) => {
     // Only intercept on non-desktop / touch / small screens
@@ -72,22 +53,6 @@ export function About() {
 
   return (
     <section id="about" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
-      {/* Floating Mouse Tooltip for Desktop */}
-      <AnimatePresence>
-        {tooltip.show && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
-            style={{ left: tooltip.x, top: tooltip.y }}
-            className="fixed z-50 pointer-events-none hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground text-background font-mono text-[11px] font-semibold shadow-lg border border-background/20"
-          >
-            <span>{tooltip.text}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Header Section */}
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
@@ -117,9 +82,8 @@ export function About() {
             target="_blank"
             rel="noreferrer"
             onClick={(e) => handleLinkClick(e, "https://www.linkedin.com/in/haidar-rauf/", "LinkedIn Profile")}
-            onMouseMove={(e) => handleMouseMove(e, "LinkedIn Profile")}
-            onMouseLeave={handleMouseLeave}
             className="group block h-full cursor-pointer"
+            title="LinkedIn Profile — Open in new tab ↗"
           >
             <Card className="h-full border-border/80 bg-card/60 rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-primary/50 hover:bg-card/90 hover:shadow-md transition-all duration-300 relative">
               <div className="space-y-4">
@@ -128,6 +92,10 @@ export function About() {
                   <img
                     src="/experience/haidarphoto.webp"
                     alt="Muhammad Haidar Rauf Prayogo"
+                    width={144}
+                    height={144}
+                    decoding="async"
+                    loading="lazy"
                     className="w-auto h-28 sm:h-36 object-contain shrink-0"
                   />
                   <ExternalLink className="size-4 text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0" />
@@ -182,8 +150,7 @@ export function About() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => handleLinkClick(e, cert.url, cert.code)}
-                    onMouseMove={(e) => handleMouseMove(e, cert.code)}
-                    onMouseLeave={handleMouseLeave}
+                    title={`${cert.code} — Open in new tab ↗`}
                     className="group block p-2.5 rounded-lg bg-secondary/30 border border-border/40 hover:border-primary/50 hover:bg-secondary/60 transition-all space-y-0.5 cursor-pointer relative"
                   >
                     <div className="flex items-center justify-between">
