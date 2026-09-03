@@ -6,10 +6,9 @@ import Link from "next/link";
 import { getAchievementBySlug } from "@/lib/achievements";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, Award, Calendar, MapPin } from "lucide-react";
+import { ArrowLeft, ExternalLink, Calendar, MapPin } from "lucide-react";
 import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
 
 export function AchievementDetailContent({ slug }: { slug: string }) {
@@ -55,10 +54,7 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
 
       {/* Header Info */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant="outline" className="font-mono text-xs bg-primary/10 text-primary border-primary/20">
-            {t(item.positionId, item.positionEn)}
-          </Badge>
+        <div>
           <span className="text-xs font-mono text-muted-foreground">{t(item.periodId, item.periodEn)}</span>
         </div>
 
@@ -67,10 +63,6 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
         </h1>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-sans text-muted-foreground border-y border-border/40 py-3">
-          <div className="flex items-center gap-1.5">
-            <Award className="size-4 text-primary shrink-0" />
-            <span>{item.organization}</span>
-          </div>
           <div className="flex items-center gap-1.5">
             <MapPin className="size-4 text-primary shrink-0" />
             <span>{t(item.locationId, item.locationEn)}</span>
