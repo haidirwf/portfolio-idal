@@ -237,7 +237,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
 
       {/* Step-by-Step Lab & Configuration Guide (Roadmap Style - Frameless on mobile, spacious card on desktop) */}
       {(project.articleContentId || project.articleContentEn) && (
-        <Card className="border-0 bg-transparent shadow-none p-0 sm:border sm:border-border/80 sm:bg-card/60 sm:p-8 sm:rounded-xl space-y-6 sm:shadow-xs">
+        <section className="space-y-6 sm:border sm:border-border/80 sm:bg-card/60 sm:p-8 sm:rounded-xl sm:shadow-xs">
           <div className="flex items-center gap-2 pb-3 border-b border-border/40">
             <Terminal className="size-4 text-primary" />
             <h2 className="text-base sm:text-lg font-bold font-sans tracking-tight text-foreground">
@@ -267,9 +267,9 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                     const isLast = idx === sections.length - 1;
 
                     return (
-                      <div key={idx} className="relative flex gap-4 sm:gap-6 group">
+                      <div key={idx} className="relative flex gap-3 sm:gap-5 group">
                         {/* Left Timeline Rail (Dashed line + Numbered Circle Node) */}
-                        <div className="flex flex-col items-center shrink-0 pt-0.5">
+                        <div className="flex flex-col items-center shrink-0 w-6 sm:w-7 pt-0.5">
                           {/* Numbered / Icon Node matching reference image */}
                           <div className={cn(
                             "size-6 sm:size-7 rounded-full border border-foreground/60 dark:border-zinc-400 flex items-center justify-center font-sans text-xs font-semibold z-10 transition-colors bg-background text-foreground shrink-0 shadow-xs"
@@ -279,7 +279,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
 
                           {/* Vertical Dashed Connecting Line (Only if not the last item) */}
                           {!isLast && (
-                            <div className="w-[1px] flex-1 border-l-2 border-dashed border-zinc-300 dark:border-zinc-700 my-1.5 min-h-[36px]" />
+                            <div className="w-[1px] flex-1 border-l-2 border-dashed border-zinc-300 dark:border-zinc-700 my-1 min-h-[30px]" />
                           )}
                         </div>
 
@@ -504,7 +504,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
         );
       })()}
     </div>
-  </Card>
+  </section>
 )}
     </div>
   );
