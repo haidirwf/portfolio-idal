@@ -286,7 +286,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
                         {/* Right Content Column */}
                         <div className={cn("flex-1 space-y-3 min-w-0", !isLast ? "pb-8 sm:pb-10" : "pb-2")}>
                           <h3 className="text-sm sm:text-base font-bold font-sans text-foreground pt-0.5 leading-snug">
-                            {rawHeading}
+                            {rawHeading.replace(/^\d+[\.\)]\s*/, "")}
                           </h3>
 
                     {/* Parse content elements: code blocks, tables, lists, text */}
