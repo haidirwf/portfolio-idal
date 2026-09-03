@@ -9,76 +9,60 @@ export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-// Optimized titles & rich search keywords targeted for search engines (ranking #1 for each configuration keyword)
+// Optimized titles (<= 55 chars) & rich search keywords targeted for search engines
 const SEO_CONFIG_MAP: Record<string, { title: string; descId: string; keywords: string[] }> = {
   "standard-acl-access-control": {
-    title: "Konfigurasi Standard ACL Cisco Packet Tracer — Tutorial Lengkap & Skrip Lab",
-    descId: "Panduan tutorial langkah-demi-langkah konfigurasi Standard ACL (Access Control List 1-99) pada Cisco Packet Tracer & router IOS. Dilengkapi tabel IP, CLI commands, dan uji verifikasi ping.",
+    title: "Konfigurasi Standard ACL Cisco Packet Tracer",
+    descId: "Tutorial langkah-demi-langkah konfigurasi Standard Access Control List (ACL 1-99) Cisco Packet Tracer & router IOS lengkap skrip CLI dan uji ping.",
     keywords: [
       "konfigurasi acl",
       "konfigurasi standard acl",
       "konfigurasi acl cisco",
       "cara konfigurasi acl di cisco packet tracer",
-      "konfigurasi access control list",
       "standard acl cisco packet tracer",
-      "access control list tutorial cisco",
-      "filter server access acl",
-      "cara setting acl cisco",
       "network security acl cisco",
     ],
   },
   "enterprise-vlan-inter-vlan-routing": {
-    title: "Konfigurasi EIGRP, OSPF & Inter-VLAN Enterprise — Tutorial Cisco Packet Tracer",
-    descId: "Panduan konfigurasi jaringan enterprise lengkap: Konfigurasi EIGRP 10 & OSPF 100, Route Redistribution Multilayer Switch 3560, Router-on-a-Stick 802.1Q VLAN /28, DHCP Pool, GRE Tunnel, dan Extended ACL.",
+    title: "Konfigurasi EIGRP, OSPF & Inter-VLAN Enterprise",
+    descId: "Panduan konfigurasi routing enterprise: EIGRP 10, OSPF 100, Route Redistribution Switch 3560, Router-on-a-Stick VLAN, dan ACL Cisco Packet Tracer.",
     keywords: [
       "konfigurasi eigrp",
       "konfigurasi routing eigrp",
       "konfigurasi eigrp cisco",
-      "cara konfigurasi eigrp cisco packet tracer",
       "konfigurasi vlan",
       "konfigurasi inter-vlan routing",
       "konfigurasi router on a stick",
-      "konfigurasi redistribusi routing eigrp ospf",
       "redistribusi ospf eigrp multilayer switch",
-      "konfigurasi gre tunnel cisco",
-      "konfigurasi extended acl cisco",
-      "cisco switch 3560 routing configuration",
     ],
   },
   "ospf-rip-route-redistribution": {
-    title: "Konfigurasi OSPF & Redistribusi RIPv2 Cisco IOS — Tutorial & Seed Metric",
-    descId: "Tutorial lengkap cara konfigurasi routing OSPF dan RIPv2 serta mutual route redistribution pada router ASBR Cisco IOS. Penjelasan detail metric cost OSPF, hop count RIP, dan uji ping antar-domain.",
+    title: "Konfigurasi OSPF & Redistribusi RIPv2 Cisco IOS",
+    descId: "Tutorial lengkap konfigurasi routing OSPF, RIPv2, dan mutual route redistribution router ASBR Cisco IOS beserta penjelasan seed metric dan verifikasi.",
     keywords: [
       "konfigurasi ospf",
       "konfigurasi routing ospf",
       "konfigurasi rip",
       "konfigurasi redistribusi routing",
       "redistribute ospf to rip",
-      "redistribute rip to ospf",
-      "cara konfigurasi ospf cisco packet tracer",
-      "route redistribution cisco",
-      "seed metric eigrp ospf rip",
       "asbr router cisco configuration",
     ],
   },
   "nat-overload-pat-public-gateway": {
-    title: "Konfigurasi NAT Overload (PAT) Cisco Packet Tracer — Tutorial Gateway Internet",
-    descId: "Panduan langkah-demi-langkah setting NAT Overload (Port Address Translation / PAT) pada Cisco IOS. Dilengkapi Standard ACL, ip nat inside outside, dan verifikasi show ip nat translations.",
+    title: "Konfigurasi NAT Overload PAT Cisco Packet Tracer",
+    descId: "Panduan setting NAT Overload (Port Address Translation / PAT) Cisco IOS. Konfigurasi Standard ACL, ip nat inside outside, dan verifikasi translasi IP.",
     keywords: [
       "konfigurasi nat",
       "konfigurasi nat overload",
       "konfigurasi pat cisco",
       "cara setting nat di cisco packet tracer",
-      "cara konfigurasi nat overload cisco",
       "ip nat inside source list overload",
-      "nat pool gateway cisco",
-      "translasi ip privat ke publik pat",
       "port address translation cisco tutorial",
     ],
   },
   "stp-pvst-loop-prevention": {
-    title: "Konfigurasi Spanning Tree Protocol (STP & PVST+) Cisco — Mencegah Switching Loop",
-    descId: "Tutorial lengkap konfigurasi Spanning Tree Protocol (STP & PVST+) pada switch Cisco. Cara menentukan Root Bridge priority, memeriksa Root Port & Alternate Blocking port untuk mencegah broadcast storm.",
+    title: "Konfigurasi Spanning Tree Protocol STP Cisco",
+    descId: "Tutorial konfigurasi Spanning Tree Protocol (STP & PVST+) switch Cisco: setting Root Bridge priority, Root Port, dan Alternate Blocking port anti-loop.",
     keywords: [
       "konfigurasi stp",
       "konfigurasi stp cisco",
@@ -86,9 +70,6 @@ const SEO_CONFIG_MAP: Record<string, { title: string; descId: string; keywords: 
       "setting pvst+ cisco switch",
       "cara menentukan root bridge stp",
       "alternate blocking port stp",
-      "mencegah broadcast storm layer 2",
-      "cisco spanning tree priority configuration",
-      "spanning-tree vlan priority",
     ],
   },
 };

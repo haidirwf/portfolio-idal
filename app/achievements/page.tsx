@@ -4,8 +4,8 @@ import { MainWrapper } from "@/components/portfolio/main-wrapper";
 import { AllAchievementsContent } from "@/components/portfolio/all-achievements-content";
 
 export const metadata: Metadata = {
-  title: "Achievements & Activities — Muhammad Haidar Rauf Prayogo",
-  description: "Complete archive of computer networking competitions, organizational leadership roles, and featured activity write-ups by Muhammad Haidar Rauf Prayogo.",
+  title: "Pencapaian & Kegiatan Hackathon",
+  description: "Arsip kompetisi jaringan komputer, kepemimpinan organisasi, dan ulasan dokumentasi kegiatan oleh Muhammad Haidar Rauf Prayogo.",
 };
 
 export default function AllAchievementsPage() {

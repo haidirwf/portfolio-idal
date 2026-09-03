@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `${item.titleEn} — Achievements & Activities`,
+    title: item.titleEn,
     description: item.descriptionEn,
     openGraph: {
       title: `${item.titleEn} — Muhammad Haidar Rauf Prayogo`,

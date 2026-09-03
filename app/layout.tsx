@@ -13,14 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://haidarwf.vercel.app"),
   applicationName: "Haidar Portfolio",
   title: {
-    default: "Muhammad Haidar Rauf Prayogo — Network Engineer Portfolio",
-    template: "%s | Haidar Portfolio",
+    default: "Muhammad Haidar Rauf Prayogo — Network Engineer",
+    template: "%s | Haidar",
   },
-  description: "Portofolio & Tutorial Jaringan Komputer Muhammad Haidar Rauf Prayogo — Network Engineer spesialis Cisco IOS, MikroTik (MTCNA/MTCRE), Routing EIGRP/OSPF/BGP, Inter-VLAN, NAT, dan Network Security.",
+  description: "Portofolio & Tutorial Jaringan Komputer Muhammad Haidar Rauf Prayogo — Network Engineer spesialis Cisco IOS, MikroTik (MTCNA/MTCRE), Routing EIGRP/OSPF, VLAN, dan Security.",
   keywords: [
     "Muhammad Haidar Rauf Prayogo",
     "Haidar Rauf",
