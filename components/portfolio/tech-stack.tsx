@@ -21,10 +21,7 @@ interface TechItem {
 
 const TECH_STACK: TechItem[] = [
   { name: "MikroTik RouterOS", category: "Routing & Switching", icon: Server },
-  { name: "Cisco Packet Tracer", category: "Network Simulation", icon: Cpu },
-  { name: "PNETLab", category: "Network Emulation", icon: Cpu },
-  { name: "MTCNA & MTCRE", category: "Certification", icon: ShieldCheck },
-  { name: "GNS3", category: "Network Emulation", icon: Cpu },
+  { name: "Network Simulator", category: "CPT • PNETLab • GNS3", icon: Cpu },
   { name: "OSPF & EIGRP", category: "Routing Protocols", icon: Workflow },
   { name: "BGP Inter-Domain", category: "Routing Protocols", icon: Globe },
   { name: "VLAN & Subnetting", category: "Switching & L2/L3", icon: Layers },
@@ -43,13 +40,13 @@ export function TechStack() {
         </h2>
         <p className="text-sm text-muted-foreground font-sans">
           {t(
-            "Perangkat jaringan, protokol routing, sertifikasi MikroTik, dan sistem operasi yang dikuasai.",
-            "Networking hardware, routing protocols, MikroTik certifications, and OS proficiency."
+            "Perangkat jaringan, protokol routing, simulasi jaringan, dan sistem operasi yang dikuasai.",
+            "Networking hardware, routing protocols, network simulation, and OS proficiency."
           )}
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto">
         {TECH_STACK.map((item, idx) => {
           const Icon = item.icon;
           return (
@@ -60,8 +57,9 @@ export function TechStack() {
               whileHover={{ y: -5, scale: 1.03 }}
               viewport={{ once: true }}
               transition={{ duration: 0.2, delay: idx * 0.03 }}
+              className="w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] md:w-[calc(25%-0.75rem)] min-w-[140px] max-w-[210px]"
             >
-              <Card className="p-4 border-border/80 bg-card/60 rounded-xl hover:bg-card/90 hover:border-primary/60 hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group cursor-default">
+              <Card className="p-4 h-full border-border/80 bg-card/60 rounded-xl hover:bg-card/90 hover:border-primary/60 hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group cursor-default">
                 <Icon className="size-6 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
                 <span className="text-xs font-sans font-bold text-foreground group-hover:text-primary transition-colors">
                   {item.name}
