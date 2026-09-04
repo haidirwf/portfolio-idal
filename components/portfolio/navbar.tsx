@@ -36,6 +36,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
     { name: t("Proyek", "Projects"), href: "/#projects" },
     { name: t("Pencapaian", "Achievements"), href: "/#achievements" },
     { name: t("Tentang", "About"), href: "/#about" },
+    { name: t("Sertifikat", "Certifications"), href: "/#certifications" },
     { name: t("Kontak", "Contact"), href: "/#contact" },
   ];
 
