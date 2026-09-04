@@ -18,17 +18,17 @@ const CERTIFICATIONS: Certificate[] = [
   {
     code: "MTCNA",
     name: "MikroTik Certified Network Associate",
-    image: "/certificates/mtcna.webp",
+    image: "/certificates/MTCNA.webp",
   },
   {
     code: "MTCRE",
     name: "MikroTik Certified Routing Engineer",
-    image: "/certificates/mtcna.webp",
+    image: "/certificates/MTCNA.webp",
   },
   {
     code: "CCNA",
     name: "Cisco Certified Network Associate",
-    image: "/certificates/mtcna.webp",
+    image: "/certificates/MTCNA.webp",
   }
 ];
 
