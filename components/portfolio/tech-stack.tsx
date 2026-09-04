@@ -8,7 +8,8 @@ import {
   Workflow,
   ShieldCheck,
   Globe,
-  Terminal
+  Terminal,
+  Network
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
@@ -26,6 +27,7 @@ const TECH_STACK: TechItem[] = [
   { name: "BGP Inter-Domain", category: "Routing Protocols", icon: Globe },
   { name: "VLAN & Subnetting", category: "Switching & L2/L3", icon: Layers },
   { name: "Firewall & NAT", category: "Security Hardening", icon: ShieldCheck },
+  { name: "Network Services", category: "DHCP • DNS • NTP", icon: Network },
   { name: "Linux Server", category: "OS & Infrastructure", icon: Terminal }
 ];
 
@@ -46,7 +48,7 @@ export function TechStack() {
         </p>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">
         {TECH_STACK.map((item, idx) => {
           const Icon = item.icon;
           return (
@@ -57,7 +59,7 @@ export function TechStack() {
               whileHover={{ y: -5, scale: 1.03 }}
               viewport={{ once: true }}
               transition={{ duration: 0.2, delay: idx * 0.03 }}
-              className="w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] md:w-[calc(25%-0.75rem)] min-w-[140px] max-w-[210px]"
+              className="h-full"
             >
               <Card className="p-4 h-full border-border/80 bg-card/60 rounded-xl hover:bg-card/90 hover:border-primary/60 hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group cursor-default">
                 <Icon className="size-6 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
