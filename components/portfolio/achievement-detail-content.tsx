@@ -131,7 +131,7 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
                     </h3>
                   )}
 
-                  <div className="space-y-2.5 text-xs sm:text-sm text-muted-foreground">
+                  <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
                     {bodyLines.map((line, lIdx) => {
                       const cleanLine = line.trim();
                       if (!cleanLine) return null;
