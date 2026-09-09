@@ -19,11 +19,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/experience/:slug*",
-        destination: "/articles",
-        permanent: true,
-      },
-      {
         source: "/achievements",
         destination: "/articles",
         permanent: true,

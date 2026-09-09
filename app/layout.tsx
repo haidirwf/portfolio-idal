@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     siteName: "Haidar Portfolio",
     images: [
       {
-        url: "/experience/haidarphoto.webp",
+        url: "/haidarphoto.webp",
         width: 1200,
         height: 630,
         alt: "Muhammad Haidar Rauf Prayogo — Network Engineer",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Muhammad Haidar Rauf Prayogo — Network Engineer",
     description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
-    images: ["/experience/haidarphoto.webp"],
+    images: ["/haidarphoto.webp"],
   },
   robots: {
     index: true,

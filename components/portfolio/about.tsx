@@ -90,7 +90,7 @@ export function About() {
                 {/* Photo Row */}
                 <div className="flex items-start justify-between">
                   <img
-                    src="/experience/haidarphoto.webp"
+                    src="/haidarphoto.webp"
                     alt="Muhammad Haidar Rauf Prayogo"
                     width={144}
                     height={144}
