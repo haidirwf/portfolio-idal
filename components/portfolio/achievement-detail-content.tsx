@@ -131,13 +131,12 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
               return (
                 <div key={idx} className="space-y-3 pt-1">
                   {headingLine && (
-                    <h3 className="text-base sm:text-lg font-bold font-sans text-foreground flex items-center gap-2">
-                      <span className="size-1.5 rounded-full bg-primary inline-block" />
+                    <h3 className="text-base sm:text-lg font-bold font-sans text-foreground">
                       {headingLine}
                     </h3>
                   )}
 
-                  <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
+                  <div className="space-y-4 text-sm sm:text-base text-muted-foreground text-justify">
                     {bodyLines.map((line, lIdx) => {
                       const cleanLine = line.trim();
                       if (!cleanLine) return null;
@@ -166,7 +165,7 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
                         );
                       }
                       return (
-                        <p key={lIdx} className="leading-relaxed">
+                        <p key={lIdx} className="leading-relaxed text-justify">
                           {renderFormattedText(cleanLine)}
                         </p>
                       );
