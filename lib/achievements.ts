@@ -82,6 +82,51 @@ export const ACHIEVEMENTS: Achievement[] = [
     cover: "/experience/hackaton.webp",
     tags: ["HackAIthon", "KOMDIGI", "Jagoan Hosting", "Vibe Coding", "DNCC Yogyakarta"],
     featured: true
+  },
+  {
+    id: "juara-3-popda-karate-karanganyar",
+    slug: "juara-3-popda-karate-karanganyar",
+    titleId: "Juara 3 POPDA Karate Karanganyar",
+    titleEn: "3rd Place POPDA Karate Karanganyar",
+    organization: "POPDA Kabupaten Karanganyar",
+    category: "competition",
+    categoryLabelId: "Kompetisi & Kejuaraan",
+    categoryLabelEn: "Competition & Championship",
+    positionId: "Juara 3 Karate (Kategori 60 kg)",
+    positionEn: "3rd Place Karate (60 kg Category)",
+    periodId: "2026",
+    periodEn: "2026",
+    locationId: "Karanganyar, Jawa Tengah, Indonesia",
+    locationEn: "Karanganyar, Central Java, Indonesia",
+    descriptionId: "Menyabet Juara 3 dalam kompetisi POPDA Karate Kabupaten Karanganyar kategori 60 kg bersama tim IDN Solo setelah belajar basic karate bersama Pak Isworo.",
+    descriptionEn: "Won 3rd place in the Karanganyar Regency POPDA Karate competition (60 kg category) representing IDN Solo after training under Pak Isworo.",
+    articleContentId: `
+      ### Juara 3 POPDA Karate Karanganyar
+
+      Terhitung saya masuk IDN Solo, kurang lebih sudah satu tahun setengah saya belajar basic-basic karate bersama Pak Isworo. Alhamdulillah pada tanggal 23 Mei lalu saya menyabet juara 3 dalam kompetisi POPDA karate kabupaten Karanganyar.
+
+      Jujur saya kurang minat pada cabang olahraga satu ini, malahan sabuk saya masih putih. Pada babak pertama saya langsung dihadapkan dengan lawan yang pakai sabuk coklat. Tapi Alhamdulillah saya dan beberapa teman bisa membawa pulang piala juara— saya sendiri juara 3 dalam kategori 60 kg, ada beberapa teman saya yang juara 1 dan 2 pada kategorinya masing masing. Sebuah pengalaman yang sangat berharga mengingat saya seorang pemula. Terimakasih atas banyak insightnya, Pak Isworo.
+    `,
+    articleContentEn: `
+      ### 3rd Place POPDA Karate Karanganyar
+
+      Since joining IDN Solo, I have spent roughly a year and a half learning the fundamentals of karate under the mentorship of Pak Isworo. Alhamdulillah, on May 23rd, I secured 3rd place in the Karanganyar Regency POPDA karate championship.
+
+      To be honest, martial arts wasn't my primary interest, and I was still holding a white belt. In the very first round, I was immediately matched against an opponent with a brown belt. Yet Alhamdulillah, my teammates and I were able to bring home championship trophies—I earned 3rd place in the 60 kg category, while several of my friends took 1st and 2nd place in their respective divisions. An extraordinarily valuable journey, especially considering I was a beginner. Many thanks for all the guidance and insights, Pak Isworo.
+    `,
+    highlightsId: [
+      "Menyabet Juara 3 kategori 60 kg pada kompetisi POPDA Karate Kabupaten Karanganyar",
+      "Bertanding melawan praktisi sabuk coklat di babak awal sebagai pemegang sabuk putih",
+      "Membawa pulang piala bersama kontingen IDN Solo di bawah bimbingan Pak Isworo"
+    ],
+    highlightsEn: [
+      "Secured 3rd place in the 60 kg division at the Karanganyar Regency POPDA Karate championship",
+      "Faced advanced brown belt opponents in opening rounds while competing as a white belt",
+      "Brought home trophies alongside the IDN Solo team under the mentorship of Pak Isworo"
+    ],
+    cover: "/experience/hackaton.webp",
+    tags: ["POPDA", "Karate", "Karanganyar", "IDN Solo", "Olahraga", "Kompetisi"],
+    featured: true
   }
 ];
 
