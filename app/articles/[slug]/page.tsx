@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: `${item.titleEn} — Muhammad Haidar Rauf Prayogo`,
       description: item.descriptionEn,
       type: "article",
-      url: `https://haidarwf.vercel.app/achievements/${item.slug}`,
+      url: `https://haidarwf.vercel.app/articles/${item.slug}`,
       images: [
         {
           url: item.cover,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function AchievementDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticleDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   return (
     <MainWrapper>

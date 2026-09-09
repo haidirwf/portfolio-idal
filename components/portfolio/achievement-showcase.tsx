@@ -22,22 +22,22 @@ export function AchievementShowcase() {
   };
 
   return (
-    <section id="achievements" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
-      {/* Section Header (Centered layout matching Project Showcase) */}
+    <section id="articles" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
+      {/* Section Header */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Pencapaian & Kegiatan", "Achievements & Activities")}
+          {t("Artikel", "Articles")}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
           {t(
-            "Pengalaman mengikuti lomba jaringan, posisi kepemimpinan, dan ulasan artikel kegiatan.",
-            "Networking competition experience, leadership roles, and activity article reviews."
+            "Dokumentasi kegiatan, kompetisi, dan catatan pengalaman.",
+            "Activity documentation, competitions, and experience notes."
           )}
         </p>
 
         <div className="pt-1">
           <Link
-            href="/achievements"
+            href="/articles"
             className="inline-flex items-center text-xs font-mono font-medium text-foreground hover:underline bg-muted/50 hover:bg-muted px-3.5 py-1.5 rounded-lg border border-border/50 transition-colors"
           >
             {t("Lihat Semua Artikel →", "See All Articles →")}
@@ -45,7 +45,7 @@ export function AchievementShowcase() {
         </div>
       </div>
 
-      {/* Clean Minimal Horizontal List (Exact Format from Reference Image) */}
+      {/* Clean Minimal Horizontal List */}
       <div className="divide-y divide-border/40 w-full border-y border-border/40">
         {ACHIEVEMENTS.map((item, idx) => {
           const isExternal = Boolean(item.url);
@@ -61,7 +61,7 @@ export function AchievementShowcase() {
                 {/* Left Side: Thumbnail Image + Title & Description */}
                 <div className="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
                   <Link
-                    href={`/achievements/${item.slug}`}
+                    href={`/articles/${item.slug}`}
                     className="relative w-24 sm:w-36 aspect-video rounded-lg overflow-hidden border border-border/60 bg-secondary/30 shrink-0 shadow-xs block group-hover:border-primary/40 transition-colors"
                   >
                     <Image
@@ -75,7 +75,7 @@ export function AchievementShowcase() {
 
                   <div className="space-y-1.5 min-w-0 flex-1">
                     <h3 className="text-base sm:text-xl font-bold font-sans tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      <Link href={`/achievements/${item.slug}`} className="hover:underline">
+                      <Link href={`/articles/${item.slug}`} className="hover:underline">
                         {t(item.titleId, item.titleEn)}
                       </Link>
                     </h3>
@@ -89,7 +89,7 @@ export function AchievementShowcase() {
                 {/* Right Side: Simple Detail Action Link */}
                 <div className="flex md:flex-col md:items-end justify-end shrink-0 text-left md:text-right pt-1 md:pt-0">
                   <Link
-                    href={`/achievements/${item.slug}`}
+                    href={`/articles/${item.slug}`}
                     className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
                   >
                     {t("Detail →", "Detail →")}

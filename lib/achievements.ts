@@ -80,7 +80,7 @@ export const ACHIEVEMENTS: Achievement[] = [
       "Creative industry seminar with Mas Haqqi Hasan (DAGADU) & vibe coding insights with Mas Rizqinofa (Skyshi)",
       "Built and pitched a vibe-coding product prototype alongside teammates Faiz, Nain, and Kevin"
     ],
-    cover: "/experience/hackaton.webp",
+    cover: "/articles/hackaton.webp",
     tags: ["HackAIthon", "KOMDIGI", "Jagoan Hosting", "Vibe Coding", "DNCC Yogyakarta"],
     featured: true
   },
@@ -125,10 +125,10 @@ export const ACHIEVEMENTS: Achievement[] = [
       "Faced advanced brown belt opponents in opening rounds while competing as a white belt",
       "Brought home trophies alongside the IDN Solo team under the mentorship of Pak Isworo"
     ],
-    cover: "/experience/karate_1.webp",
+    cover: "/articles/karate_1.webp",
     gallery: [
-      "/experience/karate_1.webp",
-      "/experience/karate_2.webp"
+      "/articles/karate_1.webp",
+      "/articles/karate_2.webp"
     ],
     tags: ["POPDA", "Karate", "Karanganyar", "IDN Solo", "Olahraga", "Kompetisi"],
     featured: true

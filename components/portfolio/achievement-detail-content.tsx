@@ -63,11 +63,11 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
       {/* Back button */}
       <div>
         <Link
-          href="/"
+          href="/articles"
           className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "font-mono text-xs gap-2")}
         >
           <ArrowLeft className="size-3.5" />
-          <span>{t("Kembali", "Back")}</span>
+          <span>{t("Semua Artikel", "All Articles")}</span>
         </Link>
       </div>
 

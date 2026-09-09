@@ -34,7 +34,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand?: () => void }) {
 
   const navLinks = [
     { name: t("Proyek", "Projects"), href: "/#projects" },
-    { name: t("Pencapaian", "Achievements"), href: "/#achievements" },
+    { name: t("Artikel", "Articles"), href: "/#articles" },
     { name: t("Tentang", "About"), href: "/#about" },
     { name: t("Sertifikat", "Certifications"), href: "/#certifications" },
     { name: t("Kontak", "Contact"), href: "/#contact" },

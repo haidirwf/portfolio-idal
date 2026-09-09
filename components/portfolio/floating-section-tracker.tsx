@@ -15,8 +15,9 @@ interface NavSection {
 const SECTIONS: NavSection[] = [
   { id: "hero", labelId: "Intro", labelEn: "Intro" },
   { id: "projects", labelId: "Proyek", labelEn: "Projects" },
+  { id: "articles", labelId: "Artikel", labelEn: "Articles" },
   { id: "about", labelId: "Tentang", labelEn: "About" },
-  { id: "experience", labelId: "Pengalaman", labelEn: "Experiences" },
+  { id: "certifications", labelId: "Sertifikat", labelEn: "Certs" },
   { id: "tech-stack", labelId: "Keahlian", labelEn: "Stacks" },
   { id: "contact", labelId: "Kontak", labelEn: "Contact" }
 ];

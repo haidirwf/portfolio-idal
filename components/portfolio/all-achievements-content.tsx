@@ -57,12 +57,12 @@ export function AllAchievementsContent() {
       {/* Header */}
       <div className="space-y-3">
         <h1 className="text-3xl sm:text-5xl font-bold font-sans tracking-tight">
-          {t("Semua Pencapaian & Artikel Kegiatan", "All Achievements & Activity Articles")}
+          {t("Artikel", "Articles")}
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
           {t(
-            "Arsip lengkap pengalaman mengikuti lomba jaringan komputer, posisi kepemimpinan, dan ulasan artikel kegiatan.",
-            "Complete archive of networking competitions, leadership positions, and activity article reviews."
+            "Arsip ulasan kegiatan, dokumentasi kompetisi, dan catatan perjalanan.",
+            "Complete archive of activity reviews, competition documentation, and journey notes."
           )}
         </p>
 
@@ -73,13 +73,13 @@ export function AllAchievementsContent() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("Cari lomba, posisi, atau kegiatan...", "Search competitions, roles, or activities...")}
+            placeholder={t("Cari artikel...", "Search articles...")}
             className="w-full pl-9 pr-4 py-2 text-xs font-sans rounded-xl bg-card border border-border/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
         </div>
       </div>
 
-      {/* Clean Minimal List (Exact Format from Reference Image) */}
+      {/* Clean Minimal List */}
       <div className="divide-y divide-border/40 w-full border-y border-border/40">
         {filteredAchievements.map((item, idx) => {
           const isExternal = Boolean(item.url);
@@ -94,7 +94,7 @@ export function AllAchievementsContent() {
                 {/* Left Side: Thumbnail Image + Title & Description */}
                 <div className="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
                   <Link
-                    href={`/achievements/${item.slug}`}
+                    href={`/articles/${item.slug}`}
                     className="relative w-24 sm:w-36 aspect-video rounded-lg overflow-hidden border border-border/60 bg-secondary/30 shrink-0 shadow-xs block group-hover:border-primary/40 transition-colors"
                   >
                     <Image
@@ -108,7 +108,7 @@ export function AllAchievementsContent() {
 
                   <div className="space-y-1.5 min-w-0 flex-1">
                     <h3 className="text-base sm:text-xl font-bold font-sans tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      <Link href={`/achievements/${item.slug}`} className="hover:underline">
+                      <Link href={`/articles/${item.slug}`} className="hover:underline">
                         {t(item.titleId, item.titleEn)}
                       </Link>
                     </h3>
@@ -122,7 +122,7 @@ export function AllAchievementsContent() {
                 {/* Right Side: Simple Detail Action Link */}
                 <div className="flex md:flex-col md:items-end justify-end shrink-0 text-left md:text-right pt-1 md:pt-0">
                   <Link
-                    href={`/achievements/${item.slug}`}
+                    href={`/articles/${item.slug}`}
                     className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
                   >
                     {t("Detail →", "Detail →")}
@@ -137,7 +137,7 @@ export function AllAchievementsContent() {
       {filteredAchievements.length === 0 && (
         <div className="text-center py-12 space-y-2">
           <p className="text-sm text-muted-foreground font-sans">
-            {t("Tidak ada artikel pencapaian yang sesuai dengan pencarian.", "No achievements match your search query.")}
+            {t("Tidak ada artikel yang sesuai dengan pencarian.", "No articles match your search query.")}
           </p>
         </div>
       )}

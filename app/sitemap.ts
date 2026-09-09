@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const achievementUrls = ACHIEVEMENTS.map((achievement) => ({
-    url: `${baseUrl}/achievements/${achievement.slug}`,
+    url: `${baseUrl}/articles/${achievement.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/achievements`,
+      url: `${baseUrl}/articles`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
