@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { getAchievementBySlug } from "@/lib/achievements";
@@ -8,13 +9,31 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, Calendar, MapPin, User } from "lucide-react";
+import { ArrowLeft, ExternalLink, Calendar, MapPin, User, X } from "lucide-react";
 import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
 
 export function AchievementDetailContent({ slug }: { slug: string }) {
   const item = getAchievementBySlug(slug);
   const { t, lang } = useLanguage();
   const { openConfirmation } = useExternalLinkConfirm();
+  const [expandedImage, setExpandedImage] = React.useState<string | null>(null);
+
+  // Handle ESC key to close lightbox
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpandedImage(null);
+    };
+
+    if (expandedImage) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expandedImage]);
 
   if (!item) {
     return (
@@ -76,17 +95,47 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
         </div>
       </div>
 
-      {/* Cover Image */}
-      <div className="relative aspect-video rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-sm">
-        <Image
-          src={item.cover}
-          alt={t(item.titleId, item.titleEn)}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
-          className="object-contain p-2"
-          priority
-        />
-      </div>
+      {/* Cover Image / Documentation Gallery */}
+      {item.gallery && item.gallery.length > 1 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {item.gallery.map((photo, pIdx) => (
+            <div
+              key={pIdx}
+              onClick={() => setExpandedImage(photo)}
+              className="relative aspect-[4/5] sm:aspect-[3/4] rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-xs cursor-pointer select-none group"
+            >
+              <Image
+                src={photo}
+                alt={`${t(item.titleId, item.titleEn)} - Dokumentasi ${pIdx + 1}`}
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                priority={pIdx === 0}
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-sans font-medium backdrop-blur-[2px]">
+                {t("Klik untuk perbesar", "Click to expand")}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          onClick={() => setExpandedImage(item.cover)}
+          className="relative aspect-video rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-sm cursor-pointer select-none group"
+        >
+          <Image
+            src={item.cover}
+            alt={t(item.titleId, item.titleEn)}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
+            className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.01]"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-sans font-medium backdrop-blur-[2px]">
+            {t("Klik untuk perbesar", "Click to expand")}
+          </div>
+        </div>
+      )}
 
       {/* Main Article Body (Formatted Markdown with headings and lists) */}
       <Card className="p-6 sm:p-8 border-border/80 bg-card/60 rounded-xl space-y-6">
@@ -195,6 +244,48 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
             <ExternalLink className="size-3.5" />
           </a>
         </div>
+      )}
+
+      {/* Fullscreen Lightbox Modal */}
+      {expandedImage && typeof document !== "undefined" && createPortal(
+        <div
+          onClick={() => setExpandedImage(null)}
+          className="fixed inset-0 w-screen h-screen z-[9999] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 cursor-zoom-out animate-in fade-in duration-200"
+          style={{ margin: 0, top: 0, left: 0, right: 0, bottom: 0 }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-4xl flex items-center justify-between pb-3 text-white cursor-default"
+          >
+            <span className="text-xs sm:text-sm font-sans font-medium text-white/80">
+              {t(item.titleId, item.titleEn)}
+            </span>
+            <button
+              type="button"
+              onClick={() => setExpandedImage(null)}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+              aria-label="Close modal"
+            >
+              <X className="size-5" />
+            </button>
+          </div>
+
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-4xl h-[75vh] sm:h-[85vh] flex items-center justify-center rounded-xl overflow-hidden cursor-default"
+          >
+            <Image
+              src={expandedImage}
+              alt="Dokumentasi Fullscreen"
+              fill
+              sizes="100vw"
+              className="object-contain select-none"
+              quality={100}
+              priority
+            />
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

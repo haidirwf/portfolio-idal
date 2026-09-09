@@ -20,6 +20,7 @@ export interface Achievement {
   highlightsId: string[];
   highlightsEn: string[];
   cover: string;
+  gallery?: string[];
   tags: string[];
   url?: string;
   featured: boolean;
@@ -124,7 +125,11 @@ export const ACHIEVEMENTS: Achievement[] = [
       "Faced advanced brown belt opponents in opening rounds while competing as a white belt",
       "Brought home trophies alongside the IDN Solo team under the mentorship of Pak Isworo"
     ],
-    cover: "/experience/hackaton.webp",
+    cover: "/experience/karate_1.webp",
+    gallery: [
+      "/experience/karate_1.webp",
+      "/experience/karate_2.webp"
+    ],
     tags: ["POPDA", "Karate", "Karanganyar", "IDN Solo", "Olahraga", "Kompetisi"],
     featured: true
   }
