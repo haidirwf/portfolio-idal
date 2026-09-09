@@ -30,8 +30,8 @@ export function AchievementShowcase() {
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
           {t(
-            "Dokumentasi kegiatan, kompetisi, dan catatan pengalaman.",
-            "Activity documentation, competitions, and experience notes."
+            "Beberapa artikel dan catatan dokumentasi seputar kompetisi, kegiatan, serta pengalaman yang saya lalui.",
+            "A collection of articles and documentation chronicling competitions, events, and key experiences."
           )}
         </p>
 

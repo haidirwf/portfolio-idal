@@ -61,8 +61,8 @@ export function AllAchievementsContent() {
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
           {t(
-            "Arsip ulasan kegiatan, dokumentasi kompetisi, dan catatan perjalanan.",
-            "Complete archive of activity reviews, competition documentation, and journey notes."
+            "Beberapa artikel dan dokumentasi seputar kompetisi, kegiatan, serta pengalaman yang saya lalui.",
+            "A collection of articles and documentation chronicling competitions, events, and key experiences."
           )}
         </p>
 
