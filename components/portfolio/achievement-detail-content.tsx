@@ -17,6 +17,26 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
   const { t, lang } = useLanguage();
   const { openConfirmation } = useExternalLinkConfirm();
   const [expandedImage, setExpandedImage] = React.useState<string | null>(null);
+  const [activeSlide, setActiveSlide] = React.useState(0);
+  const galleryRef = React.useRef<HTMLDivElement>(null);
+
+  const handleGalleryScroll = () => {
+    if (!galleryRef.current) return;
+    const { scrollLeft, clientWidth } = galleryRef.current;
+    if (clientWidth > 0) {
+      const index = Math.round(scrollLeft / (clientWidth * 0.86));
+      setActiveSlide(Math.min(Math.max(index, 0), (item?.gallery?.length || 1) - 1));
+    }
+  };
+
+  const scrollToSlide = (index: number) => {
+    if (!galleryRef.current) return;
+    const child = galleryRef.current.children[index] as HTMLElement;
+    if (child) {
+      child.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      setActiveSlide(index);
+    }
+  };
 
   // Handle ESC key to close lightbox
   React.useEffect(() => {
@@ -96,29 +116,58 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
       </div>
 
       {/* Cover Image / Documentation Gallery */}
-      {item.gallery && item.gallery.length > 1 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {item.gallery.map((photo, pIdx) => (
+      {item.gallery && item.gallery.length > 1 ? (() => {
+        const gallery = item.gallery;
+        return (
+          <div className="space-y-3">
             <div
-              key={pIdx}
-              onClick={() => setExpandedImage(photo)}
-              className="relative aspect-[4/5] sm:aspect-[3/4] rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-xs cursor-pointer select-none group"
+              ref={galleryRef}
+              onScroll={handleGalleryScroll}
+              className="flex sm:grid sm:grid-cols-2 gap-3 sm:gap-4 overflow-x-auto sm:overflow-x-visible snap-x snap-mandatory sm:snap-none scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 py-1"
             >
-              <Image
-                src={photo}
-                alt={`${t(item.titleId, item.titleEn)} - Dokumentasi ${pIdx + 1}`}
-                fill
-                sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                priority={pIdx === 0}
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-sans font-medium backdrop-blur-[2px]">
-                {t("Klik untuk perbesar", "Click to expand")}
-              </div>
+              {gallery.map((photo, pIdx) => (
+                <div
+                  key={pIdx}
+                  onClick={() => setExpandedImage(photo)}
+                  className="relative shrink-0 w-[86%] sm:w-auto snap-center sm:snap-none aspect-[4/5] sm:aspect-[3/4] rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-xs cursor-pointer select-none group"
+                >
+                  <Image
+                    src={photo}
+                    alt={`${t(item.titleId, item.titleEn)} - Dokumentasi ${pIdx + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 86vw, 50vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    priority={pIdx === 0}
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-sans font-medium backdrop-blur-[2px]">
+                    {t("Klik untuk perbesar", "Click to expand")}
+                  </div>
+                  {/* Mobile Photo Counter Badge */}
+                  <div className="absolute top-2.5 right-2.5 sm:hidden px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-[10px] font-mono font-medium text-white border border-white/20">
+                    {pIdx + 1} / {gallery.length}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
+
+            {/* Mobile Swipe Pagination Dots */}
+            <div className="flex sm:hidden justify-center items-center gap-1.5 pt-1">
+              {gallery.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={() => scrollToSlide(dotIdx)}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all duration-300 cursor-pointer",
+                    activeSlide === dotIdx ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/30"
+                  )}
+                  aria-label={`Slide ${dotIdx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })() : (
         <div
           onClick={() => setExpandedImage(item.cover)}
           className="relative aspect-video rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-sm cursor-pointer select-none group"
