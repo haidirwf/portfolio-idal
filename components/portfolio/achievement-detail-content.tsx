@@ -4,6 +4,7 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getAchievementBySlug } from "@/lib/achievements";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,10 +16,49 @@ import { useExternalLinkConfirm } from "@/components/portfolio/external-link-mod
 export function AchievementDetailContent({ slug }: { slug: string }) {
   const item = getAchievementBySlug(slug);
   const { t, lang } = useLanguage();
+  const router = useRouter();
   const { openConfirmation } = useExternalLinkConfirm();
   const [expandedImage, setExpandedImage] = React.useState<string | null>(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
+  const [source, setSource] = React.useState<"home" | "articles">("home");
+  const [mounted, setMounted] = React.useState(false);
   const galleryRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setMounted(true);
+    try {
+      const stored = sessionStorage.getItem("article_source");
+      if (stored === "home" || stored === "articles") {
+        setSource(stored);
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    if (typeof document !== "undefined" && document.referrer) {
+      if (document.referrer.includes("/articles")) {
+        setSource("articles");
+      } else if (document.referrer.startsWith(window.location.origin)) {
+        setSource("home");
+      }
+    }
+  }, []);
+
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      const hasHistory = window.history.length > 1;
+      const isInternal = document.referrer && document.referrer.startsWith(window.location.origin);
+      if (hasHistory && (isInternal || sessionStorage.getItem("article_source"))) {
+        router.back();
+        return;
+      }
+    }
+    router.push(source === "articles" ? "/articles" : "/#articles");
+  };
+
+  const backHref = source === "articles" ? "/articles" : "/#articles";
 
   const handleGalleryScroll = () => {
     if (!galleryRef.current) return;
@@ -83,11 +123,18 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
       {/* Back button */}
       <div>
         <Link
-          href="/articles"
+          href={backHref}
+          onClick={handleBack}
           className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "font-mono text-xs gap-2")}
         >
           <ArrowLeft className="size-3.5" />
-          <span>{t("Semua Artikel", "All Articles")}</span>
+          <span>
+            {mounted
+              ? source === "articles"
+                ? t("Kembali ke Artikel", "Back to Articles")
+                : t("Kembali ke Beranda", "Back to Home")
+              : t("Kembali", "Back")}
+          </span>
         </Link>
       </div>
 

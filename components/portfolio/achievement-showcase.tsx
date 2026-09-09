@@ -21,6 +21,14 @@ export function AchievementShowcase() {
     }
   };
 
+  const markSourceHome = () => {
+    try {
+      sessionStorage.setItem("article_source", "home");
+    } catch {
+      // ignore
+    }
+  };
+
   return (
     <section id="articles" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
       {/* Section Header */}
@@ -62,6 +70,7 @@ export function AchievementShowcase() {
                 <div className="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
                   <Link
                     href={`/articles/${item.slug}`}
+                    onClick={markSourceHome}
                     className="relative w-24 sm:w-36 aspect-video rounded-lg overflow-hidden border border-border/60 bg-secondary/30 shrink-0 shadow-xs block group-hover:border-primary/40 transition-colors"
                   >
                     <Image
@@ -75,7 +84,7 @@ export function AchievementShowcase() {
 
                   <div className="space-y-1.5 min-w-0 flex-1">
                     <h3 className="text-base sm:text-xl font-bold font-sans tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      <Link href={`/articles/${item.slug}`} className="hover:underline">
+                      <Link href={`/articles/${item.slug}`} onClick={markSourceHome} className="hover:underline">
                         {t(item.titleId, item.titleEn)}
                       </Link>
                     </h3>
@@ -90,6 +99,7 @@ export function AchievementShowcase() {
                 <div className="flex md:flex-col md:items-end justify-end shrink-0 text-left md:text-right pt-1 md:pt-0">
                   <Link
                     href={`/articles/${item.slug}`}
+                    onClick={markSourceHome}
                     className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
                   >
                     {t("Detail →", "Detail →")}
