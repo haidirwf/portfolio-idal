@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, Calendar, MapPin } from "lucide-react";
+import { ArrowLeft, ExternalLink, Calendar, MapPin, User } from "lucide-react";
 import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
 
 export function AchievementDetailContent({ slug }: { slug: string }) {
@@ -54,10 +54,6 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
 
       {/* Header Info */}
       <div className="space-y-4">
-        <div>
-          <span className="text-xs font-mono text-muted-foreground">{t(item.periodId, item.periodEn)}</span>
-        </div>
-
         <h1 className="text-3xl sm:text-5xl font-bold font-sans tracking-tight leading-tight">
           {t(item.titleId, item.titleEn)}
         </h1>
@@ -66,6 +62,16 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
           <div className="flex items-center gap-1.5">
             <MapPin className="size-4 text-primary shrink-0" />
             <span>{t(item.locationId, item.locationEn)}</span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <Calendar className="size-4 text-primary shrink-0" />
+            <span>{t(item.periodId, item.periodEn)}</span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <User className="size-4 text-primary shrink-0" />
+            <span>Haidar Rauf</span>
           </div>
         </div>
       </div>
