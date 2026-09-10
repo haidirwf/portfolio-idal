@@ -20,16 +20,24 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = React.useState<Language>("ID");
 
   React.useEffect(() => {
-    const saved = localStorage.getItem("app_lang") as Language | null;
-    if (saved === "ID" || saved === "EN") {
-      setLangState(saved);
+    try {
+      // Clean up legacy auto-saved 'EN' from previous versions
+      if (localStorage.getItem("app_lang")) {
+        localStorage.removeItem("app_lang");
+      }
+      const saved = localStorage.getItem("user_selected_lang") as Language | null;
+      if (saved === "ID" || saved === "EN") {
+        setLangState(saved);
+      }
+    } catch {
+      // ignore
     }
   }, []);
 
   const setLang = React.useCallback((newLang: Language) => {
     setLangState(newLang);
     try {
-      localStorage.setItem("app_lang", newLang);
+      localStorage.setItem("user_selected_lang", newLang);
     } catch {
       // ignore
     }
