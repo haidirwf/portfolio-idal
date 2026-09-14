@@ -107,6 +107,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         },
       ],
     },
+    alternates: {
+      canonical: `https://haidarwf.vercel.app/projects/${project.slug}`,
+    },
     twitter: {
       card: "summary_large_image",
       title,

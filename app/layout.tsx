@@ -74,9 +74,19 @@ export const metadata: Metadata = {
     description: "Portfolio of Muhammad Haidar Rauf Prayogo, Network Engineer specializing in MikroTik, Cisco Topologies, and Security Hardening.",
     images: ["/haidarphoto.webp"],
   },
+  alternates: {
+    canonical: "https://haidarwf.vercel.app",
+  },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   verification: {
     google: "Yt9g-sAkOHGZYo2YeLQogZkOl-FMSxcYvdIkqcB6aos",
