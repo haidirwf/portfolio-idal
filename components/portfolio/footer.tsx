@@ -137,10 +137,7 @@ export function Footer() {
         </p>
 
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Open for work</span>
-          </span>
+          <span>Open for work</span>
           <span>·</span>
           <span>{new Date().getFullYear()}</span>
         </div>

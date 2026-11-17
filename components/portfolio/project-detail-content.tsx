@@ -128,7 +128,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
               )}
             >
               <ExternalLink className="size-3.5" />
-              <span>Live Demo / Documentation</span>
+              <span>Demo / Documentation</span>
             </a>
           )}
         </div>
