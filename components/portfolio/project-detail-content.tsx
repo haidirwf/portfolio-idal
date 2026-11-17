@@ -51,9 +51,20 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
 
       {/* Header Compact */}
       <div className="space-y-3">
-        <h1 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight">
-          {project.title}
-        </h1>
+        <div className="flex items-center gap-3">
+          <div className="size-8 sm:size-9 rounded-lg bg-secondary/50 border border-border/60 shrink-0 grid place-items-center p-1 overflow-hidden">
+            <Image
+              src={project.deviceType === "switch" ? "/projects/perangkatjaringan/Switch.png" : "/projects/perangkatjaringan/Router.png"}
+              alt={project.deviceType === "switch" ? "Switch" : "Router"}
+              width={36}
+              height={36}
+              className="size-full object-contain"
+            />
+          </div>
+          <h1 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight">
+            {project.title}
+          </h1>
+        </div>
 
         <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
           {t(project.descriptionId, project.descriptionEn)}

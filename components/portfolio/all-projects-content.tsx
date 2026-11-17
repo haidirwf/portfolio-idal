@@ -146,7 +146,17 @@ export function AllProjectsContent() {
                 }`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-                  <div className="flex items-center min-w-0">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="size-6 rounded-md bg-secondary/50 border border-border/60 shrink-0 grid place-items-center p-0.5 overflow-hidden">
+                      <Image
+                        src={p.deviceType === "switch" ? "/projects/perangkatjaringan/Switch.png" : "/projects/perangkatjaringan/Router.png"}
+                        alt={p.deviceType === "switch" ? "Switch" : "Router"}
+                        width={24}
+                        height={24}
+                        className="size-full object-contain"
+                      />
+                    </div>
+
                     <Link
                       href={`/projects/${p.slug}`}
                       className="font-medium text-sm sm:text-[15px] text-foreground hover:underline underline-offset-4 decoration-border transition-colors truncate"
@@ -198,7 +208,16 @@ export function AllProjectsContent() {
 
               <div className="space-y-1.5 flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="size-5 rounded bg-secondary/50 border border-border/60 shrink-0 grid place-items-center p-0.5 overflow-hidden">
+                      <Image
+                        src={p.deviceType === "switch" ? "/projects/perangkatjaringan/Switch.png" : "/projects/perangkatjaringan/Router.png"}
+                        alt={p.deviceType === "switch" ? "Switch" : "Router"}
+                        width={20}
+                        height={20}
+                        className="size-full object-contain"
+                      />
+                    </div>
                     <Link
                       href={`/projects/${p.slug}`}
                       className="font-medium text-sm text-foreground hover:underline underline-offset-4 line-clamp-1"

@@ -10,6 +10,13 @@ export interface ProjectSummary {
   demo?: string;
   featured: boolean;
   tags: string[];
+  deviceType: "router" | "switch";
+}
+
+export function getProjectDeviceIcon(deviceType?: "router" | "switch"): string {
+  return deviceType === "switch"
+    ? "/projects/perangkatjaringan/Switch.png"
+    : "/projects/perangkatjaringan/Router.png";
 }
 
 export interface Project extends ProjectSummary {
@@ -52,6 +59,7 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
     tags: ["Enterprise Network", "VLAN", "OSPF & EIGRP", "ACL Security"],
+    deviceType: "switch",
     architectureId: "VLAN 10/20/21/30/40 (/28) -> Router 802.1Q Subinterfaces & DHCP -> Core Multilayer Switch (OSPF 100 & EIGRP 10 Redistribution + Server 8.8.8.0/28) -> GRE Tunnel (100.100.100.0/30) -> Edge Branch Routers & Extended ACL.",
     architectureEn: "VLAN 10/20/21/30/40 (/28) -> Router 802.1Q Subinterfaces & DHCP -> Core Multilayer Switch (OSPF 100 & EIGRP 10 Redistribution + Server 8.8.8.0/28) -> GRE Tunnel (100.100.100.0/30) -> Edge Branch Routers & Extended ACL.",
     resultId: "Konektivitas terenkripsi antar-domain routing OSPF & EIGRP 100% stabil dengan alokasi DHCP /28 otomatis dan filtrasi keamanan ACL yang presisi.",
@@ -602,6 +610,7 @@ D EX  192.168.30.0/28 [170/2560512] via 20.20.20.2, GigabitEthernet1/0/4
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
     tags: ["Routing", "OSPF", "RIPv2"],
+    deviceType: "router",
     architectureId: "Router0 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router1 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/1, Gig0/2: 192.168.20.1/24) <-> Router2 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
     architectureEn: "Router0 (OSPF Area 0, Gig0/0: 10.10.10.1/30, Gig0/1: 192.168.10.1/24) <-> Router1 (ASBR - OSPF Area 0 Gig0/0 & RIPv2 Gig0/1, Gig0/2: 192.168.20.1/24) <-> Router2 (RIPv2, Gig0/0: 10.10.20.2/30, Gig0/1: 192.168.30.1/24).",
     resultId: "Konektivitas full-mesh 100% antar wilayah OSPF (Router0 & PC0) dan RIPv2 (Router2 & PC2) melalui Router1 ASBR dengan mutual redistribution.",
@@ -1017,6 +1026,7 @@ Reply from 192.168.30.10: bytes=32 time<1ms TTL=126
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: true,
     tags: ["Security", "ACL", "Cisco"],
+    deviceType: "router",
     architectureId: "LAN Subnet (PC0: 192.168.10.10 - DITERIMA, PC1: 192.168.10.20 - DITOLAK) -> Router0 (10.10.10.0/30) -> Router1 (ACL Filter on Gig0/1 Out) -> Server0 (192.168.20.10).",
     architectureEn: "LAN Subnet (PC0: 192.168.10.10 - PERMITTED, PC1: 192.168.10.20 - DENIED) -> Router0 (10.10.10.0/30) -> Router1 (ACL Filter on Gig0/1 Out) -> Server0 (192.168.20.10).",
     resultId: "Akses PC0 (192.168.10.10) DITERIMA 100% dan PC1 (192.168.10.20) DITOLAK secara presisi oleh Standard ACL pada Router1.",
@@ -1381,6 +1391,7 @@ Ping statistics for 192.168.20.10:
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
     tags: ["NAT", "PAT", "Networking"],
+    deviceType: "router",
     architectureId: "Local LAN (PC0: 192.168.10.10, PC1: 192.168.10.20) -> Router-NAT (Gig0/1 Inside: 192.168.10.1, Gig0/0 Outside: 1.1.1.1/30) -> Router-ISP (Gig0/0: 1.1.1.2/30, Gig0/1: 192.168.20.1) -> Server-INTERNET (192.168.20.0/24).",
     architectureEn: "Local LAN (PC0: 192.168.10.10, PC1: 192.168.10.20) -> Router-NAT (Gig0/1 Inside: 192.168.10.1, Gig0/0 Outside: 1.1.1.1/30) -> Router-ISP (Gig0/0: 1.1.1.2/30, Gig0/1: 192.168.20.1) -> Server-INTERNET (192.168.20.0/24).",
     resultId: "Seluruh pengguna lokal di subnet 192.168.10.0/24 (PC0 & PC1) berhasil mengakses Server-INTERNET melalui translasi PAT IP publik 1.1.1.1.",
@@ -1656,6 +1667,7 @@ Reply from 192.168.20.10: bytes=32 time<1ms TTL=126
     github: "https://github.com/haidirwf/portfolio-idal",
     featured: false,
     tags: ["STP", "Switching", "L2 Infrastructure"],
+    deviceType: "switch",
     architectureId: "Switch1 (Root Bridge, Priority 4096, Fa0/1 & Fa0/2 Designated) <-> Switch2 (Backup Root, Priority 8192, Fa0/1 Root, Fa0/2 Designated) <-> Switch3 (Non-Root, Priority 32768, Fa0/1 Root, Fa0/2 Alternate/Blocking).",
     architectureEn: "Switch1 (Root Bridge, Priority 4096, Fa0/1 & Fa0/2 Designated) <-> Switch2 (Backup Root, Priority 8192, Fa0/1 Root, Fa0/2 Designated) <-> Switch3 (Non-Root, Priority 32768, Fa0/1 Root, Fa0/2 Alternate/Blocking).",
     resultId: "Topologi segitiga 3 switch 100% bebas dari Layer 2 loop/broadcast storm dengan 1 port otomatis diblokir (Blocking state) & failover sub-detik jika link terputus.",
@@ -1954,6 +1966,7 @@ export function getProjectSummaries(): ProjectSummary[] {
     demo: p.demo,
     featured: p.featured,
     tags: p.tags,
+    deviceType: p.deviceType,
   }));
 }
 
