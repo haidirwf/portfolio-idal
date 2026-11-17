@@ -27,39 +27,41 @@ export function Footer() {
   return (
     <footer
       id="contact"
-      className="px-4 sm:px-10 py-12 sm:py-16 border-t border-border space-y-6 scroll-mt-16"
+      className="px-4 sm:px-10 pt-10 sm:pt-14 pb-8 sm:pb-10 border-t border-border scroll-mt-16"
       aria-label="Contact"
     >
-      {/* Index */}
-      <div className="flex items-baseline gap-2.5">
-        <span className="font-mono text-xs text-primary font-semibold">07</span>
-        <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold m-0">
-          {t("Kontak", "Contact")}
-        </p>
+      {/* Index & Heading Group */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs text-primary font-semibold">07</span>
+          <span className="text-muted-foreground/30 text-xs select-none">/</span>
+          <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold m-0">
+            {t("Kontak", "Contact")}
+          </p>
+        </div>
+
+        <h2 className="text-2xl sm:text-[30px] font-semibold tracking-tight text-foreground leading-tight m-0">
+          {t("Mari berkolaborasi.", "Let’s work together.")}
+        </h2>
       </div>
 
-      {/* Heading */}
-      <h2 className="text-2xl sm:text-[32px] font-semibold tracking-tight text-foreground leading-tight m-0">
-        {t("Mari berkolaborasi.", "Let’s work together.")}
-      </h2>
-
-      {/* Subtitles */}
-      <div className="space-y-1 text-sm text-muted-foreground">
+      {/* Subtitles / Bio & Location */}
+      <div className="mt-3.5 space-y-1.5 text-sm sm:text-[14.5px] text-muted-foreground leading-relaxed max-w-xl">
         <p className="m-0">
           {t(
             "Terbuka untuk kesempatan magang (PKL), proyek infrastruktur jaringan, dan kolaborasi teknis.",
             "Open to internship (PKL) opportunities, network infrastructure projects, and collaborations."
           )}
         </p>
-        <p className="font-mono text-xs text-muted-foreground/80 m-0">
+        <p className="font-mono text-xs text-muted-foreground/80 pt-0.5 m-0">
           {t("Berbasis di Bekasi, Indonesia (WIB · UTC+7)", "Based in Bekasi, Indonesia (UTC+7)")}
         </p>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap items-center gap-4 pt-1">
-        {/* Email group with 1-click copy */}
-        <span className="inline-flex items-center gap-1.5 text-sm font-medium">
+      {/* Action Links */}
+      <div className="mt-5 flex flex-wrap items-center gap-4 text-sm font-medium">
+        {/* Email group with subtle copy button */}
+        <div className="inline-flex items-center gap-1.5">
           <a
             href={`mailto:${email}`}
             className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
@@ -70,7 +72,7 @@ export function Footer() {
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="grid place-items-center size-7 rounded-md border border-border bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="inline-grid place-items-center size-6 rounded text-muted-foreground hover:text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
             aria-label="Copy email address"
             title={copied ? "Copied!" : "Copy email address"}
           >
@@ -80,7 +82,9 @@ export function Footer() {
               <Copy className="size-3.5" />
             )}
           </button>
-        </span>
+        </div>
+
+        <span className="text-muted-foreground/30 font-mono text-xs select-none">·</span>
 
         {/* WhatsApp Link */}
         <a
@@ -96,7 +100,7 @@ export function Footer() {
 
       {/* Footer Nav Links */}
       <nav
-        className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-6 border-t border-dashed border-border text-xs text-muted-foreground"
+        className="mt-10 sm:mt-12 pt-5 border-t border-dashed border-border flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground"
         aria-label="Footer links"
       >
         <a
@@ -134,7 +138,7 @@ export function Footer() {
       </nav>
 
       {/* Colophon & Meta */}
-      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
+      <div className="mt-3.5 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
         <p className="m-0">
           {t("Dirancang dan dibangun oleh Haidar.", "Designed and built by Haidar.")}
         </p>

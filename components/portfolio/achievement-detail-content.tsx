@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,7 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, Calendar, MapPin, User, X } from "lucide-react";
+import { ArrowLeft, ExternalLink, Calendar, MapPin, User } from "lucide-react";
 import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
 
 export function AchievementDetailContent({ slug }: { slug: string }) {
@@ -18,7 +17,6 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
   const { t, lang } = useLanguage();
   const router = useRouter();
   const { openConfirmation } = useExternalLinkConfirm();
-  const [expandedImage, setExpandedImage] = React.useState<string | null>(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
   const [source, setSource] = React.useState<"home" | "articles">("home");
   const [mounted, setMounted] = React.useState(false);
