@@ -17,6 +17,7 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
   const { t, lang } = useLanguage();
   const router = useRouter();
   const { openConfirmation } = useExternalLinkConfirm();
+  const [expandedImage, setExpandedImage] = React.useState<string | null>(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
   const [source, setSource] = React.useState<"home" | "articles">("home");
   const [mounted, setMounted] = React.useState(false);
@@ -338,48 +339,6 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
             <ExternalLink className="size-3.5" />
           </a>
         </div>
-      )}
-
-      {/* Fullscreen Lightbox Modal */}
-      {expandedImage && typeof document !== "undefined" && createPortal(
-        <div
-          onClick={() => setExpandedImage(null)}
-          className="fixed inset-0 w-screen h-screen z-[9999] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 cursor-zoom-out animate-in fade-in duration-200"
-          style={{ margin: 0, top: 0, left: 0, right: 0, bottom: 0 }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-4xl flex items-center justify-between pb-3 text-white cursor-default"
-          >
-            <span className="text-xs sm:text-sm font-sans font-medium text-white/80">
-              {t(item.titleId, item.titleEn)}
-            </span>
-            <button
-              type="button"
-              onClick={() => setExpandedImage(null)}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-              aria-label="Close modal"
-            >
-              <X className="size-5" />
-            </button>
-          </div>
-
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-4xl h-[75vh] sm:h-[85vh] flex items-center justify-center rounded-xl overflow-hidden cursor-default"
-          >
-            <Image
-              src={expandedImage}
-              alt="Dokumentasi Fullscreen"
-              fill
-              sizes="100vw"
-              className="object-contain select-none"
-              quality={100}
-              priority
-            />
-          </div>
-        </div>,
-        document.body
       )}
     </div>
   );

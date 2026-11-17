@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { getProjectBySlug } from "@/lib/projects";
@@ -27,21 +26,6 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
   const project = getProjectBySlug(slug);
   const { t } = useLanguage();
   const [copiedConfig, setCopiedConfig] = React.useState(false);
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsExpanded(false);
-    };
-    if (isExpanded) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isExpanded]);
 
   if (!project) return null;
 
@@ -135,41 +119,16 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
       </div>
 
       {/* Hero Screenshot / Topology Visual */}
-      <div
-        onClick={() => setIsExpanded(true)}
-        className="group relative aspect-video w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs cursor-pointer select-none"
-      >
+      <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border/80 bg-secondary/30 shadow-xs select-none">
         <Image
           src={project.cover}
           alt={project.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+          className="object-cover"
           priority
         />
       </div>
-
-      {/* Pure Full Screen Image Overlay (Rendered into document.body to ensure 100% viewport coverage with zero un-dimmed gaps) */}
-      {isExpanded && typeof document !== "undefined" && createPortal(
-        <div
-          onClick={() => setIsExpanded(false)}
-          className="fixed inset-0 w-screen h-screen z-[9999] bg-black/90 backdrop-blur-xs flex items-center justify-center p-2 sm:p-6 cursor-zoom-out animate-in fade-in duration-200"
-          style={{ margin: 0, top: 0, left: 0, right: 0, bottom: 0 }}
-        >
-          <div className="relative w-full h-full max-w-7xl max-h-[95vh] flex items-center justify-center">
-            <Image
-              src={project.cover}
-              alt={project.title}
-              fill
-              sizes="100vw"
-              className="object-contain select-none"
-              quality={100}
-              priority
-            />
-          </div>
-        </div>,
-        document.body
-      )}
 
       {/* Structured Grid: Overview, Problem, Solution (Only shown if project does not have a full tutorial article) */}
       {!project.articleContentId && !project.articleContentEn && (
