@@ -111,23 +111,23 @@ export function GithubActivity() {
             --gh-4: #39d353;
           }
           [data-snake-segment] {
-            stroke: #10b981;
+            stroke: #342bf4;
             stroke-linecap: round;
           }
           :global(.dark) [data-snake-segment] {
-            stroke: #34d399;
+            stroke: #6b63ff;
           }
           [data-snake-head] ellipse {
-            fill: #059669;
+            fill: #342bf4;
           }
           :global(.dark) [data-snake-head] ellipse {
-            fill: #10b981;
+            fill: #6b63ff;
           }
           [data-snake-eye] {
-            fill: #064e3b;
+            fill: #ffffff;
           }
           :global(.dark) [data-snake-eye] {
-            fill: #022c22;
+            fill: #09090b;
           }
           [data-snake-tongue] {
             fill: none;

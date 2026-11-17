@@ -12,7 +12,7 @@ export function MainWrapper({
 }) {
   return (
     <ExternalLinkConfirmProvider>
-      <div className="min-h-screen max-w-[768px] mx-auto flex flex-col bg-background text-foreground border-x-0 sm:border-x border-border selection:bg-foreground selection:text-background font-sans antialiased relative">
+      <div className="min-h-screen max-w-[768px] mx-auto flex flex-col bg-background text-foreground border-x-0 sm:border-x border-border selection:bg-primary/20 selection:text-foreground font-sans antialiased relative">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-foreground focus:text-background focus:rounded-md focus:text-sm font-medium shadow-md"
