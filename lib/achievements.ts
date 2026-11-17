@@ -28,55 +28,55 @@ export interface Achievement {
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
-    id: "pengajar-vibe-coding-smp",
-    slug: "pengajar-vibe-coding-smp",
-    titleId: "Pengajar Vibe Coding & Dasar Software Development",
-    titleEn: "Vibe Coding & Modern Software Development Instructor",
-    organization: "SMP (Sekolah Menengah Pertama)",
+    id: "it-mentor-smp-hang-tuah-1-surabaya",
+    slug: "it-mentor-smp-hang-tuah-1-surabaya",
+    titleId: "IT Mentor at SMP Hang Tuah 1 Surabaya",
+    titleEn: "IT Mentor at SMP Hang Tuah 1 Surabaya",
+    organization: "SMP Hang Tuah 1 Surabaya · IDN Mengajar",
     category: "work",
-    categoryLabelId: "Pengajaran & Mentoring",
-    categoryLabelEn: "Teaching & Mentoring",
-    positionId: "Instruktur & Pengajar Tamu",
-    positionEn: "Guest Instructor & Mentor",
+    categoryLabelId: "Pengajaran & Mentoring (IDN Mengajar)",
+    categoryLabelEn: "Teaching & Mentoring (IDN Mengajar)",
+    positionId: "IT Mentor (Program IDN Mengajar)",
+    positionEn: "IT Mentor (IDN Mengajar Program)",
     periodId: "Sep 2026 – Okt 2026",
     periodEn: "Sep 2026 – Oct 2026",
-    locationId: "Surakarta / Solo, Indonesia",
-    locationEn: "Surakarta / Solo, Indonesia",
-    descriptionId: "Memperkenalkan dasar-dasar pengembangan perangkat lunak modern dan vibe coding kepada siswa sekolah menengah pertama dengan materi praktis menggunakan Lovable.",
-    descriptionEn: "Introducing the fundamentals of modern software development and vibe coding to middle school students with hands-on sessions using Lovable.",
+    locationId: "Surabaya, Jawa Timur, Indonesia",
+    locationEn: "Surabaya, East Java, Indonesia",
+    descriptionId: "Menjadi IT Mentor dalam program pengabdian IDN Mengajar di SMP Hang Tuah 1 Surabaya, mengenalkan dasar-dasar pengembangan perangkat lunak modern dan vibe coding berbasis Lovable kepada siswa.",
+    descriptionEn: "Served as an IT Mentor under the IDN Mengajar community program at SMP Hang Tuah 1 Surabaya, introducing modern software development fundamentals and vibe coding with Lovable to middle school students.",
     articleContentId: `
-      ## Pengajar Vibe Coding & Dasar Software Development
+      ## IT Mentor at SMP Hang Tuah 1 Surabaya (IDN Mengajar)
 
-      Pada periode September hingga Oktober 2026, saya berkesempatan untuk menjadi instruktur dan mengajar adik-adik siswa Sekolah Menengah Pertama (SMP). Fokus utama kegiatan ini adalah mengenalkan dasar-dasar pengembangan perangkat lunak modern serta paradigma *vibe coding* yang sedang berkembang pesat di industri teknologi.
+      Pada periode September hingga Oktober 2026, saya berkesempatan menjadi IT Mentor dalam kegiatan **IDN Mengajar** yang bertempat di SMP Hang Tuah 1 Surabaya. IDN Mengajar merupakan program pengabdian sosial dan edukasi dari IDN Boarding School untuk berbagi ilmu teknologi informasi kepada para pelajar di berbagai sekolah.
 
-      Materi yang diajarkan berpusat pada penggunaan tools AI modern seperti Lovable untuk merancang dan mewujudkan ide aplikasi web interaktif secara cepat. Para siswa diajak memahami bagaimana menyusun instruksi yang terstruktur (prompt engineering), memahami antarmuka pengguna (UI/UX), hingga melihat hasil coding yang langsung berjalan.
+      Dalam agenda ini, saya membimbing adik-adik siswa SMP Hang Tuah 1 Surabaya untuk mengenal dasar-dasar pengembangan perangkat lunak modern serta paradigma baru dalam pemrograman yaitu *vibe coding*. Kami mengeksplorasi bagaimana kecerdasan buatan dapat dimanfaatkan untuk memvisualisasikan dan mewujudkan ide aplikasi web dengan cepat menggunakan platform **Lovable**.
 
-      Melihat antusiasme siswa SMP yang begitu besar saat berhasil membuat proyek web pertama mereka merupakan pengalaman yang sangat berharga dan memuaskan bagi saya. Ini membuktikan bahwa dengan pendekatan yang tepat, teknologi modern dan coding dapat dipahami dengan menyenangkan oleh generasi muda sedini mungkin.
+      Para siswa diajak mempraktikkan langsung alur pembuatan proyek dari nol: menyusun kebutuhan logika aplikasi (prompt engineering), memahami antarmuka pengguna (UI/UX), hingga menguji aplikasi web yang langsung siap digunakan. Melihat antusiasme serta rasa ingin tahu yang tinggi dari para siswa menjadi pengalaman yang sangat berharga dan memotivasi saya untuk terus berbagi ilmu di bidang teknologi.
     `,
     articleContentEn: `
-      ## Vibe Coding & Modern Software Development Instructor
+      ## IT Mentor at SMP Hang Tuah 1 Surabaya (IDN Mengajar)
 
-      Between September and October 2026, I had the privilege of serving as an instructor and mentor for junior high school (SMP) students. The primary focus was introducing modern software development concepts and the rapidly evolving "vibe coding" paradigm.
+      Between September and October 2026, I served as an IT Mentor as part of the **IDN Mengajar** educational outreach initiative held at SMP Hang Tuah 1 Surabaya. IDN Mengajar is an impactful community-driven program organized by IDN Boarding School students to share cutting-edge IT knowledge with younger students.
 
-      The curriculum centered around leveraging modern AI-assisted tools like Lovable to design and prototype interactive web applications rapidly. Students were guided through crafting structured technical prompts, understanding intuitive UI/UX principles, and deploying functional web applications.
+      During this program, I mentored students at SMP Hang Tuah 1 Surabaya in understanding the essentials of modern software development and the emerging "vibe coding" paradigm. We explored how AI-assisted tooling can be harnessed to rapidly conceptualize and deploy web applications using **Lovable**.
 
-      Witnessing the tremendous excitement of young students as they built and launched their very first web projects was an immensely rewarding journey. It reinforced that with the right pedagogy, modern software engineering can be accessible, inspiring, and engaging from an early age.
+      Students engaged in end-to-end hands-on prototyping: translating computational ideas into structured prompts, understanding responsive UI/UX principles, and testing live functional web apps. Experiencing their vibrant curiosity and seeing them build their first working projects was an immensely fulfilling milestone in my journey.
     `,
     highlightsId: [
-      "Memperkenalkan konsep dasar pengembangan perangkat lunak modern dan paradigma vibe coding",
-      "Praktik langsung pembuatan dan prototyping web app menggunakan tools Lovable",
-      "Membimbing siswa SMP dalam eksplorasi logika komputasi dan implementasi ide digital"
+      "Menjadi IT Mentor dalam program pengabdian IDN Mengajar di SMP Hang Tuah 1 Surabaya",
+      "Memperkenalkan konsep dasar pengembangan software modern dan paradigma vibe coding",
+      "Praktik langsung pembuatan dan prototyping web app interaktif menggunakan platform Lovable"
     ],
     highlightsEn: [
-      "Introduced modern software development concepts and the vibe coding paradigm",
-      "Hands-on web application building and prototyping sessions with Lovable",
-      "Mentored middle school students in computational thinking and digital idea execution"
+      "Served as an IT Mentor under the IDN Mengajar outreach initiative at SMP Hang Tuah 1 Surabaya",
+      "Introduced modern software engineering concepts and the vibe coding paradigm",
+      "Hands-on guided interactive application building and prototyping sessions with Lovable"
     ],
     cover: "/articles/dokumentasingajar3.webp",
     gallery: [
       "/articles/dokumentasingajar3.webp"
     ],
-    tags: ["Teaching", "Mentoring", "Vibe Coding", "Lovable", "Software Development", "Pendidikan"],
+    tags: ["IDN Mengajar", "SMP Hang Tuah 1 Surabaya", "IT Mentor", "Vibe Coding", "Lovable", "Software Development", "Mentoring"],
     featured: true
   },
   {
