@@ -24,7 +24,7 @@ export function Hero() {
       {/* Identity row */}
       <div className="flex items-center gap-4 sm:gap-5">
         {/* Avatar */}
-        <div className="size-14 sm:size-16 rounded-2xl overflow-hidden border border-border shadow-xs -rotate-3 hover:rotate-0 hover:scale-105 transition-transform duration-300 relative shrink-0 bg-secondary">
+        <div className="size-14 sm:size-16 rounded-2xl overflow-hidden border border-border shadow-xs hover:scale-105 transition-transform duration-300 relative shrink-0 bg-secondary">
           <Image
             src="/haidarphoto.webp"
             alt="Muhammad Haidar Rauf Prayogo"
