@@ -27,13 +27,16 @@ export function Footer() {
   return (
     <footer
       id="contact"
-      className="py-12 sm:py-16 mt-8 border-t border-border space-y-6 scroll-mt-16"
+      className="px-4 sm:px-10 py-12 sm:py-16 border-t border-border space-y-6 scroll-mt-16"
       aria-label="Contact"
     >
       {/* Index */}
-      <p className="font-mono text-xs uppercase tracking-wider text-primary font-semibold m-0">
-        {t("Kontak", "Contact")}
-      </p>
+      <div className="flex items-baseline gap-2.5">
+        <span className="font-mono text-xs text-primary font-semibold">07</span>
+        <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold m-0">
+          {t("Kontak", "Contact")}
+        </p>
+      </div>
 
       {/* Heading */}
       <h2 className="text-2xl sm:text-[32px] font-semibold tracking-tight text-foreground leading-tight m-0">
