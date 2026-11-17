@@ -27,7 +27,7 @@ export function About() {
     <section id="about" className="py-8 sm:py-10 space-y-5 scroll-mt-16">
       {/* Head */}
       <div className="flex items-baseline gap-3">
-        <span className="font-mono text-xs text-primary font-semibold">06</span>
+        <span className="font-mono text-xs text-primary font-semibold">07</span>
         <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
           {t("Latar Belakang & Pendidikan", "About & Education")}
         </h2>
