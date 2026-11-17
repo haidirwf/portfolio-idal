@@ -17,7 +17,6 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
   const { t, lang } = useLanguage();
   const router = useRouter();
   const { openConfirmation } = useExternalLinkConfirm();
-  const [expandedImage, setExpandedImage] = React.useState<string | null>(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
   const [source, setSource] = React.useState<"home" | "articles">("home");
   const [mounted, setMounted] = React.useState(false);
@@ -76,23 +75,6 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
       setActiveSlide(index);
     }
   };
-
-  // Handle ESC key to close lightbox
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setExpandedImage(null);
-    };
-
-    if (expandedImage) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [expandedImage]);
 
   if (!item) {
     return (
@@ -174,20 +156,16 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
               {gallery.map((photo, pIdx) => (
                 <div
                   key={pIdx}
-                  onClick={() => setExpandedImage(photo)}
-                  className="relative shrink-0 w-[86%] sm:w-auto snap-center sm:snap-none aspect-[4/5] sm:aspect-[3/4] rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-xs cursor-pointer select-none group"
+                  className="relative shrink-0 w-[86%] sm:w-auto snap-center sm:snap-none aspect-[4/5] sm:aspect-[3/4] rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-xs select-none"
                 >
                   <Image
                     src={photo}
                     alt={`${t(item.titleId, item.titleEn)} - Dokumentasi ${pIdx + 1}`}
                     fill
                     sizes="(max-width: 640px) 86vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="object-cover"
                     priority={pIdx === 0}
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-sans font-medium backdrop-blur-[2px]">
-                    {t("Klik untuk perbesar", "Click to expand")}
-                  </div>
                   {/* Mobile Photo Counter Badge */}
                   <div className="absolute top-2.5 right-2.5 sm:hidden px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-[10px] font-mono font-medium text-white border border-white/20">
                     {pIdx + 1} / {gallery.length}
@@ -214,21 +192,15 @@ export function AchievementDetailContent({ slug }: { slug: string }) {
           </div>
         );
       })() : (
-        <div
-          onClick={() => setExpandedImage(item.cover)}
-          className="relative aspect-video rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-sm cursor-pointer select-none group"
-        >
+        <div className="relative aspect-video rounded-xl overflow-hidden border border-border/60 bg-secondary/30 shadow-sm select-none">
           <Image
             src={item.cover}
             alt={t(item.titleId, item.titleEn)}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
-            className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.01]"
+            className="object-contain p-2"
             priority
           />
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-sans font-medium backdrop-blur-[2px]">
-            {t("Klik untuk perbesar", "Click to expand")}
-          </div>
         </div>
       )}
 
