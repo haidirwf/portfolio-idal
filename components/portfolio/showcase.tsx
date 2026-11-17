@@ -3,221 +3,252 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
-import { GitBranch, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight, List, LayoutGrid } from "lucide-react";
 import { ProjectSummary } from "@/lib/projects";
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language-provider";
-import { cn } from "@/lib/utils";
+
+type ViewMode = "list" | "grid";
 
 export function Showcase({ projects }: { projects: ProjectSummary[] }) {
   const { t } = useLanguage();
-  const scrollRef = React.useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
-  const [canScrollRight, setCanScrollRight] = React.useState(true);
+  const [view, setView] = React.useState<ViewMode>("list");
+  const [isHoveringList, setIsHoveringList] = React.useState(false);
+  const [hoveredIdx, setHoveredIdx] = React.useState<number | null>(null);
 
-  const [pageCount, setPageCount] = React.useState(1);
-  const [activePage, setActivePage] = React.useState(0);
-
-  const checkScroll = React.useCallback(() => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 0) {
-      setPageCount(1);
-      setActivePage(0);
-      return;
+  // Read saved preference
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("view-projects-pref");
+      if (saved === "list" || saved === "grid") {
+        setView(saved);
+      }
+    } catch {
+      // ignore
     }
-
-    // Number of pages is total scrollable distance / page scroll distance + 1
-    const pages = Math.ceil(maxScroll / clientWidth) + 1;
-    setPageCount(pages);
-
-    const currentPage = Math.round((scrollLeft / maxScroll) * (pages - 1));
-    setActivePage(Math.min(Math.max(currentPage, 0), pages - 1));
   }, []);
 
-  React.useEffect(() => {
-    checkScroll();
-    window.addEventListener("resize", checkScroll);
-    return () => window.removeEventListener("resize", checkScroll);
-  }, [checkScroll]);
-
-  const scrollToPage = (pageIndex: number) => {
-    if (!scrollRef.current) return;
-    const { scrollWidth, clientWidth } = scrollRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (pageCount <= 1 || maxScroll <= 0) return;
-
-    const targetScroll = (pageIndex / (pageCount - 1)) * maxScroll;
-    scrollRef.current.scrollTo({ left: targetScroll, behavior: "smooth" });
+  const changeView = (next: ViewMode) => {
+    setView(next);
+    try {
+      localStorage.setItem("view-projects-pref", next);
+    } catch {
+      // ignore
+    }
   };
 
-  const [isMouseDown, setIsMouseDown] = React.useState(false);
-  const [startX, setStartX] = React.useState(0);
-  const [scrollLeftPos, setScrollLeftPos] = React.useState(0);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return;
-    setIsMouseDown(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeftPos(scrollRef.current.scrollLeft);
-  };
-
-  const handleMouseLeaveOrUp = () => {
-    setIsMouseDown(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isMouseDown || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Drag speed multiplier
-    scrollRef.current.scrollLeft = scrollLeftPos - walk;
-  };
+  // Show top featured projects (up to 4 on homepage)
+  const displayProjects = projects.slice(0, 4);
 
   return (
-    <section id="projects" className="py-12 px-6 sm:px-10 space-y-6 scroll-mt-20">
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Topologi & Proyek Jaringan", "Network Topologies & Works")}
-        </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
-          {t(
-            "Arsitektur jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik.",
-            "Enterprise network architecture, Cisco Packet Tracer simulations, and MikroTik edge management."
-          )}
-        </p>
+    <section id="projects" className="py-8 sm:py-10 space-y-5 scroll-mt-16">
+      {/* Bar / Section Head + View Toggle */}
+      <div className="flex items-center justify-between gap-4">
+        {/* Head */}
+        <div className="flex items-baseline gap-3">
+          <span className="font-mono text-xs text-primary font-semibold">01</span>
+          <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+            {t("Topologi & Proyek Jaringan", "Things I’ve Built")}
+          </h2>
+        </div>
 
-        <div className="pt-1">
-          <Link
-            href="/projects"
-            className="inline-flex items-center text-xs font-mono font-medium text-foreground hover:underline bg-muted/50 hover:bg-muted px-3.5 py-1.5 rounded-lg border border-border/50 transition-colors"
+        {/* View Toggle (List vs Grid) */}
+        <div
+          className="relative inline-flex items-center p-0.5 rounded-lg border border-border bg-secondary/50 text-muted-foreground"
+          role="radiogroup"
+          aria-label="Project layout"
+        >
+          {/* Sliding indicator thumb */}
+          <div
+            className={`absolute top-0.5 bottom-0.5 w-7 rounded-md bg-background border border-border shadow-2xs transition-transform duration-200 ease-out ${
+              view === "grid" ? "translate-x-7" : "translate-x-0"
+            }`}
+            aria-hidden="true"
+          />
+
+          <button
+            type="button"
+            role="radio"
+            aria-checked={view === "list"}
+            aria-label="List view"
+            onClick={() => changeView("list")}
+            className={`relative z-10 grid place-items-center size-7 rounded-md transition-colors ${
+              view === "list" ? "text-foreground" : "hover:text-foreground"
+            }`}
           >
-            {t("Lihat Semua Proyek →", "See All Projects →")}
-          </Link>
+            <List className="size-3.5" />
+          </button>
+
+          <button
+            type="button"
+            role="radio"
+            aria-checked={view === "grid"}
+            aria-label="Grid view"
+            onClick={() => changeView("grid")}
+            className={`relative z-10 grid place-items-center size-7 rounded-md transition-colors ${
+              view === "grid" ? "text-foreground" : "hover:text-foreground"
+            }`}
+          >
+            <LayoutGrid className="size-3.5" />
+          </button>
         </div>
       </div>
 
-      {/* Horizontal Carousel: Shows 3 cards on desktop, scrollable & drag-scrollable */}
-      <div
-        ref={scrollRef}
-        onScroll={checkScroll}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeaveOrUp}
-        onMouseUp={handleMouseLeaveOrUp}
-        onMouseMove={handleMouseMove}
-        className={cn(
-          "flex gap-5 overflow-x-auto scrollbar-none pb-4 pt-1 px-3 select-none transition-cursor",
-          isMouseDown ? "cursor-grabbing scroll-auto" : "cursor-grab scroll-smooth snap-x snap-mandatory"
-        )}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {projects.map((project, idx) => (
-          <div
-            key={project.slug}
-            className="w-full min-w-[270px] sm:min-w-[300px] lg:w-[calc(33.333%-14px)] shrink-0 snap-start"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: idx * 0.05 }}
-              className="h-full"
-            >
-              <Card className="h-full flex flex-col justify-between overflow-hidden border-border/80 bg-card/60 rounded-xl p-2.5 hover:bg-card hover:shadow-md transition-all duration-300 group">
-                <div className="space-y-3">
-                  <div className="relative aspect-video rounded-lg bg-secondary/40 overflow-hidden border border-border/40">
-                    <Image
-                      src={project.cover}
-                      alt={project.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-contain p-1 transition-transform duration-500 group-hover:scale-[1.02]"
-                      priority={idx < 3}
-                      loading={idx < 3 ? "eager" : "lazy"}
-                    />
-                  </div>
+      {/* Projects List View */}
+      {view === "list" && (
+        <ul
+          className="border-t border-border"
+          onMouseEnter={() => setIsHoveringList(true)}
+          onMouseLeave={() => {
+            setIsHoveringList(false);
+            setHoveredIdx(null);
+          }}
+        >
+          {displayProjects.map((p, idx) => {
+            const isDimmed = isHoveringList && hoveredIdx !== null && hoveredIdx !== idx;
 
-                  <div className="px-3 pt-1 space-y-1.5">
-                    <CardTitle className="text-base font-bold font-sans tracking-tight">
-                      <Link
-                        href={`/projects/${project.slug}`}
-                        className="hover:underline group-hover:text-primary transition-colors"
-                      >
-                        {project.title}
-                      </Link>
-                    </CardTitle>
-
-                    <CardDescription className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                      {t(project.descriptionId, project.descriptionEn)}
-                    </CardDescription>
-                  </div>
-                </div>
-
-                <div className="p-3 pt-2">
-                  <div className="flex items-end justify-between gap-2">
-                    <div className="flex flex-wrap gap-1 flex-1">
-                      {project.stack.map((s) => (
-                        <span
-                          key={s}
-                          className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-muted/80 text-muted-foreground"
-                        >
-                          {s}
-                        </span>
-                      ))}
+            return (
+              <li
+                key={p.slug}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                className={`py-4 border-b border-border space-y-1.5 transition-opacity duration-200 ${
+                  isDimmed ? "opacity-40" : "opacity-100"
+                }`}
+              >
+                {/* Top row: Name + Live Badge + Action Links */}
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="size-5 rounded bg-secondary/80 border border-border/60 shrink-0 grid place-items-center text-[10px] font-mono font-bold text-foreground">
+                      {p.title.charAt(0)}
                     </div>
 
                     <Link
-                      href={`/projects/${project.slug}`}
-                      className="text-xs font-sans font-medium text-foreground hover:underline shrink-0 pb-0.5"
+                      href={`/projects/${p.slug}`}
+                      className="font-medium text-sm sm:text-[15px] text-foreground hover:underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors truncate"
                     >
-                      Details →
+                      {p.title}
                     </Link>
+
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Live Lab
+                    </span>
                   </div>
 
-                  {project.demo && (
-                    <div className="pt-2 border-t border-border/40 mt-2 text-xs font-mono">
+                  {/* Links */}
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono">
+                    <Link
+                      href={`/projects/${p.slug}`}
+                      className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
+                    >
+                      <span>Detail</span>
+                      <ArrowRight className="size-3" />
+                    </Link>
+                    {p.github && (
                       <a
-                        href={project.demo}
+                        href={p.github}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+                        className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
                       >
-                        <ExternalLink className="size-3.5" />
-                        <span>Demo</span>
+                        <span>GitHub</span>
+                        <ArrowUpRight className="size-3" />
                       </a>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </Card>
-            </motion.div>
-          </div>
-        ))}
-      </div>
 
-      {/* Pagination Indicator Dots */}
-      {pageCount > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-1">
-          {Array.from({ length: pageCount }).map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => scrollToPage(idx)}
-              className={cn(
-                "h-2 rounded-full transition-all duration-300 focus:outline-none cursor-pointer",
-                activePage === idx
-                  ? "w-6 bg-primary"
-                  : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-              )}
-              aria-label={`Go to page ${idx + 1}`}
-            />
-          ))}
-        </div>
+                {/* Description */}
+                <p className="text-xs sm:text-[13.5px] leading-relaxed text-muted-foreground max-w-2xl">
+                  {t(p.descriptionId, p.descriptionEn)}
+                </p>
+
+                {/* Tech chips */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  {p.stack.slice(0, 4).map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-secondary/50 text-muted-foreground border border-border/40"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       )}
+
+      {/* Projects Grid View */}
+      {view === "grid" && (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+          {displayProjects.map((p) => (
+            <li
+              key={p.slug}
+              className="group flex flex-col space-y-3 rounded-xl border border-border bg-card/40 p-3 hover:bg-card/80 hover:border-border transition-all duration-200"
+            >
+              {/* Image shot */}
+              <Link
+                href={`/projects/${p.slug}`}
+                className="relative block aspect-[16/10] w-full rounded-lg overflow-hidden bg-secondary/40 border border-border/60"
+              >
+                <Image
+                  src={p.cover}
+                  alt={p.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 360px"
+                  className="object-contain p-2 transition-transform duration-300 group-hover:scale-[1.03]"
+                />
+              </Link>
+
+              {/* Head & Links */}
+              <div className="space-y-1.5 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <Link
+                      href={`/projects/${p.slug}`}
+                      className="font-medium text-sm text-foreground hover:underline underline-offset-4 line-clamp-1"
+                    >
+                      {p.title}
+                    </Link>
+
+                    <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <span className="size-1.5 rounded-full bg-emerald-500" />
+                      Live
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mt-1">
+                    {t(p.descriptionId, p.descriptionEn)}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 text-xs font-mono text-muted-foreground border-t border-border/50">
+                  <span>{p.year}</span>
+                  <Link
+                    href={`/projects/${p.slug}`}
+                    className="inline-flex items-center gap-1 text-foreground hover:underline"
+                  >
+                    <span>Detail lab</span>
+                    <ArrowRight className="size-3" />
+                  </Link>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Centered Show More Projects Pill Button */}
+      <div className="flex justify-center pt-2">
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-1.5 h-8 px-4 rounded-full border border-border bg-secondary/50 hover:bg-secondary text-xs font-medium text-foreground transition-all duration-150 active:scale-95"
+        >
+          <span>{t("Tampilkan semua proyek", "Show more projects")}</span>
+          <ArrowRight className="size-3" />
+        </Link>
+      </div>
     </section>
   );
 }

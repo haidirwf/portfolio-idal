@@ -1,118 +1,130 @@
 "use client";
 
-import { motion } from "motion/react";
-import {
-  ArrowDown,
-  Mail,
-  ArrowUpRight,
-  Router,
-  Server,
-  Cpu,
-  Globe,
-  Wifi,
-  ShieldCheck,
-  Layers,
-  Terminal,
-  Activity,
-  Radio,
-  Lock,
-  Cable
-} from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
-import { cn } from "@/lib/utils";
 
-// Floating background icons pattern for Network Engineering theme
-const FLOATING_ICONS = [
-  { Icon: Router, top: "10%", left: "6%", size: "size-5 sm:size-6" },
-  { Icon: Server, top: "14%", right: "8%", size: "size-5 sm:size-6" },
-  { Icon: Cpu, top: "35%", left: "10%", size: "size-4 sm:size-5" },
-  { Icon: Globe, top: "40%", right: "12%", size: "size-5 sm:size-6" },
-  { Icon: Wifi, top: "65%", left: "8%", size: "size-4 sm:size-5" },
-  { Icon: ShieldCheck, top: "70%", right: "9%", size: "size-5 sm:size-6" },
-  { Icon: Layers, top: "82%", left: "15%", size: "size-4 sm:size-5" },
-  { Icon: Activity, top: "85%", right: "16%", size: "size-4 sm:size-5" },
-  { Icon: Lock, top: "22%", left: "22%", size: "size-3.5 sm:size-4" },
-  { Icon: Cable, top: "25%", right: "24%", size: "size-3.5 sm:size-4" },
-  { Icon: Terminal, top: "78%", left: "28%", size: "size-4" },
-  { Icon: Radio, top: "76%", right: "30%", size: "size-4" }
-];
+const GREETINGS = ["Halo", "Hello", "Assalamu’alaikum"];
 
 export function Hero() {
   const { t } = useLanguage();
+  const [greetingIndex, setGreetingIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setGreetingIndex((prev) => (prev + 1) % GREETINGS.length);
+    }, 3200);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <section id="hero" className="pt-8 pb-8 px-4 sm:px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-      >
-        <Card className="min-h-[360px] sm:min-h-[480px] flex flex-col justify-center items-center text-center overflow-hidden border-border/80 bg-card/60 rounded-xl p-6 sm:p-16 md:p-20 shadow-xs relative">
-          {/* Background grid pattern */}
-          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-35 pointer-events-none" />
+    <section className="py-10 sm:py-14 space-y-6">
+      {/* Identity row */}
+      <div className="flex items-center gap-4 sm:gap-5">
+        {/* Avatar */}
+        <div className="size-14 sm:size-16 rounded-2xl overflow-hidden border border-border shadow-xs -rotate-3 hover:rotate-0 hover:scale-105 transition-transform duration-300 relative shrink-0 bg-secondary">
+          <Image
+            src="/icon.png"
+            alt="Muhammad Haidar Rauf Prayogo"
+            width={64}
+            height={64}
+            className="size-full object-cover"
+            priority
+          />
+        </div>
 
-          {/* Floating Subtle Network Icons (Shown cleanly on desktop, hidden/minimal on mobile to prevent clutter) */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-            {FLOATING_ICONS.map((item, idx) => {
-              const IconComponent = item.Icon;
-              return (
-                <div
-                  key={idx}
-                  style={{ top: item.top, left: item.left, right: item.right }}
-                  className={cn(
-                    "absolute text-muted-foreground/15 dark:text-muted-foreground/20 transition-all duration-700 pointer-events-none select-none hidden sm:block",
-                    item.size
-                  )}
-                >
-                  <IconComponent className="w-full h-full" />
-                </div>
-              );
-            })}
+        {/* Greeting + Name + Role */}
+        <div className="min-w-0">
+          <div className="h-5 overflow-hidden text-xs sm:text-[13px] font-medium text-muted-foreground mb-1">
+            <span
+              key={greetingIndex}
+              className="inline-block animate-in fade-in slide-in-from-bottom-1 duration-300"
+            >
+              {GREETINGS[greetingIndex]}
+            </span>
           </div>
 
-          <div className="relative space-y-4 sm:space-y-6 max-w-3xl flex flex-col items-center z-10">
-            <div className="space-y-2 sm:space-y-3">
-              <h1 className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground font-sans leading-tight">
-                Muhammad Haidar Rauf Prayogo
-              </h1>
+          <h1 className="text-2xl sm:text-[34px] font-semibold tracking-tight leading-tight text-foreground">
+            Muhammad Haidar Rauf Prayogo
+          </h1>
 
-              <p className="text-base sm:text-2xl text-muted-foreground font-medium font-sans max-w-2xl leading-snug">
-                {t(
-                  "Network Engineer | MTCNA & MTCRE | Spesialis Infrastruktur Jaringan Computer & Security",
-                  "Network Engineer | MTCNA & MTCRE | Computer Network Infrastructure & Security Specialist"
-                )}
-              </p>
-            </div>
+          <p className="text-xs sm:text-[14.5px] text-muted-foreground mt-1">
+            {t("Network Engineer · Siswa TKJ di ", "Network Engineer · Networking Student at ")}
+            <a
+              href="https://idn.sch.id"
+              target="_blank"
+              rel="noreferrer"
+              className="text-foreground hover:underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+            >
+              IDN Boarding School Solo
+            </a>
+          </p>
+        </div>
+      </div>
 
-            <p className="text-xs sm:text-base text-muted-foreground/80 font-sans max-w-xl leading-relaxed">
-              {t(
-                "Fokus pada perancangan jaringan komputer yang aman, andal, efisien, dan skalabel. Bekasi, Jawa Barat, Indonesia.",
-                "Focusing on designing secure, reliable, efficient, and scalable computer network infrastructure. Bekasi, West Java, Indonesia."
-              )}
-            </p>
+      {/* Lead Paragraph with Inline Chips */}
+      <p className="max-w-[620px] text-[15px] sm:text-[17px] leading-[1.7] text-muted-foreground tracking-tight">
+        {t(
+          "Saya merancang dan mengonfigurasi infrastruktur jaringan komputer, dari simulasi topologi enterprise hingga pengerasan keamanan edge router. Tersertifikasi ",
+          "I design and configure computer network infrastructure, from enterprise topology simulations to edge router security hardening. Certified "
+        )}
+        <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
+          MTCNA
+        </span>
+        {t(" & ", " & ")}
+        <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
+          MTCRE
+        </span>
+        {t(
+          ", dengan fokus mendalam pada ",
+          ", with deep focus on "
+        )}
+        <Link
+          href="/#projects"
+          className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground hover:border-foreground/40 transition-colors"
+        >
+          Inter-VLAN
+        </Link>
+        {t(", redistribusi routing dinamis ", ", dynamic routing redistribution ")}
+        <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
+          OSPF & EIGRP
+        </span>
+        {t(", serta filtrasi akses ", ", and access filtering via ")}
+        <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
+          ACL & NAT
+        </span>
+        {t(".", ".")}
+      </p>
 
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto">
-              <a
-                href="#projects"
-                className={cn(buttonVariants({ variant: "default", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 shadow-xs w-full sm:w-auto justify-center")}
-              >
-                <span>{t("Lihat Topologi", "View Topologies")}</span>
-                <ArrowDown className="size-4" />
-              </a>
+      {/* Quick Hero Links */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 text-sm font-medium">
+        <a
+          href="https://wa.me/6282173662010"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+        >
+          <span>{t("Hubungi via WhatsApp", "Chat on WhatsApp")}</span>
+          <ArrowUpRight className="size-3.5" />
+        </a>
 
-              <a
-                href="#contact"
-                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full font-sans text-xs sm:text-sm font-medium px-6 gap-2 bg-background w-full sm:w-auto justify-center")}
-              >
-                <Mail className="size-4" />
-                <span>{t("Kontak", "Contact")}</span>
-              </a>
-            </div>
-          </div>
-        </Card>
-      </motion.div>
+        <a
+          href="#contact"
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+        >
+          <span>{t("Kirim Email", "Email me")}</span>
+        </a>
+
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+        >
+          <span>{t("Lihat Semua Proyek", "Browse all projects")}</span>
+          <ArrowRight className="size-3" />
+        </Link>
+      </div>
     </section>
   );
 }

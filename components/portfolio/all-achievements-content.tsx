@@ -3,19 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
-import { ExternalLink, ArrowLeft, Trophy, Search } from "lucide-react";
-import { ACHIEVEMENTS, Achievement } from "@/lib/achievements";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, ArrowRight, Search } from "lucide-react";
+import { ACHIEVEMENTS } from "@/lib/achievements";
 import { useLanguage } from "@/components/language-provider";
-import { useExternalLinkConfirm } from "@/components/portfolio/external-link-modal";
-import { cn } from "@/lib/utils";
 
 export function AllAchievementsContent() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = React.useState("");
-  const { openConfirmation } = useExternalLinkConfirm();
+  const [hoveredIdx, setHoveredIdx] = React.useState<number | null>(null);
 
   const filteredAchievements = React.useMemo(() => {
     if (!searchQuery.trim()) return ACHIEVEMENTS;
@@ -31,13 +26,6 @@ export function AllAchievementsContent() {
     );
   }, [searchQuery]);
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string, title: string) => {
-    if (window.innerWidth < 1024) {
-      e.preventDefault();
-      openConfirmation(url, title);
-    }
-  };
-
   const markSourceArticles = () => {
     try {
       sessionStorage.setItem("article_source", "articles");
@@ -47,110 +35,79 @@ export function AllAchievementsContent() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="py-8 sm:py-12 space-y-8">
       {/* Back button */}
-      <div className="flex items-center justify-between">
+      <div>
         <Link
           href="/"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "font-mono text-xs gap-1.5 rounded-lg text-muted-foreground hover:text-foreground"
-          )}
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
           <span>{t("Kembali ke Beranda", "Back to Home")}</span>
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="space-y-3">
-        <h1 className="text-3xl sm:text-5xl font-bold font-sans tracking-tight">
-          {t("Artikel", "Articles")}
+      {/* Page Intro (matching sumit-pfp pageIntro) */}
+      <header className="space-y-2 border-b border-border pb-6">
+        <p className="font-mono text-xs uppercase tracking-wider text-primary font-semibold m-0">
+          {t("Catatan & Tulisan", "Writing")}
+        </p>
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground m-0">
+          {t("Catatan Pengalaman & Kompetisi", "Notes & Experiences")}
         </h1>
-        <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
+        <p className="text-sm text-muted-foreground max-w-xl leading-relaxed m-0">
           {t(
-            "Beberapa artikel dan dokumentasi seputar kompetisi, kegiatan, serta pengalaman yang saya lalui.",
-            "A collection of articles and documentation chronicling competitions, events, and key experiences."
+            "Dokumentasi seputar kompetisi hackathon, kejuaraan, serta perjalanan teknis di bidang jaringan komputer.",
+            "Documentation chronicling hackathon competitions, championships, and computer networking journey."
           )}
         </p>
+      </header>
 
-        {/* Search Bar */}
-        <div className="relative max-w-md pt-2">
-          <Search className="absolute left-3 top-5 size-4 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("Cari artikel...", "Search articles...")}
-            className="w-full pl-9 pr-4 py-2 text-xs font-sans rounded-xl bg-card border border-border/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-          />
-        </div>
+      {/* Search Input */}
+      <div className="relative max-w-sm">
+        <Search className="absolute left-3 top-2.5 size-3.5 text-muted-foreground" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t("Cari artikel...", "Search articles...")}
+          className="w-full pl-8 pr-3 py-1.5 text-xs font-mono rounded-lg bg-secondary/40 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+        />
       </div>
 
-      {/* Clean Minimal List */}
-      <div className="divide-y divide-border/40 w-full border-y border-border/40">
+      {/* Clean Writing List (matching sumit-pfp writingList) */}
+      <div className="border-t border-border">
         {filteredAchievements.map((item, idx) => {
-          const isExternal = Boolean(item.url);
+          const isDimmed = hoveredIdx !== null && hoveredIdx !== idx;
+
           return (
-            <motion.div
+            <Link
               key={item.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25, delay: idx * 0.04 }}
+              href={`/articles/${item.slug}`}
+              onClick={markSourceArticles}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              className={`block py-5 border-b border-border space-y-1.5 group transition-opacity duration-200 ${
+                isDimmed ? "opacity-40" : "opacity-100"
+              }`}
             >
-              <div className="py-6 flex flex-col md:flex-row md:items-center justify-between gap-6 group hover:bg-card/40 transition-colors px-2 rounded-lg">
-                {/* Left Side: Thumbnail Image + Title & Description */}
-                <div className="flex items-start gap-4 sm:gap-6 flex-1 min-w-0">
-                  <Link
-                    href={`/articles/${item.slug}`}
-                    onClick={markSourceArticles}
-                    className="relative w-24 sm:w-36 aspect-video rounded-lg overflow-hidden border border-border/60 bg-secondary/30 shrink-0 shadow-xs block group-hover:border-primary/40 transition-colors"
-                  >
-                    <Image
-                      src={item.cover}
-                      alt={t(item.titleId, item.titleEn)}
-                      fill
-                      sizes="(max-width: 640px) 96px, 144px"
-                      className="object-contain p-1 rounded-md transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </Link>
-
-                  <div className="space-y-1.5 min-w-0 flex-1">
-                    <h3 className="text-base sm:text-xl font-bold font-sans tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      <Link href={`/articles/${item.slug}`} onClick={markSourceArticles} className="hover:underline">
-                        {t(item.titleId, item.titleEn)}
-                      </Link>
-                    </h3>
-
-                    <p className="text-xs sm:text-sm font-sans text-muted-foreground line-clamp-2 leading-relaxed">
-                      {t(item.descriptionId, item.descriptionEn)}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right Side: Simple Detail Action Link */}
-                <div className="flex md:flex-col md:items-end justify-end shrink-0 text-left md:text-right pt-1 md:pt-0">
-                  <Link
-                    href={`/articles/${item.slug}`}
-                    onClick={markSourceArticles}
-                    className="text-xs font-sans font-medium text-foreground hover:underline shrink-0"
-                  >
-                    {t("Detail →", "Detail →")}
-                  </Link>
-                </div>
+              <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+                <time>{item.periodEn}</time>
+                <span>·</span>
+                <span>{item.organization}</span>
               </div>
-            </motion.div>
+
+              <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:underline underline-offset-4 decoration-border group-hover:decoration-foreground transition-colors m-0">
+                {t(item.titleId, item.titleEn)}
+              </h2>
+
+              <p className="text-xs sm:text-[13.5px] text-muted-foreground leading-relaxed max-w-2xl m-0 line-clamp-2">
+                {t(item.descriptionId, item.descriptionEn)}
+              </p>
+            </Link>
           );
         })}
       </div>
-
-      {filteredAchievements.length === 0 && (
-        <div className="text-center py-12 space-y-2">
-          <p className="text-sm text-muted-foreground font-sans">
-            {t("Tidak ada artikel yang sesuai dengan pencarian.", "No articles match your search query.")}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

@@ -3,17 +3,35 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
-import { ExternalLink, ArrowLeft, Download, FileDown, Search } from "lucide-react";
-import { PROJECTS, Project } from "@/lib/projects";
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Search, List, LayoutGrid } from "lucide-react";
+import { PROJECTS } from "@/lib/projects";
 import { useLanguage } from "@/components/language-provider";
-import { cn } from "@/lib/utils";
+
+type ViewMode = "list" | "grid";
 
 export function AllProjectsContent() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [view, setView] = React.useState<ViewMode>("list");
+  const [hoveredIdx, setHoveredIdx] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("view-all-projects-pref");
+      if (saved === "list" || saved === "grid") setView(saved);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const changeView = (next: ViewMode) => {
+    setView(next);
+    try {
+      localStorage.setItem("view-all-projects-pref", next);
+    } catch {
+      // ignore
+    }
+  };
 
   const filteredProjects = React.useMemo(() => {
     if (!searchQuery.trim()) return PROJECTS;
@@ -29,144 +47,221 @@ export function AllProjectsContent() {
   }, [searchQuery]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="py-8 sm:py-12 space-y-8">
       {/* Back button */}
-      <div className="flex items-center justify-between">
+      <div>
         <Link
           href="/"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "font-mono text-xs gap-1.5 rounded-lg text-muted-foreground hover:text-foreground"
-          )}
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
           <span>{t("Kembali ke Beranda", "Back to Home")}</span>
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="space-y-3">
-        <h1 className="text-3xl sm:text-5xl font-bold font-sans tracking-tight">
-          {t("Semua Proyek Jaringan", "All Network Projects")}
+      {/* Page Intro (matching sumit-pfp pageIntro) */}
+      <header className="space-y-2 border-b border-border pb-6">
+        <p className="font-mono text-xs uppercase tracking-wider text-primary font-semibold m-0">
+          {t("Proyek", "Work")}
+        </p>
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground m-0">
+          {t("Topologi & Simulasi Jaringan", "Things I’ve Built & Simulated")}
         </h1>
-        <p className="text-sm sm:text-base text-muted-foreground font-sans max-w-2xl leading-relaxed">
+        <p className="text-sm text-muted-foreground max-w-xl leading-relaxed m-0">
           {t(
-            "Kumpulan lengkap simulasi topologi jaringan Cisco Packet Tracer, konfigurasi router IOS, filtrasi ACL, dan manajemen edge MikroTik.",
-            "Complete repository of Cisco Packet Tracer network topology simulations, Cisco IOS router configs, ACL security filters, and MikroTik edge setups."
+            "Arsip lengkap topologi jaringan enterprise, simulasi Cisco Packet Tracer, dan manajemen edge MikroTik.",
+            "Complete repository of enterprise network topologies, Cisco Packet Tracer simulations, and MikroTik setups."
           )}
         </p>
+      </header>
 
-        {/* Search Bar */}
-        <div className="relative max-w-md pt-2">
-          <Search className="absolute left-3 top-5 size-4 text-muted-foreground" />
+      {/* Controls Bar: Search & View Toggle */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        {/* Search */}
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-2.5 size-3.5 text-muted-foreground" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("Cari proyek, protokol, atau teknologi...", "Search projects, protocols, or tech stack...")}
-            className="w-full pl-9 pr-4 py-2 text-xs font-sans rounded-xl bg-card border border-border/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            placeholder={t("Cari proyek, protokol, atau teknologi...", "Search projects, protocols...")}
+            className="w-full pl-8 pr-3 py-1.5 text-xs font-mono rounded-lg bg-secondary/40 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all"
           />
+        </div>
+
+        {/* View Toggle */}
+        <div
+          className="relative inline-flex self-end sm:self-auto items-center p-0.5 rounded-lg border border-border bg-secondary/50 text-muted-foreground"
+          role="radiogroup"
+          aria-label="Project layout"
+        >
+          <div
+            className={`absolute top-0.5 bottom-0.5 w-7 rounded-md bg-background border border-border shadow-2xs transition-transform duration-200 ease-out ${
+              view === "grid" ? "translate-x-7" : "translate-x-0"
+            }`}
+            aria-hidden="true"
+          />
+
+          <button
+            type="button"
+            role="radio"
+            aria-checked={view === "list"}
+            aria-label="List view"
+            onClick={() => changeView("list")}
+            className={`relative z-10 grid place-items-center size-7 rounded-md transition-colors ${
+              view === "list" ? "text-foreground" : "hover:text-foreground"
+            }`}
+          >
+            <List className="size-3.5" />
+          </button>
+
+          <button
+            type="button"
+            role="radio"
+            aria-checked={view === "grid"}
+            aria-label="Grid view"
+            onClick={() => changeView("grid")}
+            className={`relative z-10 grid place-items-center size-7 rounded-md transition-colors ${
+              view === "grid" ? "text-foreground" : "hover:text-foreground"
+            }`}
+          >
+            <LayoutGrid className="size-3.5" />
+          </button>
         </div>
       </div>
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project, idx) => (
-          <motion.div
-            key={project.slug}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: idx * 0.05 }}
-            className="h-full"
-          >
-            <Card className="h-full flex flex-col justify-between overflow-hidden border-border/80 bg-card/60 rounded-xl p-3 hover:bg-card hover:shadow-md transition-all duration-300 group">
-              <div className="space-y-3">
-                <Link href={`/projects/${project.slug}`} className="block relative aspect-video rounded-lg bg-secondary/40 overflow-hidden border border-border/40">
-                  <Image
-                    src={project.cover}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-contain p-1 transition-transform duration-500 group-hover:scale-[1.02]"
-                    priority={idx < 3}
-                    loading={idx < 3 ? "eager" : "lazy"}
-                  />
-                </Link>
+      {/* Projects List View */}
+      {view === "list" && (
+        <ul className="border-t border-border">
+          {filteredProjects.map((p, idx) => {
+            const isDimmed = hoveredIdx !== null && hoveredIdx !== idx;
 
-                <div className="space-y-1.5">
-                  <CardTitle className="text-base font-bold font-sans tracking-tight">
+            return (
+              <li
+                key={p.slug}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                className={`py-4 border-b border-border space-y-1.5 transition-opacity duration-200 ${
+                  isDimmed ? "opacity-40" : "opacity-100"
+                }`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="size-5 rounded bg-secondary/80 border border-border/60 shrink-0 grid place-items-center text-[10px] font-mono font-bold text-foreground">
+                      {p.title.charAt(0)}
+                    </div>
+
                     <Link
-                      href={`/projects/${project.slug}`}
-                      className="hover:underline group-hover:text-primary transition-colors"
+                      href={`/projects/${p.slug}`}
+                      className="font-medium text-sm sm:text-[15px] text-foreground hover:underline underline-offset-4 decoration-border transition-colors truncate"
                     >
-                      {project.title}
+                      {p.title}
                     </Link>
-                  </CardTitle>
 
-                  <CardDescription className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                    {t(project.descriptionId, project.descriptionEn)}
-                  </CardDescription>
-                </div>
-              </div>
-
-              <div className="pt-4 space-y-3">
-                {/* Tech Stack Pills */}
-                <div className="flex flex-wrap gap-1">
-                  {project.stack.map((s) => (
-                    <span
-                      key={s}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-muted/80 text-muted-foreground"
-                    >
-                      {s}
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <span className="size-1.5 rounded-full bg-emerald-500" />
+                      Live Lab
                     </span>
-                  ))}
-                </div>
+                  </div>
 
-                {/* Footer Action Links */}
-                <div className="flex items-center justify-between pt-2.5 border-t border-border/40 text-xs">
-                  <div className="flex items-center gap-2">
-                    {project.downloadPkt && (
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono">
+                    <Link
+                      href={`/projects/${p.slug}`}
+                      className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
+                    >
+                      <span>Detail</span>
+                      <ArrowRight className="size-3" />
+                    </Link>
+                    {p.github && (
                       <a
-                        href={project.downloadPkt}
-                        download
-                        className="text-primary hover:underline font-mono text-[11px] flex items-center gap-1"
+                        href={p.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
                       >
-                        <Download className="size-3" />
-                        <span>.PKT</span>
-                      </a>
-                    )}
-
-                    {project.downloadGns3 && (
-                      <a
-                        href={project.downloadGns3}
-                        download
-                        className="text-emerald-500 hover:underline font-mono text-[11px] flex items-center gap-1"
-                      >
-                        <FileDown className="size-3" />
-                        <span>.GNS3</span>
+                        <span>GitHub</span>
+                        <ArrowUpRight className="size-3" />
                       </a>
                     )}
                   </div>
+                </div>
 
+                <p className="text-xs sm:text-[13.5px] leading-relaxed text-muted-foreground max-w-2xl">
+                  {t(p.descriptionId, p.descriptionEn)}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  {p.stack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-secondary/50 text-muted-foreground border border-border/40"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {/* Projects Grid View */}
+      {view === "grid" && (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {filteredProjects.map((p) => (
+            <li
+              key={p.slug}
+              className="group flex flex-col space-y-3 rounded-xl border border-border bg-card/40 p-3 hover:bg-card/80 hover:border-border transition-all duration-200"
+            >
+              <Link
+                href={`/projects/${p.slug}`}
+                className="relative block aspect-[16/10] w-full rounded-lg overflow-hidden bg-secondary/40 border border-border/60"
+              >
+                <Image
+                  src={p.cover}
+                  alt={p.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 360px"
+                  className="object-contain p-2 transition-transform duration-300 group-hover:scale-[1.03]"
+                />
+              </Link>
+
+              <div className="space-y-1.5 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <Link
+                      href={`/projects/${p.slug}`}
+                      className="font-medium text-sm text-foreground hover:underline underline-offset-4 line-clamp-1"
+                    >
+                      {p.title}
+                    </Link>
+
+                    <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <span className="size-1.5 rounded-full bg-emerald-500" />
+                      Live
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mt-1">
+                    {t(p.descriptionId, p.descriptionEn)}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 text-xs font-mono text-muted-foreground border-t border-border/50">
+                  <span>{p.year}</span>
                   <Link
-                    href={`/projects/${project.slug}`}
-                    className="font-sans font-medium text-foreground hover:underline"
+                    href={`/projects/${p.slug}`}
+                    className="inline-flex items-center gap-1 text-foreground hover:underline"
                   >
-                    {t("Lihat Detail →", "View Details →")}
+                    <span>Detail lab</span>
+                    <ArrowRight className="size-3" />
                   </Link>
                 </div>
               </div>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {filteredProjects.length === 0 && (
-        <div className="text-center py-12 space-y-2">
-          <p className="text-sm text-muted-foreground font-sans">
-            {t("Tidak ada proyek yang sesuai dengan kata kunci pencarian.", "No projects match your search query.")}
-          </p>
-        </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

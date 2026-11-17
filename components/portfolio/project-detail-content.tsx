@@ -53,7 +53,7 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
   };
 
   return (
-    <div className="py-8 sm:py-12 max-w-5xl mx-auto px-3 sm:px-6 space-y-8">
+    <div className="py-8 sm:py-12 space-y-8">
       {/* Navigation back */}
       <div>
         <Link

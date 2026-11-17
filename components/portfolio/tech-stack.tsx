@@ -1,18 +1,17 @@
 "use client";
 
-import { motion } from "motion/react";
-import {
-  Layers,
-  Cpu,
-  Server,
-  Workflow,
-  ShieldCheck,
-  Globe,
-  Terminal,
-  Network
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
+import * as React from "react";
 import { useLanguage } from "@/components/language-provider";
+import {
+  Server,
+  Cpu,
+  Workflow,
+  Globe,
+  Layers,
+  ShieldCheck,
+  Network,
+  Terminal,
+} from "lucide-react";
 
 interface TechItem {
   name: string;
@@ -20,57 +19,78 @@ interface TechItem {
   icon: React.ElementType;
 }
 
-const TECH_STACK: TechItem[] = [
+const TECH_ITEMS: TechItem[] = [
   { name: "MikroTik RouterOS", category: "Routing & Switching", icon: Server },
-  { name: "Network Simulator", category: "CPT • PNETLab • GNS3", icon: Cpu },
-  { name: "OSPF & EIGRP", category: "Routing Protocols", icon: Workflow },
-  { name: "BGP Inter-Domain", category: "Routing Protocols", icon: Globe },
-  { name: "VLAN & Subnetting", category: "Switching & L2/L3", icon: Layers },
-  { name: "Firewall & NAT", category: "Security Hardening", icon: ShieldCheck },
-  { name: "Network Services", category: "DHCP • DNS • NTP", icon: Network },
-  { name: "Linux Server", category: "OS & Infrastructure", icon: Terminal }
+  { name: "Cisco IOS", category: "Enterprise Routers & Switches", icon: Cpu },
+  { name: "OSPF & EIGRP", category: "Dynamic Routing Protocols", icon: Workflow },
+  { name: "BGP Inter-Domain", category: "Exterior Routing", icon: Globe },
+  { name: "VLAN & Trunking", category: "802.1Q Subinterfaces", icon: Layers },
+  { name: "ACL & Security", category: "Packet Filtering & Hardening", icon: ShieldCheck },
+  { name: "CPT & GNS3", category: "Network Emulators", icon: Network },
+  { name: "Linux Server", category: "Debian & Ubuntu Infrastructure", icon: Terminal },
 ];
 
 export function TechStack() {
   const { t } = useLanguage();
 
   return (
-    <section id="tech-stack" className="py-12 px-4 sm:px-6 space-y-8">
-      <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Keahlian & Perangkat", "Skills & Toolset")}
+    <section id="tech-stack" className="py-8 sm:py-10 space-y-5 scroll-mt-16">
+      {/* Head */}
+      <div className="flex items-baseline gap-3">
+        <span className="font-mono text-xs text-primary font-semibold">03</span>
+        <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+          {t("Keahlian & Perangkat", "How I Work")}
         </h2>
-        <p className="text-sm text-muted-foreground font-sans">
-          {t(
-            "Perangkat jaringan, protokol routing, simulasi jaringan, dan sistem operasi yang dikuasai.",
-            "Networking hardware, routing protocols, network simulation, and OS proficiency."
-          )}
-        </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">
-        {TECH_STACK.map((item, idx) => {
+      {/* Stack Summary Line (matching sumit-pfp's stackLine) */}
+      <p className="text-[14.5px] sm:text-[15.5px] leading-relaxed text-muted-foreground">
+        {t("Sebagian besar berfokus pada ", "Mostly focused on ")}
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-border bg-secondary/50 text-foreground font-medium text-xs">
+          MikroTik RouterOS
+        </span>
+        {", "}
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-border bg-secondary/50 text-foreground font-medium text-xs">
+          Cisco IOS
+        </span>
+        {t(" dan ", " and ")}
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-border bg-secondary/50 text-foreground font-medium text-xs">
+          Linux
+        </span>
+        {t(", disimulasikan menggunakan ", ", simulated with ")}
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-border bg-secondary/50 text-foreground font-medium text-xs">
+          Cisco Packet Tracer
+        </span>
+        {", "}
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-border bg-secondary/50 text-foreground font-medium text-xs">
+          GNS3
+        </span>
+        {t(", serta analisis trafik mendalam via ", ", and packet analysis via ")}
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-border bg-secondary/50 text-foreground font-medium text-xs">
+          Wireshark
+        </span>
+        {"."}
+      </p>
+
+      {/* Compact Tool Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+        {TECH_ITEMS.map((item) => {
           const Icon = item.icon;
           return (
-            <motion.div
+            <div
               key={item.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              whileHover={{ y: -5, scale: 1.03 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.2, delay: idx * 0.03 }}
-              className="h-full"
+              className="p-3 rounded-lg border border-border/80 bg-secondary/30 hover:bg-secondary/60 hover:border-border transition-colors space-y-1"
             >
-              <Card className="p-4 h-full border-border/80 bg-card/60 rounded-xl hover:bg-card/90 hover:border-primary/60 hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center gap-2.5 group cursor-default">
-                <Icon className="size-6 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-                <span className="text-xs font-sans font-bold text-foreground group-hover:text-primary transition-colors">
+              <div className="flex items-center gap-2">
+                <Icon className="size-3.5 text-muted-foreground shrink-0" />
+                <span className="text-xs font-semibold text-foreground truncate">
                   {item.name}
                 </span>
-                <span className="text-[10px] font-sans text-muted-foreground font-medium">
-                  {item.category}
-                </span>
-              </Card>
-            </motion.div>
+              </div>
+              <p className="text-[10.5px] text-muted-foreground truncate font-mono">
+                {item.category}
+              </p>
+            </div>
           );
         })}
       </div>

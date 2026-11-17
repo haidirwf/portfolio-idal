@@ -3,33 +3,35 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { motion } from "motion/react";
-import { X } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { X, ExternalLink, Award } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 
 interface Certificate {
   code: string;
   name: string;
+  id: string;
+  period: string;
   image: string;
+  url: string;
 }
 
 const CERTIFICATIONS: Certificate[] = [
   {
     code: "MTCNA",
     name: "MikroTik Certified Network Associate",
+    id: "2601NA9959",
+    period: "2026 – 2029",
     image: "/certificates/MTCNA.webp",
+    url: "https://mikrotik.com/training/certificates/c699976c6108324c354d",
   },
   {
     code: "MTCRE",
     name: "MikroTik Certified Routing Engineer",
+    id: "2601RE9976",
+    period: "2026 – 2029",
     image: "/certificates/MTCNA.webp",
+    url: "https://mikrotik.com/training/certificates/c699976c6108324c354d",
   },
-  {
-    code: "CCNA",
-    name: "Cisco Certified Network Associate",
-    image: "/certificates/MTCNA.webp",
-  }
 ];
 
 export function Certifications() {
@@ -54,58 +56,61 @@ export function Certifications() {
   }, [selectedCert]);
 
   return (
-    <section id="certifications" className="py-12 px-4 sm:px-6 space-y-8 relative scroll-mt-20">
-      {/* Header Section */}
-      <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-sans">
-          {t("Sertifikat", "Certifications")}
+    <section id="certifications" className="py-8 sm:py-10 space-y-5 scroll-mt-16">
+      {/* Head */}
+      <div className="flex items-baseline gap-3">
+        <span className="font-mono text-xs text-primary font-semibold">05</span>
+        <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+          {t("Sertifikasi Industri", "Certifications")}
         </h2>
-        <p className="text-sm text-muted-foreground font-sans">
-          {t(
-            "Sertifikasi kompetensi jaringan MikroTik dan Cisco.",
-            "Networking certifications from MikroTik and Cisco."
-          )}
-        </p>
       </div>
 
-      {/* Grid of Certifications */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {CERTIFICATIONS.map((cert, idx) => (
-          <motion.div
+      {/* Cards List */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        {CERTIFICATIONS.map((cert) => (
+          <div
             key={cert.code}
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -4 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.2, delay: idx * 0.05 }}
+            className="p-4 rounded-xl border border-border bg-card/40 hover:bg-card hover:border-border transition-colors flex flex-col justify-between space-y-3"
           >
-            <Card
-              onClick={() => setSelectedCert(cert)}
-              className="border-border/80 bg-card/60 rounded-xl overflow-hidden shadow-xs hover:border-primary/50 hover:bg-card/90 hover:shadow-md transition-all duration-300 group cursor-pointer"
-            >
-              {/* Certificate Image */}
-              <div className="relative aspect-[16/10] w-full bg-secondary/30 overflow-hidden border-b border-border/60">
-                <Image
-                  src={cert.image}
-                  alt={`${cert.code} - ${cert.name}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  priority={idx === 0}
-                />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="font-mono font-bold text-sm text-foreground">
+                  {cert.code}
+                </span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {cert.period}
+                </span>
               </div>
 
-              {/* Title & Code */}
-              <div className="p-4 space-y-1 text-center">
-                <h3 className="text-base sm:text-lg font-bold font-sans text-foreground group-hover:text-primary transition-colors">
-                  {cert.code}
-                </h3>
-                <p className="text-xs text-muted-foreground font-sans font-medium">
-                  {cert.name}
-                </p>
-              </div>
-            </Card>
-          </motion.div>
+              <h3 className="text-xs sm:text-[13px] font-medium text-foreground leading-snug">
+                {cert.name}
+              </h3>
+
+              <p className="font-mono text-[11px] text-muted-foreground">
+                Certificate ID: {cert.id}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2 border-t border-border/50 text-xs font-mono">
+              <button
+                type="button"
+                onClick={() => setSelectedCert(cert)}
+                className="text-foreground hover:underline cursor-pointer"
+              >
+                {t("Lihat sertifikat", "View certificate")}
+              </button>
+
+              <a
+                href={cert.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span>Verifikasi</span>
+                <ExternalLink className="size-3" />
+              </a>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -119,26 +124,26 @@ export function Certifications() {
           {/* Top Bar with Title & Close Button */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-5xl flex items-center justify-between pb-3 text-white cursor-default"
+            className="w-full max-w-4xl flex items-center justify-between pb-3 text-white cursor-default"
           >
-            <span className="text-sm sm:text-base font-bold font-sans">
+            <span className="text-sm font-semibold">
               {selectedCert.code} — {selectedCert.name}
             </span>
 
             <button
               type="button"
               onClick={() => setSelectedCert(null)}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
               aria-label="Close modal"
             >
-              <X className="size-5" />
+              <X className="size-4" />
             </button>
           </div>
 
           {/* Certificate Image Container */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-5xl h-[70vh] sm:h-[80vh] flex items-center justify-center rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black/40 cursor-default"
+            className="relative w-full max-w-4xl h-[70vh] sm:h-[80vh] flex items-center justify-center rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black/40 cursor-default"
           >
             <Image
               src={selectedCert.image}

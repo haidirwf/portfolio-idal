@@ -1,15 +1,148 @@
-import { Separator } from "@/components/ui/separator";
+"use client";
+
+import * as React from "react";
+import { ArrowUpRight, Copy, Check, ArrowUp } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 export function Footer() {
+  const { t } = useLanguage();
+  const [copied, setCopied] = React.useState(false);
+  const email = "raufidnn@gmail.com";
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
+
+  const scrollToTop = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="py-8 max-w-6xl mx-auto px-4 sm:px-6 space-y-4">
-      <Separator className="bg-border/60" />
-      <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-muted-foreground gap-2">
-        <div>
-          © {new Date().getFullYear()} Haidar Rauf. All rights reserved.
-        </div>
-        <div>
-          Built using Next.js + shadcn/ui
+    <footer
+      id="contact"
+      className="py-12 sm:py-16 mt-8 border-t border-border space-y-6 scroll-mt-16"
+      aria-label="Contact"
+    >
+      {/* Index */}
+      <p className="font-mono text-xs uppercase tracking-wider text-primary font-semibold m-0">
+        {t("Kontak", "Contact")}
+      </p>
+
+      {/* Heading */}
+      <h2 className="text-2xl sm:text-[32px] font-semibold tracking-tight text-foreground leading-tight m-0">
+        {t("Mari berkolaborasi.", "Let’s work together.")}
+      </h2>
+
+      {/* Subtitles */}
+      <div className="space-y-1 text-sm text-muted-foreground">
+        <p className="m-0">
+          {t(
+            "Terbuka untuk kesempatan magang (PKL), proyek infrastruktur jaringan, dan kolaborasi teknis.",
+            "Open to internship (PKL) opportunities, network infrastructure projects, and collaborations."
+          )}
+        </p>
+        <p className="font-mono text-xs text-muted-foreground/80 m-0">
+          {t("Berbasis di Surakarta / Solo, Indonesia (WIB · UTC+7)", "Based in Surakarta / Solo, Indonesia (UTC+7)")}
+        </p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap items-center gap-4 pt-1">
+        {/* Email group with 1-click copy */}
+        <span className="inline-flex items-center gap-1.5 text-sm font-medium">
+          <a
+            href={`mailto:${email}`}
+            className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+          >
+            {t("Kirim Email", "Email me")}
+          </a>
+
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            className="grid place-items-center size-7 rounded-md border border-border bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            aria-label="Copy email address"
+            title={copied ? "Copied!" : "Copy email address"}
+          >
+            {copied ? (
+              <Check className="size-3.5 text-emerald-500 animate-in zoom-in-75 duration-150" />
+            ) : (
+              <Copy className="size-3.5" />
+            )}
+          </button>
+        </span>
+
+        {/* WhatsApp Link */}
+        <a
+          href="https://wa.me/6282173662010"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1 text-sm font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+        >
+          <span>{t("Hubungi via WhatsApp", "Chat on WhatsApp")}</span>
+          <ArrowUpRight className="size-3.5" />
+        </a>
+      </div>
+
+      {/* Footer Nav Links */}
+      <nav
+        className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-6 border-t border-dashed border-border text-xs text-muted-foreground"
+        aria-label="Footer links"
+      >
+        <a
+          href="https://github.com/haidirwf"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-foreground transition-colors"
+        >
+          GitHub
+        </a>
+        <a
+          href="https://www.linkedin.com/in/haidar-rauf/"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-foreground transition-colors"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://instagram.com/haidarwf"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-foreground transition-colors"
+        >
+          Instagram
+        </a>
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className="ml-auto inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+        >
+          <span>{t("Kembali ke atas", "Back to top")}</span>
+          <ArrowUp className="size-3" />
+        </button>
+      </nav>
+
+      {/* Colophon & Meta */}
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
+        <p className="m-0">
+          {t("Dirancang dan dibangun oleh Haidar.", "Designed and built by Haidar.")}
+        </p>
+
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Open for work</span>
+          </span>
+          <span>·</span>
+          <span>{new Date().getFullYear()}</span>
         </div>
       </div>
     </footer>
