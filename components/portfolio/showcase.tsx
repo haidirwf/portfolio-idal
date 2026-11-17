@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, ArrowRight, List, LayoutGrid } from "lucide-react";
+import { ArrowRight, List, LayoutGrid } from "lucide-react";
 import { ProjectSummary } from "@/lib/projects";
 import { useLanguage } from "@/components/language-provider";
 
@@ -138,17 +138,6 @@ export function Showcase({ projects }: { projects: ProjectSummary[] }) {
                       <span>Detail</span>
                       <ArrowRight className="size-3" />
                     </Link>
-                    {p.github && (
-                      <a
-                        href={p.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
-                      >
-                        <span>GitHub</span>
-                        <ArrowUpRight className="size-3" />
-                      </a>
-                    )}
                   </div>
                 </div>
 
@@ -156,18 +145,6 @@ export function Showcase({ projects }: { projects: ProjectSummary[] }) {
                 <p className="text-xs sm:text-[13.5px] leading-relaxed text-muted-foreground max-w-2xl">
                   {t(p.descriptionId, p.descriptionEn)}
                 </p>
-
-                {/* Tech chips */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  {p.stack.slice(0, 4).map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-secondary/50 text-muted-foreground border border-border/40"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
               </li>
             );
           })}
