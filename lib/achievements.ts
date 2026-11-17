@@ -28,6 +28,58 @@ export interface Achievement {
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
+    id: "it-mentor-smp-muhammadiyah-4-surabaya",
+    slug: "it-mentor-smp-muhammadiyah-4-surabaya",
+    titleId: "IT Mentor at SMP Muhammadiyah 4 Surabaya",
+    titleEn: "IT Mentor at SMP Muhammadiyah 4 Surabaya",
+    organization: "SMP Muhammadiyah 4 Surabaya · IDN Mengajar",
+    category: "work",
+    categoryLabelId: "Pengajaran & Mentoring (IDN Mengajar)",
+    categoryLabelEn: "Teaching & Mentoring (IDN Mengajar)",
+    positionId: "IT Mentor (Program IDN Mengajar)",
+    positionEn: "IT Mentor (IDN Mengajar Program)",
+    periodId: "Nov 2026",
+    periodEn: "Nov 2026",
+    locationId: "Surabaya, Jawa Timur, Indonesia",
+    locationEn: "Surabaya, East Java, Indonesia",
+    descriptionId: "Menjadi IT Mentor dalam program pengabdian di SMP Muhammadiyah 4 Surabaya, memperkenalkan dasar-dasar pengembangan perangkat lunak modern dan paradigma vibe coding kepada siswa.",
+    descriptionEn: "Served as an IT Mentor at SMP Muhammadiyah 4 Surabaya, introducing modern software development fundamentals and the vibe coding paradigm to junior high school students.",
+    articleContentId: `
+      ## IT Mentor at SMP Muhammadiyah 4 Surabaya (IDN Mengajar)
+
+      Pada bulan November 2026, saya kembali berkesempatan menjadi IT Mentor dalam program pengabdian edukasi **IDN Mengajar**, bertempat di SMP Muhammadiyah 4 Surabaya. Kegiatan ini bertujuan memperluas literasi teknologi serta mengenalkan dunia rekayasa perangkat lunak kepada generasi muda sejak dini.
+
+      Selama sesi pelatihan, saya membimbing para siswa untuk memahami dasar-dasar pengembangan perangkat lunak modern dan paradigma baru *vibe coding*. Para siswa diajak berinteraksi langsung dengan kecerdasan buatan untuk merancang alur logika, mengeksplorasi antarmuka digital, serta mentransformasikan ide-ide kreatif mereka menjadi purwarupa aplikasi web yang nyata.
+
+      Antusiasme dan rasa ingin tahu yang ditunjukkan oleh para siswa SMP Muhammadiyah 4 Surabaya sangat menginspirasi. Program ini tidak hanya melatih kemampuan teknis mereka dalam memanfaatkan teknologi AI secara produktif, namun juga mengasah kemampuan *problem-solving* dan kreativitas digital mereka.
+    `,
+    articleContentEn: `
+      ## IT Mentor at SMP Muhammadiyah 4 Surabaya (IDN Mengajar)
+
+      In November 2026, I had the privilege of serving once again as an IT Mentor under the **IDN Mengajar** educational outreach initiative, hosted at SMP Muhammadiyah 4 Surabaya. This program focuses on expanding technological literacy and introducing modern software engineering concepts to young minds.
+
+      During the interactive workshops, I guided middle school students through the fundamentals of contemporary software development and the emerging *vibe coding* paradigm. Students actively learned how to leverage AI tools to articulate requirements, architect UI/UX interfaces, and transform creative concepts into functional web application prototypes.
+
+      The genuine curiosity and enthusiasm displayed by the students at SMP Muhammadiyah 4 Surabaya made this an exceptionally rewarding experience, reinforcing the importance of empowering young creators with practical technology skills.
+    `,
+    highlightsId: [
+      "Menjadi IT Mentor dalam program pengabdian edukasi di SMP Muhammadiyah 4 Surabaya",
+      "Memperkenalkan konsep dasar pengembangan software modern dan paradigma vibe coding berbantuan AI",
+      "Praktik langsung pembuatan dan pemahaman purwarupa aplikasi web interaktif"
+    ],
+    highlightsEn: [
+      "Served as an IT Mentor for the educational outreach program at SMP Muhammadiyah 4 Surabaya",
+      "Introduced modern software engineering concepts and AI-assisted vibe coding workflows",
+      "Hands-on guided interactive application prototyping and logic building"
+    ],
+    cover: "/articles/smp-muhammadiyah-4-surabaya.webp",
+    gallery: [
+      "/articles/smp-muhammadiyah-4-surabaya.webp"
+    ],
+    tags: ["IDN Mengajar", "SMP Muhammadiyah 4 Surabaya", "IT Mentor", "Vibe Coding", "Software Development", "Mentoring"],
+    featured: true
+  },
+  {
     id: "it-mentor-smp-hang-tuah-1-surabaya",
     slug: "it-mentor-smp-hang-tuah-1-surabaya",
     titleId: "IT Mentor at SMP Hang Tuah 1 Surabaya",
