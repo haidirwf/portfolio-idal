@@ -75,11 +75,11 @@ export function Navbar() {
         >
           <div className="size-6 rounded-md overflow-hidden bg-secondary border border-border/60 shrink-0 transition-transform duration-200 group-hover:-rotate-6">
             <Image
-              src="/icon.png"
+              src="/haidarphoto.webp"
               alt="Haidar"
               width={24}
               height={24}
-              className="size-full object-cover"
+              className="size-full object-cover object-top"
               priority
             />
           </div>
