@@ -28,6 +28,58 @@ export interface Achievement {
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
+    id: "pengajar-vibe-coding-smp",
+    slug: "pengajar-vibe-coding-smp",
+    titleId: "Pengajar Vibe Coding & Dasar Software Development",
+    titleEn: "Vibe Coding & Modern Software Development Instructor",
+    organization: "SMP (Sekolah Menengah Pertama)",
+    category: "work",
+    categoryLabelId: "Pengajaran & Mentoring",
+    categoryLabelEn: "Teaching & Mentoring",
+    positionId: "Instruktur & Pengajar Tamu",
+    positionEn: "Guest Instructor & Mentor",
+    periodId: "Sep 2026 – Okt 2026",
+    periodEn: "Sep 2026 – Oct 2026",
+    locationId: "Surakarta / Solo, Indonesia",
+    locationEn: "Surakarta / Solo, Indonesia",
+    descriptionId: "Memperkenalkan dasar-dasar pengembangan perangkat lunak modern dan vibe coding kepada siswa sekolah menengah pertama dengan materi praktis menggunakan Lovable.",
+    descriptionEn: "Introducing the fundamentals of modern software development and vibe coding to middle school students with hands-on sessions using Lovable.",
+    articleContentId: `
+      ## Pengajar Vibe Coding & Dasar Software Development
+
+      Pada periode September hingga Oktober 2026, saya berkesempatan untuk menjadi instruktur dan mengajar adik-adik siswa Sekolah Menengah Pertama (SMP). Fokus utama kegiatan ini adalah mengenalkan dasar-dasar pengembangan perangkat lunak modern serta paradigma *vibe coding* yang sedang berkembang pesat di industri teknologi.
+
+      Materi yang diajarkan berpusat pada penggunaan tools AI modern seperti Lovable untuk merancang dan mewujudkan ide aplikasi web interaktif secara cepat. Para siswa diajak memahami bagaimana menyusun instruksi yang terstruktur (prompt engineering), memahami antarmuka pengguna (UI/UX), hingga melihat hasil coding yang langsung berjalan.
+
+      Melihat antusiasme siswa SMP yang begitu besar saat berhasil membuat proyek web pertama mereka merupakan pengalaman yang sangat berharga dan memuaskan bagi saya. Ini membuktikan bahwa dengan pendekatan yang tepat, teknologi modern dan coding dapat dipahami dengan menyenangkan oleh generasi muda sedini mungkin.
+    `,
+    articleContentEn: `
+      ## Vibe Coding & Modern Software Development Instructor
+
+      Between September and October 2026, I had the privilege of serving as an instructor and mentor for junior high school (SMP) students. The primary focus was introducing modern software development concepts and the rapidly evolving "vibe coding" paradigm.
+
+      The curriculum centered around leveraging modern AI-assisted tools like Lovable to design and prototype interactive web applications rapidly. Students were guided through crafting structured technical prompts, understanding intuitive UI/UX principles, and deploying functional web applications.
+
+      Witnessing the tremendous excitement of young students as they built and launched their very first web projects was an immensely rewarding journey. It reinforced that with the right pedagogy, modern software engineering can be accessible, inspiring, and engaging from an early age.
+    `,
+    highlightsId: [
+      "Memperkenalkan konsep dasar pengembangan perangkat lunak modern dan paradigma vibe coding",
+      "Praktik langsung pembuatan dan prototyping web app menggunakan tools Lovable",
+      "Membimbing siswa SMP dalam eksplorasi logika komputasi dan implementasi ide digital"
+    ],
+    highlightsEn: [
+      "Introduced modern software development concepts and the vibe coding paradigm",
+      "Hands-on web application building and prototyping sessions with Lovable",
+      "Mentored middle school students in computational thinking and digital idea execution"
+    ],
+    cover: "/articles/dokumentasingajar3.webp",
+    gallery: [
+      "/articles/dokumentasingajar3.webp"
+    ],
+    tags: ["Teaching", "Mentoring", "Vibe Coding", "Lovable", "Software Development", "Pendidikan"],
+    featured: true
+  },
+  {
     id: "exploraition-yogyakarta-hackathon",
     slug: "exploraition-yogyakarta-hackathon",
     titleId: "48 Jam Hackathon yang Meaningful",
