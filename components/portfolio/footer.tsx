@@ -52,7 +52,7 @@ export function Footer() {
           )}
         </p>
         <p className="font-mono text-xs text-muted-foreground/80 m-0">
-          {t("Berbasis di Surakarta / Solo, Indonesia (WIB · UTC+7)", "Based in Surakarta / Solo, Indonesia (UTC+7)")}
+          {t("Berbasis di Bekasi, Indonesia (WIB · UTC+7)", "Based in Bekasi, Indonesia (UTC+7)")}
         </p>
       </div>
 
