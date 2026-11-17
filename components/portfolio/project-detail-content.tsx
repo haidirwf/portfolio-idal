@@ -59,18 +59,6 @@ export function ProjectDetailContent({ slug }: { slug: string }) {
           {t(project.descriptionId, project.descriptionEn)}
         </p>
 
-        {/* Tech Stack Pills */}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.stack.map((item) => (
-            <span
-              key={item}
-              className="px-2 py-0.5 rounded-md font-mono text-[11px] bg-muted/80 text-muted-foreground border border-border/40"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-
         {/* Links & Download Bar */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           {project.downloadPkt && (

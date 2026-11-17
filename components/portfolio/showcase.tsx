@@ -114,13 +114,9 @@ export function Showcase({ projects }: { projects: ProjectSummary[] }) {
                   isDimmed ? "opacity-40" : "opacity-100"
                 }`}
               >
-                {/* Top row: Name + Live Badge + Action Links */}
+                {/* Top row: Name + Action Links */}
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="size-5 rounded bg-secondary/80 border border-border/60 shrink-0 grid place-items-center text-[10px] font-mono font-bold text-foreground">
-                      {p.title.charAt(0)}
-                    </div>
-
+                  <div className="flex items-center min-w-0">
                     <Link
                       href={`/projects/${p.slug}`}
                       className="font-medium text-sm sm:text-[15px] text-foreground hover:underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors truncate"
