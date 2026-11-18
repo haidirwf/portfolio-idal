@@ -25,6 +25,9 @@ interface Fish {
   variety: "primary" | "amber" | "crimson" | "silver";
   depth: number;
   eatingTimer: number;
+  isCurious: boolean;
+  orbitOffset: number;
+  orbitRadius: number;
 }
 
 interface Ripple {
@@ -55,8 +58,8 @@ interface Bubble {
   opacity: number;
 }
 
-const FISH_COUNT = 5;
-const NODE_COUNT = 14;
+const FISH_COUNT = 14;
+const NODE_COUNT = 15;
 
 export const FishBackground = React.memo(function FishBackground() {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
@@ -204,14 +207,15 @@ export const FishBackground = React.memo(function FishBackground() {
     window.addEventListener("pointerdown", handleWindowPointerDown);
 
     // Initialize fish school
-    const varieties: Fish["variety"][] = ["primary", "amber", "crimson", "silver", "primary"];
+    const varieties: Fish["variety"][] = ["primary", "amber", "crimson", "silver"];
     const fishList: Fish[] = [];
 
     for (let i = 0; i < FISH_COUNT; i++) {
       const startX = Math.random() * (width || 800);
       const startY = Math.random() * (height || 600);
       const startAngle = Math.random() * Math.PI * 2;
-      const length = 150 + Math.random() * 90; // 150px to 240px
+      // Large majestic koi lengths (220px to 350px)
+      const length = 220 + Math.random() * 130;
       const depth = 0.85 + Math.random() * 0.35; // scale & opacity depth
 
       const nodes: Point[] = [];
@@ -223,6 +227,11 @@ export const FishBackground = React.memo(function FishBackground() {
         });
       }
 
+      // About half of the fish love swarming around the cursor!
+      const isCurious = i % 2 === 0;
+      const orbitOffset = i * 0.95;
+      const orbitRadius = 75 + (i % 4) * 28; // 75px to 160px spacing around cursor
+
       fishList.push({
         x: startX,
         y: startY,
@@ -230,9 +239,9 @@ export const FishBackground = React.memo(function FishBackground() {
         vy: Math.sin(startAngle),
         angle: startAngle,
         targetAngle: startAngle,
-        turnSpeed: 0.018 + Math.random() * 0.015,
-        baseSpeed: (0.55 + Math.random() * 0.45) * depth,
-        speed: (0.55 + Math.random() * 0.45) * depth,
+        turnSpeed: 0.02 + Math.random() * 0.018,
+        baseSpeed: (0.6 + Math.random() * 0.45) * depth,
+        speed: (0.6 + Math.random() * 0.45) * depth,
         length: length * depth,
         nodes,
         tailWag: Math.random() * Math.PI * 2,
@@ -241,6 +250,9 @@ export const FishBackground = React.memo(function FishBackground() {
         variety: varieties[i % varieties.length],
         depth,
         eatingTimer: 0,
+        isCurious,
+        orbitOffset,
+        orbitRadius,
       });
     }
 
@@ -380,16 +392,36 @@ export const FishBackground = React.memo(function FishBackground() {
           else if (fish.y < margin) fish.targetAngle = Math.PI / 2;
           else if (fish.y > height - margin) fish.targetAngle = -Math.PI / 2;
 
-          // Interactive mouse avoidance
+          // Interactive mouse interaction
           if (mouseActive) {
-            const dx = fish.x - mouseX;
-            const dy = fish.y - mouseY;
-            const distSq = dx * dx + dy * dy;
-            const fearDist = 180;
-            if (distSq < fearDist * fearDist && distSq > 0) {
-              const awayAngle = Math.atan2(dy, dx);
-              fish.targetAngle = awayAngle;
-              fish.speed = Math.min(fish.baseSpeed * 2.2, 3.2);
+            if (fish.isCurious) {
+              // Curious fish actively swarm, approach, and circle around the cursor!
+              const targetX = mouseX + Math.cos(fish.tailWag * 0.35 + fish.orbitOffset) * fish.orbitRadius;
+              const targetY = mouseY + Math.sin(fish.tailWag * 0.35 + fish.orbitOffset) * fish.orbitRadius;
+              const dx = targetX - fish.x;
+              const dy = targetY - fish.y;
+              const distToTarget = Math.hypot(dx, dy);
+
+              if (distToTarget > 12) {
+                fish.targetAngle = Math.atan2(dy, dx);
+                const distToCursor = Math.hypot(mouseX - fish.x, mouseY - fish.y);
+                if (distToCursor > 220) {
+                  fish.speed = Math.min(fish.baseSpeed * 2.2, 3.2);
+                } else {
+                  fish.speed = fish.baseSpeed * 1.35;
+                }
+              }
+            } else {
+              // Shy fish gently swerve away if cursor gets too close
+              const dx = fish.x - mouseX;
+              const dy = fish.y - mouseY;
+              const distSq = dx * dx + dy * dy;
+              const fearDist = 130;
+              if (distSq < fearDist * fearDist && distSq > 0) {
+                const awayAngle = Math.atan2(dy, dx);
+                fish.targetAngle = awayAngle;
+                fish.speed = Math.min(fish.baseSpeed * 2.0, 3.0);
+              }
             }
           }
         }
@@ -410,7 +442,7 @@ export const FishBackground = React.memo(function FishBackground() {
         fish.y += fish.vy * (dt * 60);
 
         // Screen wrap
-        const wrapPadding = 180;
+        const wrapPadding = 280;
         if (fish.x < -wrapPadding) fish.x = width + wrapPadding;
         if (fish.x > width + wrapPadding) fish.x = -wrapPadding;
         if (fish.y < -wrapPadding) fish.y = height + wrapPadding;
@@ -547,7 +579,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   // Calculate half-widths and normal vectors along the spine
   const leftPoints: Point[] = [];
   const rightPoints: Point[] = [];
-  const bodyWidth = fish.length * 0.175;
+  const bodyWidth = fish.length * 0.185;
 
   for (let i = 0; i < count; i++) {
     const s = i / (count - 1);
@@ -587,7 +619,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const pNext = nodes[pectoralIdx + 1];
   const pAngle = Math.atan2(pNext.y - pNode.y, pNext.x - pNode.x);
   const finFlutter = Math.sin(fish.finPhase) * 0.18;
-  const finLen = fish.length * 0.42;
+  const finLen = fish.length * 0.44;
 
   ctx.fillStyle = finColor;
 
@@ -618,7 +650,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const tailBase = nodes[lastIdx];
   const prevTail = nodes[lastIdx - 1];
   const tailAngle = Math.atan2(tailBase.y - prevTail.y, tailBase.x - prevTail.x);
-  const tailLen = fish.length * 0.58;
+  const tailLen = fish.length * 0.62;
   const tailSpread = Math.sin(fish.tailWag) * 0.35;
 
   ctx.save();
@@ -675,7 +707,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
 
   // E. Subtle eyes
   const eyeIdx = 1;
-  const eyeR = Math.max(fish.length * 0.024, 2.2);
+  const eyeR = Math.max(fish.length * 0.024, 2.8);
   ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(15, 23, 42, 0.7)";
   ctx.beginPath();
   ctx.arc(leftPoints[eyeIdx].x, leftPoints[eyeIdx].y, eyeR, 0, Math.PI * 2);
