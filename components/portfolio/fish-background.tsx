@@ -28,7 +28,7 @@ interface Fish {
 }
 
 const FISH_COUNT = 5;
-const NODE_COUNT = 12;
+const NODE_COUNT = 14;
 
 export function FishBackground() {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
@@ -95,8 +95,8 @@ export function FishBackground() {
       const startX = Math.random() * (width || 800);
       const startY = Math.random() * (height || 600);
       const startAngle = Math.random() * Math.PI * 2;
-      const length = 55 + Math.random() * 35; // 55px to 90px
-      const depth = 0.65 + Math.random() * 0.35; // scale & opacity depth
+      const length = 150 + Math.random() * 90; // 150px to 240px
+      const depth = 0.85 + Math.random() * 0.35; // scale & opacity depth
 
       const nodes: Point[] = [];
       const segLength = (length * depth) / (NODE_COUNT - 1);
@@ -114,13 +114,13 @@ export function FishBackground() {
         vy: Math.sin(startAngle),
         angle: startAngle,
         targetAngle: startAngle,
-        turnSpeed: 0.02 + Math.random() * 0.02,
-        baseSpeed: (0.7 + Math.random() * 0.6) * depth,
-        speed: (0.7 + Math.random() * 0.6) * depth,
+        turnSpeed: 0.018 + Math.random() * 0.015,
+        baseSpeed: (0.55 + Math.random() * 0.45) * depth,
+        speed: (0.55 + Math.random() * 0.45) * depth,
         length: length * depth,
         nodes,
         tailWag: Math.random() * Math.PI * 2,
-        wagSpeed: 0.07 + Math.random() * 0.04,
+        wagSpeed: 0.055 + Math.random() * 0.035,
         finPhase: Math.random() * Math.PI * 2,
         variety: varieties[i % varieties.length],
         depth,
@@ -163,7 +163,7 @@ export function FishBackground() {
           const dx = fish.x - mouseX;
           const dy = fish.y - mouseY;
           const distSq = dx * dx + dy * dy;
-          const fearDist = 140;
+          const fearDist = 180;
           if (distSq < fearDist * fearDist && distSq > 0) {
             const dist = Math.sqrt(distSq);
             const awayAngle = Math.atan2(dy, dx);
@@ -188,7 +188,7 @@ export function FishBackground() {
         fish.y += fish.vy * (dt * 60);
 
         // Screen wrap
-        const wrapPadding = 80;
+        const wrapPadding = 180;
         if (fish.x < -wrapPadding) fish.x = width + wrapPadding;
         if (fish.x > width + wrapPadding) fish.x = -wrapPadding;
         if (fish.y < -wrapPadding) fish.y = height + wrapPadding;
@@ -319,7 +319,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   // Calculate half-widths and normal vectors along the spine
   const leftPoints: Point[] = [];
   const rightPoints: Point[] = [];
-  const bodyWidth = fish.length * 0.16;
+  const bodyWidth = fish.length * 0.175;
 
   for (let i = 0; i < count; i++) {
     const s = i / (count - 1);
@@ -361,7 +361,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const pNext = nodes[pectoralIdx + 1];
   const pAngle = Math.atan2(pNext.y - pNode.y, pNext.x - pNode.x);
   const finFlutter = Math.sin(fish.finPhase) * 0.18;
-  const finLen = fish.length * 0.38;
+  const finLen = fish.length * 0.42;
 
   ctx.fillStyle = finColor;
 
@@ -392,7 +392,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const tailBase = nodes[lastIdx];
   const prevTail = nodes[lastIdx - 1];
   const tailAngle = Math.atan2(tailBase.y - prevTail.y, tailBase.x - prevTail.x);
-  const tailLen = fish.length * 0.52;
+  const tailLen = fish.length * 0.58;
   const tailSpread = Math.sin(fish.tailWag) * 0.35;
 
   ctx.save();
