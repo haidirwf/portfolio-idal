@@ -64,11 +64,11 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Lead Paragraph with Inline Chips */}
+      {/* Lead Paragraph with Natural Voice */}
       <p className="max-w-[620px] text-[15px] sm:text-[17px] leading-[1.7] text-muted-foreground tracking-tight">
         {t(
-          "Saya merancang dan mengonfigurasi infrastruktur jaringan komputer, dari simulasi topologi enterprise hingga pengerasan keamanan edge router. Tersertifikasi ",
-          "I design and configure computer network infrastructure, from enterprise topology simulations to edge router security hardening. Certified "
+          "Saya siswa TKJ di IDN Boarding School Solo yang punya antusiasme besar di dunia networking. Sehari-hari suka mengulik konfigurasi router, mendesain lab topologi jaringan, dan membedah alur paket data sampai benar-benar paham cara kerjanya. Pemegang sertifikasi ",
+          "A Computer & Network Engineering student at IDN Boarding School Solo with a genuine passion for networking. I spend most of my time tinkering with router configurations, building enterprise lab topologies, and dissecting packet flows to understand how data moves end-to-end. Certified "
         )}
         <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
           MTCNA
@@ -76,24 +76,6 @@ export function Hero() {
         {t(" & ", " & ")}
         <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
           MTCRE
-        </span>
-        {t(
-          ", dengan fokus mendalam pada ",
-          ", with deep focus on "
-        )}
-        <Link
-          href="/#projects"
-          className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground hover:border-foreground/40 transition-colors"
-        >
-          Inter-VLAN
-        </Link>
-        {t(", redistribusi routing dinamis ", ", dynamic routing redistribution ")}
-        <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
-          OSPF & EIGRP
-        </span>
-        {t(", serta filtrasi akses ", ", and access filtering via ")}
-        <span className="inline-flex items-center px-2 py-0.5 mx-0.5 rounded-md border border-border bg-secondary/60 text-xs sm:text-sm font-medium text-foreground">
-          ACL & NAT
         </span>
         {t(".", ".")}
       </p>
