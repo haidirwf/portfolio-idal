@@ -20,7 +20,7 @@ const CERTIFICATIONS: Certificate[] = [
     id: "2601NA9959",
     period: "2026 – 2029",
     image: "/certificates/MTCNA.webp",
-    url: "https://mikrotik.com/training/certificates/c699976c6108324c354d",
+    url: "https://mikrotik.com/training/certificates/c699959c362cafd8fede",
   },
   {
     code: "MTCRE",
