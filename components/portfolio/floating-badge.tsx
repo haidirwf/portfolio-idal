@@ -3,52 +3,107 @@
 import * as React from "react";
 import Image from "next/image";
 
+interface FloatingItemConfig {
+  id: string;
+  src: string;
+  alt: string;
+  aspectClass: string;
+  widthStyle: string;
+  spawnXRatio: number;
+  initialY: number;
+  targetYDesktop: number;
+  targetYMobile: number;
+  initialRot: number;
+}
+
+const ITEMS: FloatingItemConfig[] = [
+  {
+    id: "seindonesia",
+    src: "/seindonesia.webp",
+    alt: "Se-Indonesia",
+    aspectClass: "aspect-[533/252]",
+    widthStyle: "clamp(120px, 16vw, 175px)",
+    spawnXRatio: 0.8,
+    initialY: -180,
+    targetYDesktop: 110,
+    targetYMobile: 80,
+    initialRot: -4,
+  },
+  {
+    id: "dimsummentai",
+    src: "/dimsummentai.webp",
+    alt: "Dimsum Mentai",
+    aspectClass: "aspect-[990/742]",
+    widthStyle: "clamp(105px, 14vw, 150px)",
+    spawnXRatio: 0.12,
+    initialY: -260,
+    targetYDesktop: 160,
+    targetYMobile: 130,
+    initialRot: 5,
+  },
+];
+
 export const FloatingBadge = React.memo(function FloatingBadge() {
   const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return (
+    <>
+      {ITEMS.map((config) => (
+        <FloatingItem key={config.id} config={config} />
+      ))}
+    </>
+  );
+});
+
+function FloatingItem({ config }: { config: FloatingItemConfig }) {
   const badgeRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Position & Physics state stored in refs for 60fps performance
+  // Position & Physics state stored in refs for 60fps performance without React state re-renders
   const stateRef = React.useRef({
     x: 0,
-    y: -180,
+    y: config.initialY,
     vx: 0,
-    vy: 2,
-    rot: -4,
+    vy: 2.2,
+    rot: config.initialRot,
     vRot: 0,
     isDragging: false,
     dragStartX: 0,
     dragStartY: 0,
     hasLanded: false,
-    targetY: 130,
-    time: 0,
+    targetY: config.targetYDesktop,
+    time: Math.random() * 10,
     lastPointerX: 0,
     lastPointerY: 0,
     lastPointerTime: 0,
   });
 
   React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  React.useEffect(() => {
-    if (!mounted) return;
-
     const el = badgeRef.current;
     if (!el) return;
 
     const state = stateRef.current;
-    const badgeWidth = el.offsetWidth || 160;
-    const badgeHeight = el.offsetHeight || 75;
+    const badgeWidth = el.offsetWidth || 150;
+    const badgeHeight = el.offsetHeight || 80;
 
-    // Only set initial position if not already landed
+    // Set initial position if not already landed
     if (!state.hasLanded) {
-      const initialX = Math.max(
-        16,
-        window.innerWidth > 900 ? window.innerWidth * 0.78 : window.innerWidth * 0.5 - badgeWidth / 2
-      );
+      const isDesktop = window.innerWidth > 900;
+      let initialX: number;
+      if (config.spawnXRatio > 0.5) {
+        initialX = Math.max(16, isDesktop ? window.innerWidth * config.spawnXRatio : window.innerWidth * 0.7 - badgeWidth / 2);
+      } else {
+        initialX = Math.max(16, isDesktop ? window.innerWidth * config.spawnXRatio : 20);
+      }
+
       state.x = initialX;
-      state.y = -180;
-      state.targetY = window.innerWidth > 640 ? 110 : 80;
+      state.y = config.initialY;
+      state.targetY = window.innerWidth > 640 ? config.targetYDesktop : config.targetYMobile;
 
       el.style.setProperty("--bx", `${state.x}px`);
       el.style.setProperty("--by", `${state.y}px`);
@@ -68,20 +123,20 @@ export const FloatingBadge = React.memo(function FloatingBadge() {
 
       if (!state.isDragging) {
         if (!state.hasLanded) {
-          // 1. Initial fall from above screen
-          state.vy += 0.38; // gravity
+          // 1. Initial gravity fall
+          state.vy += 0.42;
           state.y += state.vy;
-          state.rot += (0 - state.rot) * 0.05;
+          state.rot += (config.initialRot - state.rot) * 0.05;
 
           if (state.y >= state.targetY) {
             state.y = state.targetY;
             state.hasLanded = true;
-            state.vy = -3.5; // gentle upward bounce upon water impact
+            state.vy = -3.8; // gentle upward bounce upon water impact
 
             // Splash into water!
             window.dispatchEvent(
               new CustomEvent("fish:ripple", {
-                detail: { x: state.x + currentW / 2, y: state.y + currentH / 2, size: 140 },
+                detail: { x: state.x + currentW / 2, y: state.y + currentH / 2, size: 130 },
               })
             );
             window.dispatchEvent(
@@ -157,7 +212,7 @@ export const FloatingBadge = React.memo(function FloatingBadge() {
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, [mounted]);
+  }, [config]);
 
   // Pointer drag & toss handlers
   function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
@@ -226,7 +281,7 @@ export const FloatingBadge = React.memo(function FloatingBadge() {
     // Release ripple and drop fish treats!
     window.dispatchEvent(
       new CustomEvent("fish:ripple", {
-        detail: { x: state.x + el.offsetWidth / 2, y: state.y + el.offsetHeight / 2, size: 120 },
+        detail: { x: state.x + el.offsetWidth / 2, y: state.y + el.offsetHeight / 2, size: 110 },
       })
     );
     window.dispatchEvent(
@@ -241,7 +296,6 @@ export const FloatingBadge = React.memo(function FloatingBadge() {
     if (!el) return;
 
     const state = stateRef.current;
-    // Playful bounce & drop food when tapped
     state.vy = -4.5;
     state.vRot = (Math.random() - 0.5) * 8;
 
@@ -252,12 +306,10 @@ export const FloatingBadge = React.memo(function FloatingBadge() {
     );
     window.dispatchEvent(
       new CustomEvent("fish:ripple", {
-        detail: { x: state.x + el.offsetWidth / 2, y: state.y + el.offsetHeight / 2, size: 100 },
+        detail: { x: state.x + el.offsetWidth / 2, y: state.y + el.offsetHeight / 2, size: 95 },
       })
     );
   }
-
-  if (!mounted) return null;
 
   return (
     <div
@@ -269,26 +321,26 @@ export const FloatingBadge = React.memo(function FloatingBadge() {
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      aria-label="Interactive floating Se-Indonesia sticker"
+      aria-label={`Interactive floating ${config.alt} sticker`}
       data-interactive="true"
       className="fixed top-0 left-0 z-30 select-none cursor-grab active:cursor-grabbing will-change-transform touch-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)] dark:drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
       style={{
-        width: "clamp(130px, 18vw, 185px)",
+        width: config.widthStyle,
         height: "auto",
-        transform: "translate3d(var(--bx, 0px), var(--by, -180px), 0) rotate(var(--brot, 0deg))",
+        transform: `translate3d(var(--bx, 0px), var(--by, ${config.initialY}px), 0) rotate(var(--brot, 0deg))`,
       }}
     >
-      <div className="relative w-full aspect-[533/252]">
+      <div className={`relative w-full ${config.aspectClass}`}>
         <Image
-          src="/seindonesia.png"
-          alt="Se-Indonesia"
+          src={config.src}
+          alt={config.alt}
           fill
           priority
-          sizes="(max-width: 640px) 130px, 185px"
+          sizes="(max-width: 640px) 115px, 175px"
           className="object-contain pointer-events-none drop-shadow-sm select-none"
           draggable={false}
         />
       </div>
     </div>
   );
-});
+}
