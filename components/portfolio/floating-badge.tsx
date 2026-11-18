@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 
-export function FloatingBadge() {
+export const FloatingBadge = React.memo(function FloatingBadge() {
   const [mounted, setMounted] = React.useState(false);
   const badgeRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -24,7 +24,6 @@ export function FloatingBadge() {
     lastPointerX: 0,
     lastPointerY: 0,
     lastPointerTime: 0,
-    isWobbling: false,
   });
 
   React.useEffect(() => {
@@ -41,11 +40,20 @@ export function FloatingBadge() {
     const badgeWidth = el.offsetWidth || 160;
     const badgeHeight = el.offsetHeight || 75;
 
-    // Initial position on the right side for desktop, centered for mobile
-    const initialX = Math.max(16, window.innerWidth > 900 ? window.innerWidth * 0.78 : window.innerWidth * 0.5 - badgeWidth / 2);
-    state.x = initialX;
-    state.y = -180;
-    state.targetY = window.innerWidth > 640 ? 110 : 80;
+    // Only set initial position if not already landed
+    if (!state.hasLanded) {
+      const initialX = Math.max(
+        16,
+        window.innerWidth > 900 ? window.innerWidth * 0.78 : window.innerWidth * 0.5 - badgeWidth / 2
+      );
+      state.x = initialX;
+      state.y = -180;
+      state.targetY = window.innerWidth > 640 ? 110 : 80;
+
+      el.style.setProperty("--bx", `${state.x}px`);
+      el.style.setProperty("--by", `${state.y}px`);
+      el.style.setProperty("--brot", `${state.rot}deg`);
+    }
 
     let animId: number;
     let rippleThrottle = 0;
@@ -134,9 +142,11 @@ export function FloatingBadge() {
         }
       }
 
-      // Apply transform smoothly
+      // Apply transform via CSS custom properties to avoid React reconciliation wipeout
       if (el) {
-        el.style.transform = `translate3d(${state.x}px, ${state.y}px, 0) rotate(${state.rot}deg)`;
+        el.style.setProperty("--bx", `${state.x.toFixed(1)}px`);
+        el.style.setProperty("--by", `${state.y.toFixed(1)}px`);
+        el.style.setProperty("--brot", `${state.rot.toFixed(1)}deg`);
       }
 
       animId = requestAnimationFrame(loop);
@@ -259,16 +269,16 @@ export function FloatingBadge() {
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      aria-label="Interactive floating Se-Indonesia sticker. Drag to toss or click to feed fish."
-      title="Tarik & lempar atau klik untuk memberi makan ikan koi!"
+      aria-label="Interactive floating Se-Indonesia sticker"
       data-interactive="true"
-      className="fixed top-0 left-0 z-30 select-none cursor-grab active:cursor-grabbing will-change-transform touch-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)] dark:drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)] transition-shadow hover:scale-105 active:scale-95 duration-150"
+      className="fixed top-0 left-0 z-30 select-none cursor-grab active:cursor-grabbing will-change-transform touch-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)] dark:drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
       style={{
         width: "clamp(130px, 18vw, 185px)",
         height: "auto",
+        transform: "translate3d(var(--bx, 0px), var(--by, -180px), 0) rotate(var(--brot, 0deg))",
       }}
     >
-      <div className="relative w-full aspect-[533/252] group">
+      <div className="relative w-full aspect-[533/252]">
         <Image
           src="/seindonesia.png"
           alt="Se-Indonesia"
@@ -278,12 +288,7 @@ export function FloatingBadge() {
           className="object-contain pointer-events-none drop-shadow-sm select-none"
           draggable={false}
         />
-        {/* Subtle playful hint badge on hover */}
-        <span className="sr-only">Se-Indonesia badge</span>
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap text-[10px] font-medium px-2 py-0.5 rounded-full bg-background/90 text-foreground border border-border shadow-sm backdrop-blur-xs">
-          Tarik / lempar aku! ✨
-        </div>
       </div>
     </div>
   );
-}
+});

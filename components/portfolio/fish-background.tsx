@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useTheme } from "next-themes";
 
 interface Point {
   x: number;
@@ -59,9 +58,8 @@ interface Bubble {
 const FISH_COUNT = 5;
 const NODE_COUNT = 14;
 
-export function FishBackground() {
+export const FishBackground = React.memo(function FishBackground() {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
-  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -488,7 +486,7 @@ export function FishBackground() {
       className="fixed inset-0 pointer-events-none z-0"
     />
   );
-}
+});
 
 function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const nodes = fish.nodes;
