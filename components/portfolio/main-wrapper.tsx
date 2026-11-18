@@ -5,6 +5,7 @@ import { Navbar } from "@/components/portfolio/navbar";
 import { Footer } from "@/components/portfolio/footer";
 import { ExternalLinkConfirmProvider } from "@/components/portfolio/external-link-modal";
 import { FishBackground } from "@/components/portfolio/fish-background";
+import { FloatingBadge } from "@/components/portfolio/floating-badge";
 
 export function MainWrapper({
   children
@@ -14,6 +15,7 @@ export function MainWrapper({
   return (
     <ExternalLinkConfirmProvider>
       <FishBackground />
+      <FloatingBadge />
       <div className="min-h-screen max-w-[768px] mx-auto flex flex-col bg-background/90 backdrop-blur-[2px] text-foreground border-x-0 sm:border-x border-border selection:bg-primary/20 selection:text-foreground font-sans antialiased relative z-10">
         <a
           href="#main"
