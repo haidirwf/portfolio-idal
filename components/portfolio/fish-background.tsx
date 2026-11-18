@@ -441,12 +441,23 @@ export const FishBackground = React.memo(function FishBackground() {
         fish.x += fish.vx * (dt * 60);
         fish.y += fish.vy * (dt * 60);
 
-        // Screen wrap
+        // Screen wrap with full node shifting to prevent teleportation stretching
         const wrapPadding = 160;
-        if (fish.x < -wrapPadding) fish.x = width + wrapPadding;
-        if (fish.x > width + wrapPadding) fish.x = -wrapPadding;
-        if (fish.y < -wrapPadding) fish.y = height + wrapPadding;
-        if (fish.y > height + wrapPadding) fish.y = -wrapPadding;
+        let shiftX = 0;
+        let shiftY = 0;
+        if (fish.x < -wrapPadding) shiftX = width + wrapPadding * 2;
+        else if (fish.x > width + wrapPadding) shiftX = -(width + wrapPadding * 2);
+        if (fish.y < -wrapPadding) shiftY = height + wrapPadding * 2;
+        else if (fish.y > height + wrapPadding) shiftY = -(height + wrapPadding * 2);
+
+        if (shiftX !== 0 || shiftY !== 0) {
+          fish.x += shiftX;
+          fish.y += shiftY;
+          for (let i = 0; i < NODE_COUNT; i++) {
+            fish.nodes[i].x += shiftX;
+            fish.nodes[i].y += shiftY;
+          }
+        }
 
         // Spine & wave wag (gentle, calming, natural sway)
         const wagMult = fish.eatingTimer > 0 ? 1.3 : 1.0;
@@ -456,6 +467,7 @@ export const FishBackground = React.memo(function FishBackground() {
         fish.tailWag += fish.wagSpeed * (0.85 + 0.15 * speedRatio) * wagMult;
         fish.finPhase += 0.025;
 
+        // Stable inverse kinematics chain constraint (non-recursive)
         fish.nodes[0].x = fish.x;
         fish.nodes[0].y = fish.y;
 
@@ -466,14 +478,10 @@ export const FishBackground = React.memo(function FishBackground() {
 
           const dx = curr.x - prev.x;
           const dy = curr.y - prev.y;
-          let angle = Math.atan2(dy, dx);
+          const dist = Math.hypot(dx, dy) || segLength;
 
-          // Apply gentle lateral sine wave to trailing joints
-          const wave = Math.sin(fish.tailWag - i * 0.45) * Math.pow(i / NODE_COUNT, 1.4) * 0.35;
-          angle += wave;
-
-          curr.x = prev.x + Math.cos(angle) * segLength;
-          curr.y = prev.y + Math.sin(angle) * segLength;
+          curr.x = prev.x + (dx / dist) * segLength;
+          curr.y = prev.y + (dy / dist) * segLength;
         }
 
         // Render organic fish body & fins
@@ -577,7 +585,8 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
     }
   }
 
-  // Calculate half-widths and normal vectors along the spine
+  // Calculate smooth undulating spine centers and flanks along the spine
+  const spineCenters: Point[] = [];
   const leftPoints: Point[] = [];
   const rightPoints: Point[] = [];
   const bodyWidth = fish.length * 0.165;
@@ -594,32 +603,40 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
     }
     w = Math.max(w, 1.2);
 
-    let nx = 0;
-    let ny = 0;
+    let tx = 0;
+    let ty = 0;
     if (i < count - 1) {
-      const dx = nodes[i + 1].x - nodes[i].x;
-      const dy = nodes[i + 1].y - nodes[i].y;
-      const len = Math.hypot(dx, dy) || 1;
-      nx = -dy / len;
-      ny = dx / len;
+      tx = nodes[i + 1].x - nodes[i].x;
+      ty = nodes[i + 1].y - nodes[i].y;
     } else {
-      const dx = nodes[i].x - nodes[i - 1].x;
-      const dy = nodes[i].y - nodes[i - 1].y;
-      const len = Math.hypot(dx, dy) || 1;
-      nx = -dy / len;
-      ny = dx / len;
+      tx = nodes[i].x - nodes[i - 1].x;
+      ty = nodes[i].y - nodes[i - 1].y;
     }
+    const tLen = Math.hypot(tx, ty) || 1;
+    tx /= tLen;
+    ty /= tLen;
 
-    leftPoints.push({ x: nodes[i].x + nx * w, y: nodes[i].y + ny * w });
-    rightPoints.push({ x: nodes[i].x - nx * w, y: nodes[i].y - ny * w });
+    const nx = -ty;
+    const ny = tx;
+
+    // Pure sinusoidal wave displacement along normal vector (zero feedback glitch)
+    const waveAmp = Math.pow(s, 1.4) * (fish.length * 0.08);
+    const waveOffset = Math.sin(fish.tailWag - i * 0.38) * waveAmp;
+
+    const cx = nodes[i].x + nx * waveOffset;
+    const cy = nodes[i].y + ny * waveOffset;
+
+    spineCenters.push({ x: cx, y: cy });
+    leftPoints.push({ x: cx + nx * w, y: cy + ny * w });
+    rightPoints.push({ x: cx - nx * w, y: cy - ny * w });
   }
 
   // A. Pectoral Fins (Left & Right)
   const pectoralIdx = 2;
-  const pNode = nodes[pectoralIdx];
-  const pNext = nodes[pectoralIdx + 1];
+  const pNode = spineCenters[pectoralIdx];
+  const pNext = spineCenters[pectoralIdx + 1];
   const pAngle = Math.atan2(pNext.y - pNode.y, pNext.x - pNode.x);
-  const finFlutter = Math.sin(fish.finPhase) * 0.18;
+  const finFlutter = Math.sin(fish.finPhase) * 0.15;
   const finLen = fish.length * 0.38;
 
   ctx.fillStyle = finColor;
@@ -627,7 +644,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   // Left pectoral fin
   ctx.save();
   ctx.translate(leftPoints[pectoralIdx].x, leftPoints[pectoralIdx].y);
-  ctx.rotate(pAngle - Math.PI / 2 + 0.4 + finFlutter);
+  ctx.rotate(pAngle - Math.PI / 2 + 0.35 + finFlutter);
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.bezierCurveTo(finLen * 0.5, -finLen * 0.4, finLen * 0.9, -finLen * 0.15, finLen, 0);
@@ -638,7 +655,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   // Right pectoral fin
   ctx.save();
   ctx.translate(rightPoints[pectoralIdx].x, rightPoints[pectoralIdx].y);
-  ctx.rotate(pAngle + Math.PI / 2 - 0.4 - finFlutter);
+  ctx.rotate(pAngle + Math.PI / 2 - 0.35 - finFlutter);
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.bezierCurveTo(finLen * 0.5, finLen * 0.4, finLen * 0.9, finLen * 0.15, finLen, 0);
@@ -646,30 +663,29 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   ctx.fill();
   ctx.restore();
 
-  // B. Flowing Caudal (Tail) Fin
+  // B. Flowing Caudal (Tail) Fin - perfectly aligned with undulating tail tangent!
   const lastIdx = count - 1;
-  const tailBase = nodes[lastIdx];
-  const prevTail = nodes[lastIdx - 1];
+  const tailBase = spineCenters[lastIdx];
+  const prevTail = spineCenters[lastIdx - 1];
   const tailAngle = Math.atan2(tailBase.y - prevTail.y, tailBase.x - prevTail.x);
   const tailLen = fish.length * 0.52;
-  const tailSpread = Math.sin(fish.tailWag) * 0.35;
 
   ctx.save();
   ctx.translate(tailBase.x, tailBase.y);
-  ctx.rotate(tailAngle + tailSpread);
+  ctx.rotate(tailAngle);
   ctx.fillStyle = finColor;
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.bezierCurveTo(tailLen * 0.4, -tailLen * 0.45, tailLen * 0.85, -tailLen * 0.5, tailLen, -tailLen * 0.2);
-  ctx.bezierCurveTo(tailLen * 0.75, 0, tailLen * 0.75, 0, tailLen, tailLen * 0.2);
-  ctx.bezierCurveTo(tailLen * 0.85, tailLen * 0.5, tailLen * 0.4, tailLen * 0.45, 0, 0);
+  ctx.bezierCurveTo(tailLen * 0.4, -tailLen * 0.42, tailLen * 0.85, -tailLen * 0.48, tailLen, -tailLen * 0.18);
+  ctx.bezierCurveTo(tailLen * 0.72, 0, tailLen * 0.72, 0, tailLen, tailLen * 0.18);
+  ctx.bezierCurveTo(tailLen * 0.85, tailLen * 0.48, tailLen * 0.4, tailLen * 0.42, 0, 0);
   ctx.fill();
   ctx.restore();
 
   // C. Main Fish Body (Silky Smooth Path)
   ctx.fillStyle = mainColor;
   ctx.beginPath();
-  const nose = nodes[0];
+  const nose = spineCenters[0];
   ctx.moveTo(leftPoints[0].x, leftPoints[0].y);
   ctx.quadraticCurveTo(nose.x, nose.y, rightPoints[0].x, rightPoints[0].y);
 
@@ -695,20 +711,20 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
 
   // D. Dorsal Accent / Spine Highlight
   ctx.strokeStyle = accentColor;
-  ctx.lineWidth = fish.length * 0.05;
+  ctx.lineWidth = fish.length * 0.045;
   ctx.lineCap = "round";
   ctx.beginPath();
   const dorsalStart = Math.floor(count * 0.2);
   const dorsalEnd = Math.floor(count * 0.7);
-  ctx.moveTo(nodes[dorsalStart].x, nodes[dorsalStart].y);
+  ctx.moveTo(spineCenters[dorsalStart].x, spineCenters[dorsalStart].y);
   for (let i = dorsalStart + 1; i <= dorsalEnd; i++) {
-    ctx.lineTo(nodes[i].x, nodes[i].y);
+    ctx.lineTo(spineCenters[i].x, spineCenters[i].y);
   }
   ctx.stroke();
 
   // E. Subtle eyes
   const eyeIdx = 1;
-  const eyeR = Math.max(fish.length * 0.024, 2.8);
+  const eyeR = Math.max(fish.length * 0.024, 2.5);
   ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(15, 23, 42, 0.7)";
   ctx.beginPath();
   ctx.arc(leftPoints[eyeIdx].x, leftPoints[eyeIdx].y, eyeR, 0, Math.PI * 2);
