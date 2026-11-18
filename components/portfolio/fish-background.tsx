@@ -214,9 +214,9 @@ export const FishBackground = React.memo(function FishBackground() {
       const startX = Math.random() * (width || 800);
       const startY = Math.random() * (height || 600);
       const startAngle = Math.random() * Math.PI * 2;
-      // Large majestic koi lengths (220px to 350px)
-      const length = 220 + Math.random() * 130;
-      const depth = 0.85 + Math.random() * 0.35; // scale & opacity depth
+      // Balanced, elegant koi lengths (110px to 175px)
+      const length = 110 + Math.random() * 65;
+      const depth = 0.8 + Math.random() * 0.3; // scale & opacity depth
 
       const nodes: Point[] = [];
       const segLength = (length * depth) / (NODE_COUNT - 1);
@@ -230,7 +230,7 @@ export const FishBackground = React.memo(function FishBackground() {
       // About half of the fish love swarming around the cursor!
       const isCurious = i % 2 === 0;
       const orbitOffset = i * 0.95;
-      const orbitRadius = 75 + (i % 4) * 28; // 75px to 160px spacing around cursor
+      const orbitRadius = 65 + (i % 4) * 22; // 65px to 130px spacing around cursor
 
       fishList.push({
         x: startX,
@@ -239,13 +239,13 @@ export const FishBackground = React.memo(function FishBackground() {
         vy: Math.sin(startAngle),
         angle: startAngle,
         targetAngle: startAngle,
-        turnSpeed: 0.02 + Math.random() * 0.018,
-        baseSpeed: (0.6 + Math.random() * 0.45) * depth,
-        speed: (0.6 + Math.random() * 0.45) * depth,
+        turnSpeed: 0.018 + Math.random() * 0.015,
+        baseSpeed: (0.55 + Math.random() * 0.35) * depth,
+        speed: (0.55 + Math.random() * 0.35) * depth,
         length: length * depth,
         nodes,
         tailWag: Math.random() * Math.PI * 2,
-        wagSpeed: 0.055 + Math.random() * 0.035,
+        wagSpeed: 0.024 + Math.random() * 0.012, // Slow, majestic tail sway
         finPhase: Math.random() * Math.PI * 2,
         variety: varieties[i % varieties.length],
         depth,
@@ -442,18 +442,19 @@ export const FishBackground = React.memo(function FishBackground() {
         fish.y += fish.vy * (dt * 60);
 
         // Screen wrap
-        const wrapPadding = 280;
+        const wrapPadding = 160;
         if (fish.x < -wrapPadding) fish.x = width + wrapPadding;
         if (fish.x > width + wrapPadding) fish.x = -wrapPadding;
         if (fish.y < -wrapPadding) fish.y = height + wrapPadding;
         if (fish.y > height + wrapPadding) fish.y = -wrapPadding;
 
-        // Spine & wave wag
-        const wagMult = fish.eatingTimer > 0 ? 1.8 : 1.0;
+        // Spine & wave wag (gentle, calming, natural sway)
+        const wagMult = fish.eatingTimer > 0 ? 1.3 : 1.0;
         if (fish.eatingTimer > 0) fish.eatingTimer--;
 
-        fish.tailWag += fish.wagSpeed * (fish.speed / fish.baseSpeed) * wagMult;
-        fish.finPhase += 0.06;
+        const speedRatio = Math.min(fish.speed / fish.baseSpeed, 1.4);
+        fish.tailWag += fish.wagSpeed * (0.85 + 0.15 * speedRatio) * wagMult;
+        fish.finPhase += 0.025;
 
         fish.nodes[0].x = fish.x;
         fish.nodes[0].y = fish.y;
@@ -579,7 +580,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   // Calculate half-widths and normal vectors along the spine
   const leftPoints: Point[] = [];
   const rightPoints: Point[] = [];
-  const bodyWidth = fish.length * 0.185;
+  const bodyWidth = fish.length * 0.165;
 
   for (let i = 0; i < count; i++) {
     const s = i / (count - 1);
@@ -619,7 +620,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const pNext = nodes[pectoralIdx + 1];
   const pAngle = Math.atan2(pNext.y - pNode.y, pNext.x - pNode.x);
   const finFlutter = Math.sin(fish.finPhase) * 0.18;
-  const finLen = fish.length * 0.44;
+  const finLen = fish.length * 0.38;
 
   ctx.fillStyle = finColor;
 
@@ -650,7 +651,7 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, isDark: boolean) {
   const tailBase = nodes[lastIdx];
   const prevTail = nodes[lastIdx - 1];
   const tailAngle = Math.atan2(tailBase.y - prevTail.y, tailBase.x - prevTail.x);
-  const tailLen = fish.length * 0.62;
+  const tailLen = fish.length * 0.52;
   const tailSpread = Math.sin(fish.tailWag) * 0.35;
 
   ctx.save();
